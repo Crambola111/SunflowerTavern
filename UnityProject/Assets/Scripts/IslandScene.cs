@@ -19,6 +19,9 @@ namespace Sunflower
         bool tutorialEnabled;
         int tutorialBaseline;
         float tutorialCompleteTime;
+        int feedbackCoins, feedbackMissed;
+        float feedbackTime;
+        string serviceFeedback="";
         Button actionButton;
         readonly GameObject[] guestHits=new GameObject[8];
         RawImage sunny;
@@ -107,7 +110,7 @@ namespace Sunflower
         }
         bool Owned(int n)=>PlayerPrefs.GetInt(SaveKey+"decor."+n,0)==1;
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel{started=true,tipRemainder=PlayerPrefs.GetFloat(SaveKey+"tipRemainder",0)};Bonuses();foreach(var g in TavernModel.Guests)if(PlayerPrefs.GetInt("sunflower.codex."+g.id,0)==1)model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;tutorialEnabled=PlayerPrefs.GetInt(SaveKey+"tutorialDone",0)==0;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel{started=true,tipRemainder=PlayerPrefs.GetFloat(SaveKey+"tipRemainder",0)};Bonuses();foreach(var g in TavernModel.Guests)if(PlayerPrefs.GetInt("sunflower.codex."+g.id,0)==1)model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=PlayerPrefs.GetInt(SaveKey+"tutorialDone",0)==0;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
@@ -123,7 +126,7 @@ namespace Sunflower
             foreach(var id in model.codex)if(PlayerPrefs.GetInt("sunflower.codex."+id,0)==0){PlayerPrefs.SetInt("sunflower.codex."+id,1);PlayerPrefs.Save();}
             if(model.TryClaimSettlement(out int income)){wallet+=income;PlayerPrefs.SetInt(SaveKey+"wallet",wallet);PlayerPrefs.SetFloat(SaveKey+"tipRemainder",model.tipRemainder);PlayerPrefs.Save();Settlement();}
             hud.text="南风岛 · 第1天       今日 "+model.coins+" / 70       钱包 "+wallet+"       "+Mathf.CeilToInt(120-model.elapsed)+" 秒";
-            status.text=model.message;
+            RefreshServiceFeedback();
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
             else queue.text=model.ready!=null?"已做好："+model.ready.drink+" · 面向出酒口取杯":model.queue.Count>0?"制作："+model.queue[0].drink+"  "+model.queue[0].remaining.ToString("0.0")+"s  | 排队 "+model.queue.Count:"点击客位转向，再次点击互动";
             RefreshCharacterMotion(model.paused||model.ended||focusPaused?0:Time.deltaTime);
@@ -133,12 +136,37 @@ namespace Sunflower
             {
                 faces[i].color=tutorialTarget==i?new Color(.55f,.9f,.55f):model.direction==i?new Color(1,.65f,.12f):new Color(1,.94f,.75f);
                 if(i==0){labels[i].text=model.ready==null?"出酒口":"出酒口 · 取杯";continue;}
-                var v=model.At(i);guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&(v.state==VisitState.Order||v.state==VisitState.Waiting));
+                var v=model.At(i);guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&v.state!=VisitState.Drinking);
+                labels[i].color=new Color(.25f,.12f,.05f);
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
                 labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?"点单":v.state==VisitState.Waiting?(v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
-                var r=bars[i].rectTransform;r.pivot=new Vector2(0,.5f);r.anchoredPosition=new Vector2(0,3.5f);r.sizeDelta=new Vector2(145*Mathf.Clamp01(v.patience/(25*model.patienceMultiplier)),7);
+                bool payment=v.state==VisitState.Payment;
+                bool waiting=v.state==VisitState.Order||v.state==VisitState.Waiting;
+                bool urgent=payment?v.timer<=3:waiting&&v.patience<=7.5f;
+                if(urgent){labels[i].color=new Color(.65f,.12f,.07f);int line=labels[i].text.IndexOf('\n');labels[i].text="P"+i+" · 快走了"+labels[i].text.Substring(line);}
+                // Payment uses its own timer; patience no longer counts down after delivery.
+                float remaining=payment?v.timer:v.patience;
+                float maximum=payment?(v.guest.id=="bobo"?6:12):25*model.patienceMultiplier;
+                bars[i].color=urgent?new Color(.85f,.2f,.12f):payment?new Color(.95f,.65f,.1f):new Color(.35f,.72f,.29f);
+                var r=bars[i].rectTransform;r.pivot=new Vector2(0,.5f);r.anchoredPosition=new Vector2(0,3.5f);r.sizeDelta=new Vector2(145*Mathf.Clamp01(remaining/maximum),7);
             }
+        }
+        void RefreshServiceFeedback()
+        {
+            if(!model.paused&&!model.ended&&!focusPaused)feedbackTime=Mathf.Max(0,feedbackTime-Time.deltaTime);
+            int earned=model.coins-feedbackCoins;
+            int lost=model.missed-feedbackMissed;
+            if(earned>0||lost>0)
+            {
+                serviceFeedback=earned>0?"收款 +"+earned+" 金币":"";
+                if(earned>0&&model.combo>=2)serviceFeedback+=" · 连续服务 "+model.combo+" 单";
+                if(lost>0)serviceFeedback+=(earned>0?"  |  ":"")+"漏单 "+lost+" 位，下一单继续！";
+                feedbackTime=2.4f;
+            }
+            feedbackCoins=model.coins;feedbackMissed=model.missed;
+            // Receipt survives incidental arrival/brew messages without changing the model.
+            status.text=feedbackTime>0?serviceFeedback:model.message;
         }
         int RefreshTutorial()
         {
