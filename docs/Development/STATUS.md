@@ -311,3 +311,5 @@ Tank/Gecko尚未接入立绘，暂用名字、订单和耐心条反馈；无新�
 - SPF8 / Snowy 座位Q版已生成透明PNG候选，待用户确认，未上传 Approved；Tank / Gecko 座位Q版仍待确认。已确认并同步的 Bobo / Coco / Horn / Mimi 不重复制作。
 - 下一步：完成 Jiwoo 座位图；针对实际运行背景制作水域遮罩、火苗/光晕和灯位清单，之后接入环境动效。图鉴独立全身图及 Coco 行李标记仍有缺口。
 
+
+- 21:45追加：用户要求扩大海岛场景在屏幕中的占比，UI按 Art/Approved/UIReference/01_Gameplay.png 还原（左上地图牌、顶部收入目标、右上计时暂停、桌旁订单气泡、底部图标操作区）。具体要求已加入 SCENE_AMBIENT_REQUIREMENTS.md；布局和动画均待开发实现/验收。
