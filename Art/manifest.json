@@ -515,7 +515,8 @@
     ],
     "mode": "RGBA",
     "sha256": "407f05a37a15af94567db39b08cc378b580031f3e5573030925f4cd7cae5df5d",
-    "status": "design_approved_pending_256_export_and_unity"
+    "status": "runtime_integrated_pending_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Drink_IcedAmericano_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_NightMocktail_v1.png",
@@ -525,6 +526,29 @@
     ],
     "mode": "RGBA",
     "sha256": "50c2dc4f5503910c097ec4a9cf704beacfb726ffaa7bcdb6c999ab23d9700e59",
-    "status": "design_approved_pending_256_export_and_unity"
+    "status": "runtime_integrated_pending_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Drink_NightMocktail_v1.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Drink_IcedAmericano_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "407f05a37a15af94567db39b08cc378b580031f3e5573030925f4cd7cae5df5d",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_IcedAmericano_v1.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Drink_NightMocktail_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "50c2dc4f5503910c097ec4a9cf704beacfb726ffaa7bcdb6c999ab23d9700e59",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_NightMocktail_v1.png"
   }
 ]
