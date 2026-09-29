@@ -13,6 +13,15 @@ namespace Sunflower
         }
         public static string Run()
         {
+            var custom=new TavernModel(new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(1,1,7)})){started=true};
+            custom.Update(1.1f);Require(custom.visitors.Count==1&&custom.At(7).guest.id=="coco","Configured guest/seat not used");
+            custom.coins=5;custom.Update(9);Require(custom.ended&&custom.elapsed==10&&custom.Passed,"Configured duration/target not used");
+            bool rejected=false;
+            try{new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(1,0,0)});}catch(ArgumentException){rejected=true;}
+            Require(rejected,"Outlet must not be accepted as an arrival seat");
+            rejected=false;
+            try{new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(2,0,1),new ArrivalDefinition(1,0,2)});}catch(ArgumentException){rejected=true;}
+            Require(rejected,"Out-of-order arrivals must be rejected");
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");
