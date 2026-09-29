@@ -73,7 +73,7 @@ func run() -> void:
 		check(ui.art.portrait(id)!=null,"Portrait loaded: "+id)
 	for drink in ui.art.DRINKS:
 		check(ui.art.drink(drink)!=null,"Drink loaded: "+drink)
-	check(ui.art.chibi("horn")==null and ui.art.chibi("bobo")!=null and ui.art.chibi("coco")!=null and ui.art.chibi("bobo")!=ui.art.portrait("bobo"),"Seated sprites load separately; missing chibi has no portrait fallback")
+	check(ui.art.chibi("tank")==null and ui.art.chibi("horn")!=null and ui.art.chibi("mimi")!=null and ui.art.chibi("bobo")!=null and ui.art.chibi("coco")!=null and ui.art.chibi("bobo")!=ui.art.portrait("bobo"),"Seated sprites load separately; missing chibi has no portrait fallback")
 	# Exercise UI for special visits outside the still-unimplemented Day4 schedule.
 	for id in ["snowy","jiwoo","spf8","mimi"]:
 		ui.close_modal()
