@@ -1,0 +1,10 @@
+UnityProject/[Ll]ibrary/
+UnityProject/[Tt]emp/
+UnityProject/[Oo]bj/
+UnityProject/[Ll]ogs/
+UnityProject/[Uu]serSettings/
+UnityProject/[Bb]uild*/
+**/bin/
+**/obj/
+*.zip
+.DS_Store
