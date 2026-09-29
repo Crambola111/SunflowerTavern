@@ -18,6 +18,8 @@ namespace Sunflower
         public int id, seat, blocked, tip;
         public GuestDefinition guest;
         public VisitState state;
+        public bool tankReady;
+        public bool NeedsTankAttention=>guest.id=="tank"&&!tankReady;
         public float patience=25, timer, bubble=2.5f;
     }
     public sealed class Cup { public int owner; public string drink; public float remaining, duration; }
@@ -62,7 +64,7 @@ namespace Sunflower
             if(ready!=null){target=0;return "② 取杯：饮品做好了，去下方出酒口互动。";}
             if(queue.Count>0)return "② 制作中：饮品会自动做好，留意下方出酒口。";
             var order=visitors.Where(v=>v.state==VisitState.Order).OrderBy(v=>v.patience).FirstOrDefault();
-            if(order!=null){target=order.seat;return "① 接单：点击 P"+target+" 转向，再次点击与客人交谈。";}
+            if(order!=null){target=order.seat;return (order.NeedsTankAttention?"① 提醒Tank摘呼吸器：点击 P":"① 接单：点击 P")+target+" 转向，再次点击与客人交谈。";}
             if(visitors.Any(v=>v.state==VisitState.Drinking))return "④ 等客人喝完，再互动收钱；上酒后还没入账。";
             return "客人正在路上。点击客位可转向，绿色客位是教学目标。";
         }
@@ -80,6 +82,12 @@ namespace Sunflower
             if(v==null){message=Blocked(direction)?"Coco 的行李占着这里。":"这里暂时没有客人。";return;}
             switch(v.state) {
                 case VisitState.Order:
+                    if(v.NeedsTankAttention)
+                    {
+                        v.tankReady=true;v.bubble=2.5f;
+                        message="Tank 摘下呼吸器：原来这里不是水下免税店。再互动正式接单。";
+                        break;
+                    }
                     v.state=VisitState.Waiting;v.bubble=2.5f;
                     queue.Add(new Cup{owner=v.id,drink=v.guest.drink,remaining=v.guest.brew,duration=v.guest.brew});
                     message="订单已送到出酒口，自动开始制作。";break;

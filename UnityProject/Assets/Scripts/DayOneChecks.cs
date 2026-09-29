@@ -40,6 +40,16 @@ namespace Sunflower
             Require(gentle.TryClaimSettlement(out int assistedIncome)&&assistedIncome==12&&!gentle.TryClaimSettlement(out assistedIncome),"Assisted payout duplicated");
             var retry=new TavernModel(custom.Day,assisted:true){started=true};
             Require(retry.Day==custom.Day&&retry.Assisted&&retry.elapsed==0&&retry.coins==0&&retry.visitors.Count==0&&retry.queue.Count==0&&retry.hand==null&&retry.ready==null,"Retry retained transient state or lost configuration");
+            var tankDay=new DayConfiguration(40,10,new[]{DayConfiguration.CreateTank()},new[]{new ArrivalDefinition(1,0,3)});
+            var tank=new TavernModel(tankDay){started=true};tank.Update(1.1f);tank.direction=3;
+            var diver=tank.At(3);float tankPatience=diver.patience;
+            tank.Interact();Require(diver.tankReady&&diver.state==VisitState.Order&&tank.queue.Count==0&&diver.patience==tankPatience,"Tank first interaction must only remove breathing gear");
+            tank.paused=true;tank.Interact();Require(tank.queue.Count==0,"Paused Tank accepted order");tank.paused=false;
+            tank.Interact();tank.Interact();Require(tank.queue.Count==1&&diver.state==VisitState.Waiting,"Tank second interaction duplicated order");
+            tank.Update(5.1f);tank.direction=0;tank.Interact();tank.direction=3;tank.Interact();tank.Update(2.1f);tank.Interact();
+            Require(tank.served==1&&tank.codex.Contains("tank")&&tank.At(3)==null,"Tank full service did not finish");
+            var abandonedTank=new TavernModel(tankDay){started=true};abandonedTank.Update(1.1f);abandonedTank.direction=3;abandonedTank.Interact();abandonedTank.direction=0;abandonedTank.Update(30);
+            Require(abandonedTank.visitors.Count==0&&abandonedTank.queue.Count==0&&abandonedTank.missed==1&&!abandonedTank.codex.Contains("tank"),"Tank attention step prevented timeout or unlocked codex early");
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");
