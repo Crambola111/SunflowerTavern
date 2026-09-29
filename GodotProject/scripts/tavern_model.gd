@@ -56,13 +56,48 @@ func blocked(seat: int) -> bool:
 			return true
 	return false
 
-func owner(cup: Dictionary) -> Dictionary:
-	if cup.is_empty():
-		return {}
+func accepts(v: Dictionary, cup: Dictionary) -> bool:
+	return not v.is_empty() and not cup.is_empty() and v.state == State.WAITING and v.delivered < v.guest.cups and v.guest.drink == cup.drink
+
+# Reconcile global demand without assigning cups to visitors. Started work survives.
+func reconcile_queue() -> void:
+	var needed := {}
+	var recipes := {}
 	for v in visitors:
-		if v.id == cup.owner:
-			return v
-	return {}
+		if v.state == State.WAITING:
+			var drink: String = v.guest.drink
+			needed[drink] = int(needed.get(drink, 0)) + int(v.guest.cups - v.delivered)
+			recipes[drink] = float(v.guest.brew)
+	for cup in [hand, ready]:
+		if not cup.is_empty():
+			needed[cup.drink] = int(needed.get(cup.drink, 0)) - 1
+	for job in queue:
+		if job.started:
+			needed[job.drink] = int(needed.get(job.drink, 0)) - 1
+	var retained: Array[Dictionary] = []
+	for job in queue:
+		if job.started:
+			retained.append(job)
+		elif int(needed.get(job.drink, 0)) > 0:
+			retained.append(job)
+			needed[job.drink] -= 1
+	queue = retained
+	for drink in recipes:
+		for n in maxi(0, int(needed.get(drink, 0))):
+			queue.append({"drink": drink, "remaining": recipes[drink], "duration": recipes[drink], "started": false})
+
+func discard_cup(from_hand: bool) -> void:
+	if not started or paused or ended:
+		return
+	var cup: Dictionary = hand if from_hand else ready
+	if cup.is_empty():
+		return
+	message = "已倒掉%s：%s。" % ["手持饮品" if from_hand else "出酒口成品", cup.drink]
+	if from_hand:
+		hand = {}
+	else:
+		ready = {}
+	reconcile_queue()
 
 func needs_cooling(v: Dictionary) -> bool:
 	return v.guest.id == "snowy" and v.state in [State.ORDER, State.WAITING]
@@ -89,7 +124,7 @@ func interact() -> void:
 		elif not ready.is_empty():
 			hand = ready
 			ready = {}
-			message = "取杯成功，去杯子标注的座位送达。"
+			message = "取杯成功，可送给任何已点同款饮品的客人。"
 		else:
 			message = "正在制作，先照顾其他客人。" if not queue.is_empty() else "先向客人接单。"
 		return
@@ -106,8 +141,7 @@ func interact() -> void:
 				return
 			v.state = State.WAITING
 			v.bubble = 2.5
-			for n in int(v.guest.cups):
-				queue.append({"owner": v.id, "drink": v.guest.drink, "remaining": float(v.guest.brew), "duration": float(v.guest.brew)})
+			reconcile_queue()
 			message = "订单已送到出酒口，自动开始制作。"
 		State.WAITING:
 			if mimi_warning(v):
@@ -118,17 +152,17 @@ func interact() -> void:
 				v.bubble = 2.5
 				message = v.guest.name + "：" + order_text(v)
 				return
-			if hand.owner != v.id:
+			if not accepts(v, hand):
 				v.patience = maxf(0, v.patience - 2)
 				v.bubble = 2.5
 				if v.patience <= 0:
 					miss(v)
 				else:
-					var recipient := owner(hand)
-					message = "送错了，耐心 -2 秒。" + ("这杯请送到 P%d。" % recipient.seat if not recipient.is_empty() else "")
+					message = "饮品不对，耐心 -2 秒。杯子保留，可以回看订单。"
 				return
 			hand = {}
 			v.delivered += 1
+			reconcile_queue()
 			if v.delivered < v.guest.cups:
 				v.bubble = 2.5
 				message = "已送 %d/%d 杯，再去取剩下的饮品。" % [v.delivered, v.guest.cups]
@@ -154,11 +188,7 @@ func interact() -> void:
 
 func remove_visit(v: Dictionary) -> void:
 	visitors.erase(v)
-	queue = queue.filter(func(c): return c.owner != v.id)
-	if not ready.is_empty() and ready.owner == v.id:
-		ready = {}
-	if not hand.is_empty() and hand.owner == v.id:
-		hand = {}
+	reconcile_queue()
 
 func miss(v: Dictionary) -> void:
 	missed += 1
@@ -239,12 +269,16 @@ func tick(dt: float) -> void:
 				else:
 					miss(v)
 	if ready.is_empty() and not queue.is_empty():
+		queue[0].started = true
 		queue[0].remaining -= dt * brew_speed
 		if queue[0].remaining <= 0:
-			ready = queue.pop_front()
+			ready = {"drink": queue.pop_front().drink}
 			message = "饮品做好了，去出酒口取杯。"
 	if elapsed >= day.duration:
 		ended = true
+		hand = {}
+		ready = {}
+		queue.clear()
 		message = "今日目标达成！" if passed() else "今天差一点，重开再试一次。"
 
 func update_gecko(v: Dictionary, dt: float) -> void:
@@ -293,11 +327,10 @@ func service_hint() -> Dictionary:
 		if needs_cooling(v) and v.heat_remaining <= 5 and hand.is_empty():
 			if v.state == State.ORDER:
 				return {"target": v.seat, "text": "Snowy快热化了！去 P%d 接单。" % v.seat}
-			if not ready.is_empty() and ready.owner == v.id:
+			if not ready.is_empty() and accepts(v, ready):
 				return {"target": 0, "text": "去出酒口取杯，快给Snowy降温！"}
-	var recipient := owner(hand)
-	if not recipient.is_empty():
-		return {"target": recipient.seat, "text": "③ 送达：去 P%d 再互动。" % recipient.seat}
+	if not hand.is_empty():
+		return {"target": -1, "text": "③ 送达：同款可互送；忘记订单可先清空手持再回看。无需求可主动倒掉。"}
 	var payments: Array = visitors.filter(func(v): return v.state == State.PAYMENT)
 	payments.sort_custom(func(a, b): return a.timer < b.timer)
 	if not payments.is_empty():

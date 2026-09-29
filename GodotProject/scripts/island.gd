@@ -20,6 +20,7 @@ var tutorial_label: Label
 var toast: Label
 var selection: Label
 var action: Button
+var discard: Button
 var sunny: TextureRect
 var held_icon: TextureRect
 var seats: Array[Button] = []
@@ -85,6 +86,7 @@ func _ready() -> void:
 	card(self, Vector2(800,781), Vector2(780,40))
 	tutorial_label = label(self, Vector2(800,781), Vector2(755,36), "", 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
+	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
 	progress = Progress.new()
 	if not progress.error.is_empty():
 		show_error(progress.error)
@@ -146,7 +148,7 @@ func interact() -> void:
 		model.interact()
 		dialogue(v, true)
 		return
-	var delivery: bool = not v.is_empty() and v.state == Model.State.WAITING and not model.mimi_warning(v) and not model.hand.is_empty() and model.hand.owner == v.id
+	var delivery: bool = not v.is_empty() and v.state == Model.State.WAITING and not model.mimi_warning(v) and not model.hand.is_empty() and model.accepts(v, model.hand)
 	var lime: bool = not model.hand.is_empty() and model.hand.drink == "青柠苏打"
 	model.interact()
 	if delivery:
@@ -220,14 +222,14 @@ func _process(delta: float) -> void:
 	previous_missed = model.missed
 	status.text = feedback if feedback_time > 0 else model.message
 	if not model.hand.is_empty():
-		var recipient: Dictionary = model.owner(model.hand)
-		queue_label.text = "手持：%s → P%s" % [model.hand.drink, str(recipient.get("seat", "?"))]
+		queue_label.text = "手持：%s · 同款可互送" % model.hand.drink
 	elif not model.ready.is_empty():
 		queue_label.text = "已做好：%s · 面向出酒口取杯" % model.ready.drink
 	elif not model.queue.is_empty():
 		queue_label.text = "制作：%s  %.1fs  | 排队 %d" % [model.queue[0].drink, model.queue[0].remaining, model.queue.size()]
 	else:
 		queue_label.text = "点击客位转向，再次点击互动"
+	discard.disabled = not can_input() or (model.hand.is_empty() and model.ready.is_empty())
 	held_icon.texture = art.drink(model.hand.get("drink", ""))
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
 	var hint: Dictionary = model.service_hint()
@@ -348,7 +350,7 @@ func welcome() -> void:
 	open_modal("南风岛 · 第%d天 · 准备营业 · %s模式" % [current_day, "辅助" if assisted else "标准"])
 	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%，收款等待延长50%" if assisted else "标准：原始耐心与收款时间"],25)
 	if current_day == 2:
-		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，杯子仍跟着客人。",20)
+		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
 	if current_day == 3:
 		label(modal,Vector2(800,525),Vector2(950,60),"Mimi伸手时互动打断（%d秒），之后再送杯。\nSPF-8要两杯椰子水，分次取送，送齐再收钱。" % (4 if assisted else 2),20)
 	for day in range(1,4):
@@ -357,6 +359,21 @@ func welcome() -> void:
 		b.disabled = not progress.can_enter(day) or day == current_day
 	button(modal,Vector2(620,590),Vector2(290,65),"开始营业",close_modal)
 	button(modal,Vector2(970,590),Vector2(290,65),"切换标准模式" if assisted else "切换辅助模式",func(): restart(not assisted))
+
+func confirm_discard() -> void:
+	if not can_input() or (model.hand.is_empty() and model.ready.is_empty()):
+		return
+	open_modal("清理成品 · 不会自动倒掉")
+	label(modal,Vector2(800,380),Vector2(850,100),"仅清理你选择的一杯；尚未满足的订单会重新安排制作。",23)
+	for from_hand in [true, false]:
+		var cup: Dictionary = model.hand if from_hand else model.ready
+		if cup.is_empty():
+			continue
+		var source: bool = from_hand
+		button(modal,Vector2(800,470 if from_hand else 550),Vector2(600,60),"确认倒掉%s：%s" % ["手持" if from_hand else "出酒口",cup.drink],func():
+			close_modal()
+			model.discard_cup(source))
+	button(modal,Vector2(800,640),Vector2(300,55),"保留，返回营业",close_modal)
 
 func pause_game() -> void:
 	if model == null or fatal:
