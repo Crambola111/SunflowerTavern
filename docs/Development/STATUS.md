@@ -313,3 +313,9 @@ Tank/Gecko尚未接入立绘，暂用名字、订单和耐心条反馈；无新�
 
 
 - 21:45追加：用户要求扩大海岛场景在屏幕中的占比，UI按 Art/Approved/UIReference/01_Gameplay.png 还原（左上地图牌、顶部收入目标、右上计时暂停、桌旁订单气泡、底部图标操作区）。具体要求已加入 SCENE_AMBIENT_REQUIREMENTS.md；布局和动画均待开发实现/验收。
+
+
+## 2026-09-29 21:48 UI清单与首批制作
+
+用户要求按7张确认参考图整理UI并先制作。清单见 docs/Development/UI_ART_PRODUCTION.md。订单气泡底框与圆形手掌互动按钮已生成真透明PNG候选，待确认，未上传Approved/未接入。下一批优先顶部信息牌；海面烛光、场景占比和UI还原仍待实现，详见 SCENE_AMBIENT_REQUIREMENTS.md。
+
