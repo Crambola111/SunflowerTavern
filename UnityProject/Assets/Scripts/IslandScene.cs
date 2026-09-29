@@ -17,6 +17,10 @@ namespace Sunflower
         Button actionButton;
         readonly GameObject[] guestHits=new GameObject[8];
         RawImage sunny;
+        readonly int[] visualVisits={-1,-1,-1,-1,-1,-1,-1,-1};
+        readonly float[] guestVisibility=new float[8];
+        float servicePulse;
+        int serviceDirection;
         readonly Text[] labels=new Text[8];
         readonly Image[] faces=new Image[8];
         readonly RawImage[] guests=new RawImage[8];
@@ -53,6 +57,8 @@ namespace Sunflower
             events.sendNavigationEvents=false;
             Art(root,new Vector2(800,450),new Vector2(1600,900),"Island_Background");
             sunny=Art(root,new Vector2(800,465),new Vector2(175,175),"Sunny_Chibi");
+            var islandUniform=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_Idle_v1");
+            if(islandUniform!=null)sunny.texture=islandUniform;
             hornPortrait=Resources.Load<Texture2D>("IslandUI/Horn_Portrait");
             if(hornPortrait==null){hornFallback=Resources.Load<Texture2D>("Art/GuestLineup");Debug.LogWarning("Round 3 art pending: Horn_Portrait.png. Using lineup placeholder.");}
             var guestLayer=Node("GuestLayer",root,new Vector2(800,450),new Vector2(1600,900)).transform;
@@ -94,11 +100,11 @@ namespace Sunflower
         }
         bool Owned(int n)=>PlayerPrefs.GetInt(SaveKey+"decor."+n,0)==1;
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel{started=true,tipRemainder=PlayerPrefs.GetFloat(SaveKey+"tipRemainder",0)};Bonuses();foreach(var g in TavernModel.Guests)if(PlayerPrefs.GetInt("sunflower.codex."+g.id,0)==1)model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel{started=true,tipRemainder=PlayerPrefs.GetFloat(SaveKey+"tipRemainder",0)};Bonuses();foreach(var g in TavernModel.Guests)if(PlayerPrefs.GetInt("sunflower.codex."+g.id,0)==1)model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
-        void Interact(){if(!CanUseGameplayInput())return;var v=model.At(model.direction);if(v!=null&&v.state==VisitState.Order){Dialogue(v);return;}model.Interact();}
+        void Interact(){if(!CanUseGameplayInput())return;var v=model.At(model.direction);if(v!=null&&v.state==VisitState.Order){Dialogue(v);return;}bool delivered=v!=null&&v.state==VisitState.Waiting&&model.hand!=null&&model.hand.owner==v.id;model.Interact();if(delivered){servicePulse=.32f;serviceDirection=model.direction;}}
         void Update()
         {
             if(model==null)return;
@@ -113,17 +119,37 @@ namespace Sunflower
             status.text=model.message;
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
             else queue.text=model.ready!=null?"已做好："+model.ready.drink+" · 面向出酒口取杯":model.queue.Count>0?"制作："+model.queue[0].drink+"  "+model.queue[0].remaining.ToString("0.0")+"s  | 排队 "+model.queue.Count:"点击客位转向，再次点击互动";
-            sunny.rectTransform.localScale=new Vector3(model.direction>4?-1:1,1,1);
+            RefreshCharacterMotion(model.paused||model.ended||focusPaused?0:Time.deltaTime);
             RefreshActionHint();
             for(int i=0;i<8;i++)
             {
                 faces[i].color=model.direction==i?new Color(1,.65f,.12f):new Color(1,.94f,.75f);
                 if(i==0){labels[i].text=model.ready==null?"出酒口":"出酒口 · 取杯";continue;}
-                var v=model.At(i);guests[i].gameObject.SetActive(v!=null);guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&(v.state==VisitState.Order||v.state==VisitState.Waiting));
+                var v=model.At(i);guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&(v.state==VisitState.Order||v.state==VisitState.Waiting));
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
                 labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?"点单":v.state==VisitState.Waiting?(v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
                 var r=bars[i].rectTransform;r.pivot=new Vector2(0,.5f);r.anchoredPosition=new Vector2(0,3.5f);r.sizeDelta=new Vector2(145*Mathf.Clamp01(v.patience/(25*model.patienceMultiplier)),7);
+            }
+        }
+        void RefreshCharacterMotion(float dt)
+        {
+            // Presentation only: never delay orders, payouts, or seat release.
+            servicePulse=Mathf.Max(0,servicePulse-dt);
+            float pulse=servicePulse>0?Mathf.Sin((1-servicePulse/.32f)*Mathf.PI):0;
+            Vector2 reach=(seats[serviceDirection]-new Vector2(800,465)).normalized;
+            sunny.rectTransform.anchoredPosition=new Vector2(800,465)+reach*(8*pulse);
+            sunny.rectTransform.localScale=new Vector3(model.direction>4?-1:1,1,1)*(1+.035f*pulse);
+            for(int i=1;i<8;i++)
+            {
+                var visit=model.At(i);
+                if(visit!=null&&visualVisits[i]!=visit.id){visualVisits[i]=visit.id;guestVisibility[i]=0;SetGuest(guests[i],visit.guest);}
+                guestVisibility[i]=Mathf.MoveTowards(guestVisibility[i],visit==null?0:1,dt/.22f);
+                float alpha=guestVisibility[i];
+                guests[i].color=new Color(1,1,1,alpha);
+                guests[i].rectTransform.anchoredPosition=seats[i]+new Vector2(-30,35-10*(1-alpha));
+                guests[i].gameObject.SetActive(alpha>0);
+                if(visit==null&&alpha==0)visualVisits[i]=-1;
             }
         }
         void RefreshActionHint()
