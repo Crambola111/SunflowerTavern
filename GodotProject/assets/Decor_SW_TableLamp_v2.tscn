@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/Decor_SW_TableLamp_v2.tres" id="1"]
+
+[node name="Decor_SW_TableLamp_v2" type="Node2D"]
+metadata/decoration_slot = "lighting"
+metadata/integration_status = "placement_pending"
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 2
+scale = Vector2(0.019851117, 0.019851117)
+texture = ExtResource("1")
+centered = false
+offset = Vector2(-604.5, -1145)

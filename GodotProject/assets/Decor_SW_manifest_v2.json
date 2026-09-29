@@ -1,0 +1,240 @@
+{
+  "version": 2,
+  "map": "southwind",
+  "approved_at": "2026-09-29 22:06 +08:00",
+  "integrated": false,
+  "assets": [
+    {
+      "id": "Decor_SW_Counter_v2",
+      "title": "吧台主体（已去吊灯）",
+      "slot": "counter",
+      "path": "GodotProject/assets/Decor_SW_Counter_v2.png",
+      "size": [
+        1670,
+        941
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        14,
+        48,
+        1656,
+        866
+      ],
+      "sha256": "f26d937556ab724978380c02da657febbfe88b55c8421f3930738f1c2aeb9ba3",
+      "texture": "res://assets/Decor_SW_Counter_v2.tres",
+      "scene": "res://assets/Decor_SW_Counter_v2.tscn",
+      "pivot_in_region": [
+        828.0,
+        866
+      ],
+      "suggested_preview_width": 600,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_Chair_v2",
+      "title": "软垫藤椅",
+      "slot": "chair",
+      "path": "GodotProject/assets/Decor_SW_Chair_v2.png",
+      "size": [
+        1333,
+        1180
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        39,
+        17,
+        1270,
+        1163
+      ],
+      "sha256": "69737e01ffd1e8ba3edced82cf33e48b7c6921bee355566090184c6b9982fe73",
+      "texture": "res://assets/Decor_SW_Chair_v2.tres",
+      "scene": "res://assets/Decor_SW_Chair_v2.tscn",
+      "pivot_in_region": [
+        635.0,
+        1163
+      ],
+      "suggested_preview_width": 100,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_TableLamp_v2",
+      "title": "桌面海玻璃烛灯",
+      "slot": "lighting",
+      "path": "GodotProject/assets/Decor_SW_TableLamp_v2.png",
+      "size": [
+        1312,
+        1199
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        51,
+        54,
+        1209,
+        1145
+      ],
+      "sha256": "459654388226cf3cac94a1cd1289361ed1a4b692fb963872a04121abc5fb83c5",
+      "texture": "res://assets/Decor_SW_TableLamp_v2.tres",
+      "scene": "res://assets/Decor_SW_TableLamp_v2.tscn",
+      "pivot_in_region": [
+        604.5,
+        1145
+      ],
+      "suggested_preview_width": 24,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_HangingLamp_v2",
+      "title": "吧台贝壳吊灯",
+      "slot": "lighting",
+      "path": "GodotProject/assets/Decor_SW_HangingLamp_v2.png",
+      "size": [
+        1268,
+        1241
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        25,
+        20,
+        1207,
+        1136
+      ],
+      "sha256": "a7d0bcb741c62ceba6477b7aa05af0da282c7dda67ee0bf9360c0f0673cb14c6",
+      "texture": "res://assets/Decor_SW_HangingLamp_v2.tres",
+      "scene": "res://assets/Decor_SW_HangingLamp_v2.tscn",
+      "pivot_in_region": [
+        603.5,
+        0
+      ],
+      "suggested_preview_width": 55,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_Railing_v2",
+      "title": "两跨三柱栏杆模块",
+      "slot": "railing",
+      "path": "GodotProject/assets/Decor_SW_Railing_v2.png",
+      "size": [
+        1821,
+        864
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        60,
+        3,
+        1743,
+        837
+      ],
+      "sha256": "2a67d4562d5df6ba9c273dfdcc8cfc55a85a7c57a68c7007de7396c771d9bbb4",
+      "texture": "res://assets/Decor_SW_Railing_v2.tres",
+      "scene": "res://assets/Decor_SW_Railing_v2.tscn",
+      "pivot_in_region": [
+        871.5,
+        837
+      ],
+      "suggested_preview_width": 240,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_Table_v2",
+      "title": "客桌主体（无灯无植物）",
+      "slot": "table",
+      "path": "GodotProject/assets/Decor_SW_Table_v2.png",
+      "size": [
+        1313,
+        1198
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        0,
+        32,
+        1217,
+        1136
+      ],
+      "sha256": "22491d61ef7b0043e0ab34836343f22722622dabd70907df72ddc0ee5979d535",
+      "texture": "res://assets/Decor_SW_Table_v2.tres",
+      "scene": "res://assets/Decor_SW_Table_v2.tscn",
+      "pivot_in_region": [
+        608.5,
+        1136
+      ],
+      "suggested_preview_width": 130,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    },
+    {
+      "id": "Decor_SW_Deck_v2",
+      "title": "整个平台地板",
+      "slot": "deck",
+      "path": "GodotProject/assets/Decor_SW_Deck_v2.png",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox_xywh": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "sha256": "2f3efb7523f107685145abb811401d2645eb2a4063876bfab7daaa5cdf2542ad",
+      "texture": "res://assets/Decor_SW_Deck_v2.tres",
+      "scene": "res://assets/Decor_SW_Deck_v2.tscn",
+      "pivot_in_region": [
+        836.0,
+        470.5
+      ],
+      "suggested_preview_width": 1500,
+      "placement_status": "待场景校准，非原图坐标覆盖层",
+      "art_status": "用户已确认v2风格；Counter/HangingLamp为拆分派生",
+      "notes": "PNG原字节保留；AtlasTexture仅裁透明边距，不改像素。"
+    }
+  ],
+  "requirements": [
+    "底图旧物件需拆层或清除后才可换装",
+    "桌灯与吊灯同属一个升级位",
+    "不对透视素材任意旋转充当其他朝向",
+    "不自动收钱或释放未结账桌位",
+    "烛光可程序调制，当前图内亮芯非独立火苗帧",
+    "Deck边缘触画布，需实机场景边界验收"
+  ]
+}
