@@ -1,0 +1,75 @@
+using System;
+
+namespace Sunflower
+{
+    // Pure C# checks shared by the Unity menu and standalone console runner.
+    public static class DayOneChecks
+    {
+        static void Require(bool value,string message){if(!value)throw new Exception(message);}
+        static TavernModel FirstGuest()
+        {
+            var model=new TavernModel{started=true};model.Update(8.1f);
+            Require(model.visitors.Count==1,"First visitor did not arrive");return model;
+        }
+        public static string Run()
+        {
+            var m=new TavernModel{started=true};
+            Require(!m.TryClaimSettlement(out int income)&&income==0,"Unfinished day allowed settlement");
+            for(int i=0;i<2500&&!m.ended;i++)
+            {
+                foreach(var v in m.visitors.ToArray())
+                {m.direction=v.seat;if(v.state==VisitState.Order||v.state==VisitState.Payment)m.Interact();}
+                if(m.ready!=null&&m.hand==null){m.direction=0;m.Interact();}
+                if(m.hand!=null){var owner=m.visitors.Find(v=>v.id==m.hand.owner);Require(owner!=null,"Orphan cup");m.direction=owner.seat;m.Interact();}
+                m.Update(.05f);
+            }
+            Require(m.ended&&m.Passed&&m.served==5&&m.coins==79,"Perfect day must serve 5 and earn 79, got "+m.served+" / "+m.coins);
+            Require(m.codex.Count==3,"Perfect day should unlock 3 guests");
+            int coins=m.coins;m.Interact();m.Update(20);Require(m.coins==coins,"Ended day paid twice");
+            Require(m.TryClaimSettlement(out income)&&income==79,"Finished day did not pay its income");
+            for(int i=0;i<10;i++)Require(!m.TryClaimSettlement(out income)&&income==0,"Repeated settlement paid twice");
+            var nextDay=new TavernModel{ended=true,coins=12};
+            Require(nextDay.TryClaimSettlement(out income)&&income==12,"New day retained previous settlement lock");
+            var zeroDay=new TavernModel{ended=true};
+            Require(zeroDay.TryClaimSettlement(out income)&&income==0&&!zeroDay.TryClaimSettlement(out income),"Zero-income day must settle exactly once");
+
+            var paused=FirstGuest();paused.paused=true;float elapsed=paused.elapsed, patience=paused.visitors[0].patience;int direction=paused.direction;
+            paused.Update(40);paused.Turn(1);paused.Interact();
+            Require(paused.elapsed==elapsed&&paused.visitors[0].patience==patience&&paused.direction==direction&&paused.queue.Count==0,"Pause changed simulation state");
+
+            var orders=FirstGuest();orders.direction=orders.visitors[0].seat;orders.Interact();orders.Interact();
+            Require(orders.queue.Count==1,"Repeated interaction duplicated order");orders.Update(3.1f);
+            Require(orders.ready!=null,"Drink not ready");orders.direction=0;orders.Interact();orders.Interact();
+            Require(orders.hand!=null&&orders.ready==null,"Repeated pickup lost cup");
+            var cup=orders.hand;var guest=orders.visitors[0];
+            var other=new Visit{id=99,seat=7,guest=TavernModel.Guests[1],state=VisitState.Waiting};orders.visitors.Add(other);
+            orders.direction=7;orders.Interact();Require(orders.hand==cup&&other.patience==23,"Wrong cup must remain held with 2s penalty");
+            orders.direction=guest.seat;orders.Interact();Require(orders.hand==null&&guest.state==VisitState.Drinking,"Correct delivery failed");
+            orders.Update(2.1f);orders.direction=guest.seat;orders.Interact();coins=orders.coins;orders.Interact();
+            Require(orders.coins==coins&&orders.At(guest.seat)==null,"Repeated collection paid twice");
+
+            foreach(float remaining in new[]{2f,1f})
+            {
+                var expiry=FirstGuest();var leaving=expiry.visitors[0];
+                expiry.direction=leaving.seat;expiry.Interact();leaving.patience=remaining;leaving.blocked=7;
+                var held=new Cup{owner=99,drink="Other order"};expiry.hand=held;
+                expiry.ready=new Cup{owner=leaving.id};expiry.combo=3;
+                expiry.Interact();
+                Require(expiry.At(leaving.seat)==null&&expiry.missed==1&&expiry.combo==0,"Wrong delivery must immediately remove an impatient guest");
+                Require(expiry.queue.Count==0&&expiry.ready==null&&!expiry.Blocked(7),"Departure left owned drinks or blocked seat");
+                Require(expiry.hand==held,"Departure removed another guest's held cup");
+                expiry.Interact();expiry.Update(.05f);
+                Require(expiry.missed==1&&expiry.coins==0,"Departed guest was processed twice");
+            }
+
+            var abandoned=FirstGuest();abandoned.direction=abandoned.visitors[0].seat;abandoned.Interact();abandoned.direction=0;abandoned.Update(3.1f);abandoned.Interact();
+            int ownerId=abandoned.hand.owner;abandoned.Update(30);
+            Require(abandoned.visitors.Find(v=>v.id==ownerId)==null&&abandoned.hand==null,"Departed guest left an orphan held cup");
+
+            var boosted=new TavernModel{started=true,patienceMultiplier=1.05f,brewSpeed=1.05f};boosted.Update(8.1f);
+            Require(boosted.visitors[0].patience>25,"Patience upgrade failed");boosted.direction=boosted.visitors[0].seat;boosted.Interact();boosted.Update(2.9f);
+            Require(boosted.ready!=null,"Brew upgrade failed");
+            return "PASS: perfect day 79 coins / 5 served / 3 codex; settlement exactly once; ended lock; pause; duplicate order/pickup/payment; wrong/correct delivery; immediate patience expiry; abandoned cup cleanup; decoration modifiers.";
+        }
+    }
+}
