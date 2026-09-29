@@ -4,3 +4,11 @@
 
 正式原稿为本目录。Review内同名文件仅保留历史审稿记录，以本目录和Art/manifest.json最新状态为准。
 
+
+## UI1 运行接入（2026-09-29）
+
+四张已确认素材已原样复制到 GodotProject/assets，AtlasTexture 裁去透明外边距并等比展示：地图牌左上、收入/钱包中上、订单泡桌边、互动手掌右下。PNG原稿不修改。
+
+新到 TimerPlate / RoundButtonBase 同步接入右上计时与图鉴/装饰/转向/暂停按钮。BATCH03仍记载待确认，故接入不代表美术审批通过；清单保留待确认状态。圆按钮的书本/椅子图标暂缺，暂用文字。旧 Dialogue_Panel / Button_Gold / Codex_Book 继续使用。
+
+Godot headless已验证资源加载与交互，游戏窗口比例、文字遮挡和动效仍待人工视觉验收。
