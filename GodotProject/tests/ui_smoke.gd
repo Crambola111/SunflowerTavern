@@ -25,6 +25,10 @@ func run() -> void:
 	ui.reset_day()
 	ui.welcome()
 	check(ui.modal != null and ui.model.paused,"Welcome pauses game")
+	for asset in ui.art.UI_REGIONS:
+		var atlas = ui.art.ui_texture(asset)
+		check(atlas.atlas != null and Rect2(Vector2.ZERO, atlas.atlas.get_size()).encloses(atlas.region), "Approved UI atlas loads within original: " + asset)
+	check(ui.bubbles.size() == 8 and ui.bubbles[2].mouse_filter == Control.MOUSE_FILTER_IGNORE, "Order artwork preserves table input")
 	ui.close_modal()
 	await process_frame
 	await process_frame
@@ -119,7 +123,7 @@ func run() -> void:
 	check(ui.action.text == "收钱清台" and not ui.action.disabled, "Empty visitor table still exposes collection action")
 	ui.interact()
 	ui._process(0)
-	check(ui.modal == null and ui.model.served == 1 and ui.seats[2].text.contains("空位"), "Collection bypasses dialogue and frees table")
+	check(ui.modal == null and ui.model.served == 1 and ui.seats[2].text.is_empty() and not ui.bubbles[2].visible, "Collection bypasses dialogue and frees table")
 	ui.restart(false)
 	check(ui.model.bills.is_empty() and ui.model.visitors.is_empty(), "Restart clears transient table state")
 	var ambient_path := "user://ambient_smoke_only.cfg"
