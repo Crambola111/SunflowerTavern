@@ -1,5 +1,14 @@
 # 已确认美术目录
 
+## 2026-09-29 20:47 用户确认：立绘与场内Q版分离
+
+Tank、Gecko精细全身立绘已确认，归档 Art/Approved/Guests/Tank/Tank_Portrait.png 与 Art/Approved/Guests/Gecko/Gecko_Portrait.png，仅用于对话/图鉴详情。原稿1024×1536 RGBA，透明通道已检查，未接入Unity。
+
+场内客位统一使用Q版静态全身图，文件建议 <ID>_Chibi.png；保留角色服装、物种、道具和有梗性格，缩小后轮廓清晰。先制作Tank/Gecko Q版供确认；Bobo/Coco/Horn已有Portrait不得默认视为合格Q版，需要核对并补齐；Mimi/SPF8/Snowy/Jiwoo同样区分两种用途。小葵已有Chibi/工作服体系，继续沿用。每人首版一张静态Q版，不追加行走/入场/多方向动画。头像可裁切。
+
+本条覆盖历史“同一张Portrait用于场内、对话、图鉴”的要求。场内Chibi与对话/图鉴Portrait需要分别配置，待开发接入，不代表已完成代码修改或Unity验收。Q版待确认前不写入Approved、不覆盖现有运行文件。
+
+
 ## 游戏运行素材
 
 位于仓库 UnityProject/Assets/Resources/IslandUI/，保留原路径与 meta。
@@ -88,3 +97,4 @@ D0 Carry及Serve_00/01/02已复制至UnityProject/Assets/Resources/IslandUI，�
 ## 第11轮B饮品补接
 
 冰美式Drink_IcedAmericano_v1、夜间无酒精特调Drink_NightMocktail_v1已按确认原稿原字节入UnityProject/Assets/Resources/IslandUI，附meta并登记manifest。代码复用订单/出酒口/手持/对话图标接口；Jiwoo正式来访仍待Day4编排。导入沿用Drink_最大256设置，Unity实际导入/透明边缘验收未运行。美术需求以docs/Development/CODEX_ART_REQUEST.md为准。
+

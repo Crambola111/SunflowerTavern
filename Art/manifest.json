@@ -550,5 +550,34 @@
     "sha256": "50c2dc4f5503910c097ec4a9cf704beacfb726ffaa7bcdb6c999ab23d9700e59",
     "status": "runtime_integrated_pending_unity",
     "source_path": "Art/Approved/Drinks/Southwind/Drink_NightMocktail_v1.png"
+  },
+  {
+    "path": "Art/Approved/Guests/Tank/Tank_Portrait.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "sha256": "5fe298edc342692b1ac02dc927145bde614b7054a75c4f1c705fd704497f27e1",
+    "status": "portrait_approved_not_runtime_integrated_chibi_pending",
+    "usage": [
+      "dialogue",
+      "codex_detail"
+    ]
+  },
+  {
+    "path": "Art/Approved/Guests/Gecko/Gecko_Portrait.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "sha256": "7be0dd9da94f3692c5e2f3662572af0887bedfacd4580d14f5a58d760bce8f56",
+    "status": "portrait_approved_not_runtime_integrated_chibi_pending",
+    "usage": [
+      "dialogue",
+      "codex_detail"
+    ]
   }
 ]
+
