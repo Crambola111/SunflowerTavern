@@ -256,5 +256,27 @@
     "mode": "RGBA",
     "sha256": "fc1ae4d9e59291a9fa55c4d23577c7760e2a1ff279b66331cc6173e0bf7b45c5",
     "status": "design_approved_pending_normalization_and_unity"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D2_Idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "0312ddc89a75901e5ff570abe8326fba21f2b639c02814de4a9464c0cebf702f",
+    "library_file_id": "libfile_a7dfbb6cf1d88191b09267a7e4dda596",
+    "source_version": 0
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "fc1ae4d9e59291a9fa55c4d23577c7760e2a1ff279b66331cc6173e0bf7b45c5",
+    "library_file_id": "libfile_8e73649406988191a309ac39fb957b29",
+    "source_version": 0
   }
 ]
