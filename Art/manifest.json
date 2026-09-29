@@ -1038,8 +1038,9 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_overlay"
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_InteractButton_Southwind_v1.png",
@@ -1053,8 +1054,9 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_overlay"
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_IncomeGoalPlate_Southwind_v1.png",
@@ -1085,5 +1087,131 @@
     ],
     "status": "uploaded_for_review_not_runtime_integrated",
     "usage": "ui_overlay"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_IncomeGoalPlate_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "7510d87e3bfe02a62b616051e604252c216ec01d22ef4f7c88470e43269aa141",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_IncomeGoalPlate_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "7510d87e3bfe02a62b616051e604252c216ec01d22ef4f7c88470e43269aa141",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_IncomeGoalPlate_Southwind_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/UI_OrderBubble_Southwind_v1.png",
+    "size": [
+      1635,
+      962
+    ],
+    "mode": "RGBA",
+    "sha256": "0429815046123389021b21574ea33571a876702d0de23514c22cfba3dd8e152d",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_OrderBubble_Southwind_v1.png"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_RoundButtonBase_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "2aa9fc15ead0ac2f3efe61df6616078cb94d474d959807125824452b5b741194",
+    "status": "runtime_integrated_art_confirmation_pending",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_RoundButtonBase_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "2aa9fc15ead0ac2f3efe61df6616078cb94d474d959807125824452b5b741194",
+    "status": "runtime_integrated_art_confirmation_pending",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_RoundButtonBase_Southwind_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/UI_InteractButton_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "e89c68ac45df3dd4ab8957b4f8cd41142a9fd4e92dc1aec4cee9b59b6b081e84",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_InteractButton_Southwind_v1.png"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_TimerPlate_Southwind_v1.png",
+    "size": [
+      2057,
+      764
+    ],
+    "mode": "RGBA",
+    "sha256": "1a55e230ed5d7aedb31f1fea962d9aad1e65e500549dd526aae781893bef3c16",
+    "status": "runtime_integrated_art_confirmation_pending",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_TimerPlate_Southwind_v1.png",
+    "size": [
+      2057,
+      764
+    ],
+    "mode": "RGBA",
+    "sha256": "1a55e230ed5d7aedb31f1fea962d9aad1e65e500549dd526aae781893bef3c16",
+    "status": "runtime_integrated_art_confirmation_pending",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_TimerPlate_Southwind_v1.png"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_MapNamePlate_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "573f3872f9e8654f65d324e2e790dc3ca08bd95bde37dc8344efcb0e42871efe",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_MapNamePlate_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "573f3872f9e8654f65d324e2e790dc3ca08bd95bde37dc8344efcb0e42871efe",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_MapNamePlate_Southwind_v1.png"
   }
 ]
