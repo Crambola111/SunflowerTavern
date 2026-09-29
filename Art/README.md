@@ -37,3 +37,9 @@ manifest.json 记录图片尺寸与 SHA-256，供版本核对。
 原始确认包：SunflowerTavern_Art_Confirmed_20260929.zip，Library ID libfile_42b515f36cb48191bb75c26b5bdadf6f，版本0。
 海岛服待机：UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_Idle_v1.png（运行接入）。默认服3张：Art/Approved/Sunny/Default/（动作参考，未接入连续动画）。原图复制，未重绘或抠图；缩小边缘、脚底与画风待引擎验收。
 包内分桌P3、P6无法完整解码，未导入；继续使用完好 TableFront_Combined。Horn已有正式图，本次不重复导入。
+
+## 方向素材制作进度（2026-09-29）
+
+新增南风岛工作服 D6 左侧面、D2 右上背侧面静态预览，已修正多余花饰与配件方位，待用户确认，未写入 Approved 或运行目录。此前背面稿鸡蛋花左右位置须复核。八方向、统一512画布/脚底基准、单方向三帧服务序列尚未完成，不能作为连续动画直接接入。
+
+已确认素材沿用第4轮A正式路径：默认服3张在 Approved/Sunny/Default/，南风岛待机在 UnityProject/Assets/Resources/IslandUI/。并行上传产生的 CharacterDesign 同名4张副本已清理，manifest 保持正式路径记录；未改动运行图片或 meta。
