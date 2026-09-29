@@ -6,6 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="../../UnityProject/Assets/Scripts/ProgressStore.cs" Link="ProgressStore.cs" />
+    <Compile Include="../../UnityProject/Assets/Scripts/ProgressChecks.cs" Link="ProgressChecks.cs" />
     <Compile Include="../../UnityProject/Assets/Scripts/DayConfiguration.cs" Link="DayConfiguration.cs" />
     <Compile Include="../../UnityProject/Assets/Scripts/TavernModel.cs" Link="TavernModel.cs" />
     <Compile Include="../../UnityProject/Assets/Scripts/DayOneChecks.cs" Link="DayOneChecks.cs" />
