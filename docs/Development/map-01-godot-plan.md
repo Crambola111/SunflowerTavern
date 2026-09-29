@@ -1,5 +1,7 @@
 # 第一地图 · Godot 开发计划
 
+追加：按用户要求在G2后插入A1环境动态首版（局部海面、烛光）。代码/headless检查已完成，完整海域与图形验收待补；下一主线仍为G3。详见SCENE_AMBIENT_REQUIREMENTS.md。
+
 更新：2026-09-29。依据 [南风岛完整玩法方案](../GameDesign/MAP01_RULES.md) 与 [整体方案](../GameDesign/OVERVIEW.md) 的21:23杯子修正、21:25离场/收钱/清台修正重新排期。当前主工程GodotProject，Godot 4.5.1标准版/GDScript。
 
 每轮最多两项任务，必须交付可核对的结果。G1、G2已完成代码及headless检查（当前129逻辑+34UI），图形试玩待验收；下一开发轮为G3。
