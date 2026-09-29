@@ -18,6 +18,9 @@ namespace Sunflower
         public int id, seat, blocked, tip;
         public GuestDefinition guest;
         public VisitState state;
+        public bool mimiAttempted;
+        public float mimiAway, mimiWarningTime;
+        public bool MimiWarning=>guest.id=="mimi"&&state==VisitState.Waiting&&!mimiAttempted&&mimiAway>=3;
         public bool tankReady;
         public bool geckoMoveAttempted;
         public float geckoWait;
@@ -42,7 +45,7 @@ namespace Sunflower
         public float elapsed;
         public float patienceMultiplier=1, brewSpeed=1, tipMultiplier=1;
         public float tipRemainder;
-        public int direction, coins, combo, bestCombo, served, missed;
+        public int direction, coins, combo, bestCombo, served, missed, stolenCoins;
         public bool started, paused, ended;
         bool settlementClaimed;
         // A day owns its payout; reopening UI cannot claim it again.
@@ -61,6 +64,8 @@ namespace Sunflower
         {
             target=-1;
             if(ended)return "今日营业结束。";
+            var thief=visitors.Find(v=>v.MimiWarning);
+            if(thief!=null){target=thief.seat;return "Mimi 伸手了！去 P"+target+" 互动打断，手中的饮品会保留。";}
             if(hand!=null){var owner=visitors.Find(v=>v.id==hand.owner);if(owner!=null){target=owner.seat;return "③ 送达：去 P"+target+"，再互动把饮品交给客人。";}}
             var payment=visitors.Where(v=>v.state==VisitState.Payment).OrderBy(v=>v.timer).FirstOrDefault();
             if(payment!=null){target=payment.seat;return "④ 收钱：去 P"+target+" 互动，金币才会入账！";}
@@ -95,6 +100,7 @@ namespace Sunflower
                     queue.Add(new Cup{owner=v.id,drink=v.guest.drink,remaining=v.guest.brew,duration=v.guest.brew});
                     message="订单已送到出酒口，自动开始制作。";break;
                 case VisitState.Waiting:
+                    if(v.MimiWarning){v.mimiAttempted=true;message="Mimi：我只是帮金币拍张游客照！已打断，再互动可送饮品。";break;}
                     if(hand==null){v.bubble=2.5f;message=v.guest.name+"："+v.guest.drink;break;}
                     if(hand.owner!=v.id){
                         v.patience=Math.Max(0,v.patience-2);v.bubble=2.5f;
@@ -111,6 +117,22 @@ namespace Sunflower
                     coins+=gain;served++;codex.Add(v.guest.id);Remove(v);message="收到 "+gain+" 金币！";break;
                 default:message="客人正在喝饮品。";break;
             }
+        }
+        void UpdateMimi(Visit v,float dt)
+        {
+            if(v.guest.id!="mimi"||v.state!=VisitState.Waiting||v.mimiAttempted)return;
+            // Preparation accumulates only while facing away. Once warned, turning alone is insufficient.
+            if(!v.MimiWarning)
+            {
+                if(direction!=v.seat)v.mimiAway+=dt;
+                if(v.MimiWarning)message="Mimi 伸手了！面向她互动，打断偷钱。";
+                return;
+            }
+            v.mimiWarningTime+=dt;
+            if(v.mimiWarningTime<(Assisted?4:2))return;
+            v.mimiAttempted=true;
+            int taken=Math.Min(5,Math.Max(0,coins));coins-=taken;stolenCoins+=taken;
+            message=taken>0?"Mimi 顺走了 "+taken+" 金币！本次不会再偷。":"Mimi：零钱盒比我的旅游预算还干净。";
         }
         void UpdateGecko(Visit v,float dt)
         {
@@ -154,7 +176,7 @@ namespace Sunflower
             }
             foreach(var v in visitors.ToArray()) {
                 v.bubble=Math.Max(0,v.bubble-dt);
-                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);else UpdateGecko(v,dt);}
+                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);else {UpdateGecko(v,dt);UpdateMimi(v,dt);}}
                 else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=(v.guest.id=="bobo"?6:12)*(Assisted?1.5f:1);}else Miss(v);}}
             }
             if(ready==null&&queue.Count>0){queue[0].remaining-=dt*brewSpeed;if(queue[0].remaining<=0){ready=queue[0];queue.RemoveAt(0);message="饮品做好了，去出酒口取杯。";}}

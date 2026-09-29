@@ -11,6 +11,49 @@ namespace Sunflower
             var model=new TavernModel{started=true};model.Update(8.1f);
             Require(model.visitors.Count==1,"First visitor did not arrive");return model;
         }
+        static TavernModel MimiOrder(bool assisted=false)
+        {
+            var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateMimi()},new[]{new ArrivalDefinition(1,0,3)});
+            var model=new TavernModel(day,assisted){started=true,coins=10};
+            model.Update(1.1f);model.direction=3;model.Interact();return model;
+        }
+        static void CheckMimi()
+        {
+            foreach(bool assisted in new[]{false,true})
+            {
+                var model=MimiOrder(assisted);var guest=model.At(3);
+                model.Update(4);Require(!guest.MimiWarning&&guest.mimiAway==0,"Facing Mimi started warning");
+                model.direction=0;model.Update(3.1f);
+                Require(guest.MimiWarning&&model.coins==10,"Mimi warning missing or early theft");
+                int target;Require(model.ServiceHint(out target).Contains("打断")&&target==3,"Mimi guidance missing");
+                model.Interact();var cup=model.hand;Require(cup!=null,"Mimi test cup missing");
+                float warning=guest.mimiWarningTime,patience=guest.patience;
+                model.paused=true;model.direction=3;model.Interact();model.Update(10);
+                Require(guest.MimiWarning&&guest.mimiWarningTime==warning&&guest.patience==patience&&model.coins==10,"Paused Mimi advanced");
+                model.paused=false;model.Interact();
+                Require(guest.mimiAttempted&&!guest.MimiWarning&&model.hand==cup&&guest.state==VisitState.Waiting&&guest.patience==patience,"Interrupt changed order/cup/patience");
+                model.Interact();Require(model.hand==null&&guest.state==VisitState.Drinking,"Second interaction did not deliver");
+                model.Update(2.1f);model.Interact();model.Interact();
+                Require(model.served==1&&model.codex.Contains("mimi")&&model.stolenCoins==0,"Interrupted visit settlement invalid");
+            }
+            foreach(int coins in new[]{0,3,10})
+            {
+                var model=MimiOrder();var guest=model.At(3);model.coins=coins;model.direction=0;model.Update(3.1f);
+                model.direction=3;model.Update(2.1f);
+                Require(guest.mimiAttempted&&model.coins==Math.Max(0,coins-5)&&model.stolenCoins==Math.Min(5,coins),"Mimi cap or facing-only behavior invalid");
+                int remaining=model.coins;model.direction=0;model.Update(6);
+                Require(model.coins==remaining,"Mimi stole twice during same visit");
+                model.ended=true;int income;Require(model.TryClaimSettlement(out income)&&income==remaining&&!model.TryClaimSettlement(out income),"Mimi net settlement not once");
+            }
+            var assist=MimiOrder(true);assist.direction=0;assist.Update(5.2f);
+            Require(assist.At(3).MimiWarning&&assist.coins==10,"Assist warning not extended");assist.Update(2.1f);Require(assist.coins==5,"Assist theft did not resolve");
+            var early=MimiOrder();early.Update(3.1f);early.direction=0;early.Interact();early.direction=3;early.Interact();early.direction=0;early.Update(6);
+            Require(early.coins==10&&early.stolenCoins==0,"Delivered Mimi stole");
+            var expired=MimiOrder();expired.direction=0;expired.Update(3.1f);expired.At(3).patience=.001f;expired.Update(.1f);
+            Require(expired.visitors.Count==0&&expired.coins==10&&expired.ready==null&&expired.queue.Count==0,"Expired Mimi stole or left cup");
+            var ended=MimiOrder();ended.direction=0;ended.Update(3.1f);ended.elapsed=ended.Day.Duration-.01f;ended.Update(10);
+            Require(ended.ended&&ended.coins==10,"Mimi advanced after day end");
+        }
         static TavernModel GeckoOrder()
         {
             var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateGecko()},new[]{new ArrivalDefinition(1,0,7)});
@@ -114,6 +157,7 @@ namespace Sunflower
             var abandonedTank=new TavernModel(tankDay){started=true};abandonedTank.Update(1.1f);abandonedTank.direction=3;abandonedTank.Interact();abandonedTank.direction=0;abandonedTank.Update(30);
             Require(abandonedTank.visitors.Count==0&&abandonedTank.queue.Count==0&&abandonedTank.missed==1&&!abandonedTank.codex.Contains("tank"),"Tank attention step prevented timeout or unlocked codex early");
             CheckGecko();
+            CheckMimi();
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");

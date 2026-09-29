@@ -44,6 +44,9 @@ namespace Sunflower
             Guests=Array.AsReadOnly(copy);Arrivals=Array.AsReadOnly((ArrivalDefinition[])arrivals.Clone());
         }
 
+        public static GuestDefinition CreateMimi()=>new GuestDefinition("mimi","Mimi · 猴子游客","芒果冰沙",10,3,6,
+            "旅行攻略只有两条：自拍找角度，零钱找机会。被老板抓包就举起手机：别误会，我在拍金币特写。");
+
         public static GuestDefinition CreateTank()=>new GuestDefinition("tank","Tank · 海龟潜水员","椰子水",14,5,3,
             "上岸半小时还戴着呼吸器。点单全靠冒泡，以为老板也会水下手语。");
 

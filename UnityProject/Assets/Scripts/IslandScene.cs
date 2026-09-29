@@ -19,7 +19,7 @@ namespace Sunflower
         bool tutorialEnabled;
         int tutorialBaseline;
         float tutorialCompleteTime;
-        int feedbackCoins, feedbackMissed;
+        int feedbackCoins, feedbackMissed, feedbackStolen;
         float feedbackTime;
         string serviceFeedback="";
         Button actionButton;
@@ -135,7 +135,7 @@ namespace Sunflower
         }
         bool Owned(int n)=>progress.Owns(n);
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel(DayConfiguration.ForDay(currentDay),assisted){started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in codexGuests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;serveTime=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel(DayConfiguration.ForDay(currentDay),assisted){started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in codexGuests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;serveTime=0;feedbackCoins=feedbackMissed=feedbackStolen=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
@@ -144,7 +144,7 @@ namespace Sunflower
             if(!CanUseGameplayInput())return;
             var v=model.At(model.direction);
             if(v!=null&&v.state==VisitState.Order){Dialogue(v);return;}
-            bool delivered=v!=null&&v.state==VisitState.Waiting&&model.hand!=null&&model.hand.owner==v.id;
+            bool delivered=v!=null&&v.state==VisitState.Waiting&&!v.MimiWarning&&model.hand!=null&&model.hand.owner==v.id;
             bool lime=model.hand!=null&&model.hand.drink=="青柠苏打";
             model.Interact();
             if(delivered)
@@ -184,7 +184,7 @@ namespace Sunflower
                 labels[i].color=new Color(.25f,.12f,.05f);
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
-                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
+                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.MimiWarning?"伸手中！互动打断 "+Mathf.CeilToInt((model.Assisted?4:2)-v.mimiWarningTime)+"s":v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
                 bool payment=v.state==VisitState.Payment;
                 bool waiting=v.state==VisitState.Order||v.state==VisitState.Waiting;
                 bool urgent=payment?v.timer<=3:waiting&&v.patience<=7.5f;
@@ -199,16 +199,18 @@ namespace Sunflower
         void RefreshServiceFeedback()
         {
             if(!model.paused&&!model.ended&&!focusPaused)feedbackTime=Mathf.Max(0,feedbackTime-Time.deltaTime);
-            int earned=model.coins-feedbackCoins;
+            int stolen=model.stolenCoins-feedbackStolen;
+            int earned=model.coins-feedbackCoins+stolen;
             int lost=model.missed-feedbackMissed;
-            if(earned>0||lost>0)
+            if(earned>0||lost>0||stolen>0)
             {
                 serviceFeedback=earned>0?"收款 +"+earned+" 金币":"";
                 if(earned>0&&model.combo>=2)serviceFeedback+=" · 连续服务 "+model.combo+" 单";
                 if(lost>0)serviceFeedback+=(earned>0?"  |  ":"")+"漏单 "+lost+" 位，下一单继续！";
+                if(stolen>0)serviceFeedback+=(serviceFeedback.Length>0?"  |  ":"")+"被偷 -"+stolen+" 金币";
                 feedbackTime=2.4f;
             }
-            feedbackCoins=model.coins;feedbackMissed=model.missed;
+            feedbackCoins=model.coins;feedbackMissed=model.missed;feedbackStolen=model.stolenCoins;
             // Receipt survives incidental arrival/brew messages without changing the model.
             status.text=feedbackTime>0?serviceFeedback:model.message;
         }
@@ -289,7 +291,7 @@ namespace Sunflower
             if(model.direction==0){actionLabel.text=model.hand!=null?"先送饮品":model.ready!=null?"取杯":"制作中";actionable=model.hand==null&&model.ready!=null;if(model.hand==null&&model.ready==null&&model.queue.Count==0)actionLabel.text="先接单";}
             else if(v==null){actionLabel.text="暂无客人";actionable=false;}
             else if(v.state==VisitState.Order)actionLabel.text=v.NeedsTankAttention?"提醒Tank":"接单";
-            else if(v.state==VisitState.Waiting)actionLabel.text=model.hand!=null?"送达":"问订单";
+            else if(v.state==VisitState.Waiting)actionLabel.text=v.MimiWarning?"打断偷钱":model.hand!=null?"送达":"问订单";
             else if(v.state==VisitState.Payment)actionLabel.text="收钱";
             else{actionLabel.text="饮用中";actionable=false;}
             actionButton.interactable=CanUseGameplayInput()&&actionable;
