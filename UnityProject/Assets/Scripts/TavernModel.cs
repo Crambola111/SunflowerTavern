@@ -27,8 +27,9 @@ namespace Sunflower
         public static readonly GuestDefinition[] Guests=DayConfiguration.CreateFirstDayGuests();
         public readonly DayConfiguration Day;
         readonly bool[] spawned;
-        public TavernModel(DayConfiguration day=null)
-        {Day=day??DayConfiguration.FirstDay();spawned=new bool[Day.Arrivals.Count];}
+        public readonly bool Assisted;
+        public TavernModel(DayConfiguration day=null,bool assisted=false)
+        {Day=day??DayConfiguration.FirstDay();Assisted=assisted;spawned=new bool[Day.Arrivals.Count];}
         public readonly List<Visit> visitors=new List<Visit>();
         public readonly List<Cup> queue=new List<Cup>();
         public readonly HashSet<string> codex=new HashSet<string>();
@@ -124,8 +125,8 @@ namespace Sunflower
             }
             foreach(var v in visitors.ToArray()) {
                 v.bubble=Math.Max(0,v.bubble-dt);
-                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1);if(v.patience<=0)Miss(v);}
-                else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=v.guest.id=="bobo"?6:12;}else Miss(v);}}
+                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);}
+                else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=(v.guest.id=="bobo"?6:12)*(Assisted?1.5f:1);}else Miss(v);}}
             }
             if(ready==null&&queue.Count>0){queue[0].remaining-=dt*brewSpeed;if(queue[0].remaining<=0){ready=queue[0];queue.RemoveAt(0);message="饮品做好了，去出酒口取杯。";}}
             if(elapsed>=Day.Duration){ended=true;message=Passed?"首日目标达成！":"今天差一点，重开再试一次。";}

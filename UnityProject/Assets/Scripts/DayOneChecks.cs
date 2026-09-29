@@ -23,6 +23,23 @@ namespace Sunflower
             rejected=false;
             try{new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(2,0,1),new ArrivalDefinition(1,0,2)});}catch(ArgumentException){rejected=true;}
             Require(rejected,"Out-of-order arrivals must be rejected");
+            var normal=new TavernModel{started=true};
+            var gentle=new TavernModel(assisted:true){started=true};
+            normal.Update(8.1f);gentle.Update(8.1f);
+            float np=normal.visitors[0].patience,gp=gentle.visitors[0].patience;
+            normal.Update(1);gentle.Update(1);
+            Require(Math.Abs((np-normal.visitors[0].patience)*.75f-(gp-gentle.visitors[0].patience))<.001f,"Assistance patience rate incorrect");
+            Require(normal.Day.TargetCoins==gentle.Day.TargetCoins&&normal.Day.Duration==gentle.Day.Duration,"Assistance changed target or duration");
+            normal.visitors[0].state=gentle.visitors[0].state=VisitState.Drinking;
+            normal.visitors[0].timer=gentle.visitors[0].timer=.01f;
+            normal.Update(.02f);gentle.Update(.02f);
+            Require(normal.visitors[0].timer==6&&gentle.visitors[0].timer==9,"Assistance payment window incorrect");
+            gentle.paused=true;float frozen=gentle.visitors[0].timer;gentle.Update(5);
+            Require(gentle.visitors[0].timer==frozen,"Assisted pause changed payment timer");
+            gentle.ended=true;gentle.coins=12;
+            Require(gentle.TryClaimSettlement(out int assistedIncome)&&assistedIncome==12&&!gentle.TryClaimSettlement(out assistedIncome),"Assisted payout duplicated");
+            var retry=new TavernModel(custom.Day,assisted:true){started=true};
+            Require(retry.Day==custom.Day&&retry.Assisted&&retry.elapsed==0&&retry.coins==0&&retry.visitors.Count==0&&retry.queue.Count==0&&retry.hand==null&&retry.ready==null,"Retry retained transient state or lost configuration");
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");

@@ -48,6 +48,7 @@ namespace Sunflower
         readonly int[] prices={30,45,60};
         ProgressStore progress;
         bool focusPaused;
+        bool assisted;
         int wallet=>progress.Wallet;
         int inputBlockedFrame=-1;
         float arrivalTime;
@@ -124,7 +125,7 @@ namespace Sunflower
         }
         bool Owned(int n)=>progress.Owns(n);
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel{started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in model.Day.Guests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;serveTime=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel(model==null?null:model.Day,assisted){started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in model.Day.Guests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;serveTime=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
@@ -153,7 +154,7 @@ namespace Sunflower
             arrivalCard.SetActive(arrivalTime>0);
             foreach(var id in model.codex)progress.Unlock(id);
             if(model.TryClaimSettlement(out int income)){progress.AddSettlement(income,model.tipRemainder);Settlement();}
-            hud.text="南风岛 · 第1天       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
+            hud.text="南风岛 · 第1天 · "+(model.Assisted?"辅助":"标准")+"       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
             RefreshServiceFeedback();
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
             else queue.text=model.ready!=null?"已做好："+model.ready.drink+" · 面向出酒口取杯":model.queue.Count>0?"制作："+model.queue[0].drink+"  "+model.queue[0].remaining.ToString("0.0")+"s  | 排队 "+model.queue.Count:"点击客位转向，再次点击互动";
@@ -277,7 +278,18 @@ namespace Sunflower
             else{actionLabel.text="饮用中";actionable=false;}
             actionButton.interactable=CanUseGameplayInput()&&actionable;
         }
-        void Welcome(){Open("南风岛 · 准备营业");Label(modal.transform,new Vector2(800,470),new Vector2(760,180),model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n点击转向，再次点击互动；也可用方向键和空格",26);MakeButton(modal.transform,new Vector2(800,310),new Vector2(300,70),"开始营业",Close);}
+        void RestartDay(bool useAssistance)
+        {
+            // Reuse this day's configuration; reset only the transient simulation.
+            assisted=useAssistance;ResetDay();Welcome();
+        }
+        void Welcome()
+        {
+            Open("南风岛 · 准备营业 · "+(model.Assisted?"辅助模式":"标准模式"));
+            Label(modal.transform,new Vector2(800,490),new Vector2(850,180),model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n"+(model.Assisted?"辅助：耐心消耗降低25%，收款等待延长50%":"标准：原始耐心与收款时间"),25);
+            MakeButton(modal.transform,new Vector2(620,310),new Vector2(290,65),"开始营业",Close);
+            MakeButton(modal.transform,new Vector2(970,310),new Vector2(290,65),model.Assisted?"切换标准模式":"切换辅助模式",()=>RestartDay(!model.Assisted));
+        }
         void Pause(){if(model.ended){Settlement();return;}Open("休息一下");MakeButton(modal.transform,new Vector2(800,470),new Vector2(300,70),"继续营业",Close);MakeButton(modal.transform,new Vector2(800,360),new Vector2(300,65),tutorialEnabled?"关闭教学提示":"重新开启教学",()=>{tutorialEnabled=!tutorialEnabled;tutorialBaseline=model.served;tutorialCompleteTime=0;Close();});}
         void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n来一杯"+v.guest.drink+"！",25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
         void Codex(int selected)
@@ -289,7 +301,19 @@ namespace Sunflower
             Label(modal.transform,new Vector2(1060,670),new Vector2(440,60),unlocked?g.name:"未知客人",25);
             Label(modal.transform,new Vector2(1060,295),new Vector2(420,165),unlocked?g.bio+"\n喜欢："+g.drink:"完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23);
         }
-        void Settlement(){Open(model.Passed?"今日打烊 · 目标达成":"今日打烊 · 明天再试");Label(modal.transform,new Vector2(800,490),new Vector2(720,170),"营业收入  "+model.coins+"\n服务客人  "+model.served+"     图鉴  "+model.codex.Count+" / 9\n金币已入账 · 钱包 "+wallet,29);MakeButton(modal.transform,new Vector2(620,310),new Vector2(280,65),"装饰酒馆",Shop);MakeButton(modal.transform,new Vector2(960,310),new Vector2(280,65),"重玩第1天",ResetDay);}
+        void Settlement()
+        {
+            Open(model.Passed?"今日打烊 · 目标达成":"今日打烊 · 再试一次");
+            int shortfall=Math.Max(0,model.Day.TargetCoins-model.coins);
+            Label(modal.transform,new Vector2(800,490),new Vector2(850,210),
+                (model.Assisted?"辅助模式":"标准模式")+" · 营业收入 "+model.coins+" / "+model.Day.TargetCoins+
+                "\n服务 "+model.served+" 位 · 漏单 "+model.missed+" 次 · 最佳连击 "+model.bestCombo+
+                "\n"+(model.Passed?"目标达成，可重玩练习":"还差 "+shortfall+" 金币；重试保留钱包、装饰和图鉴")+
+                "\n金币已入账 · 钱包 "+wallet,24);
+            MakeButton(modal.transform,new Vector2(470,310),new Vector2(260,65),"装饰酒馆",Shop);
+            MakeButton(modal.transform,new Vector2(800,310),new Vector2(300,65),model.Passed?"同模式重玩当天":"同模式重试当天",()=>RestartDay(model.Assisted));
+            MakeButton(modal.transform,new Vector2(1130,310),new Vector2(290,65),model.Assisted?"标准模式重试":"辅助模式重试",()=>RestartDay(!model.Assisted));
+        }
         void Shop()
         {
             Open("装饰酒馆 · 钱包 "+wallet);bool allowed=model.elapsed==0||model.ended;
