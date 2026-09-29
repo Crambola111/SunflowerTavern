@@ -392,5 +392,35 @@
     "mode": "RGBA",
     "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
     "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Nordic/Drink_LingonberryTea_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "984176423b97bd64e7d226062db7034ea6d632124c886d3b36de8e065f572bf4",
+    "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Nordic/Drink_CinnamonCocoa_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "6a7423b38b5297d3e443c5d5c4266b690f27cf46103fd1f95da9bd8c5561a6d4",
+    "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Nordic/Drink_AuroraSoda_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "449e4c5eeff34aaab65b42dd8b352ced40dabf600566ba5fac046e089eebd955",
+    "status": "design_approved_pending_256_export_and_unity"
   }
 ]
