@@ -20,6 +20,9 @@ namespace Sunflower
         public string OrderText=>guest.drink+(guest.cups>1?" · 已送 "+deliveredCups+"/"+guest.cups+" 杯":"");
         public GuestDefinition guest;
         public VisitState state;
+        public float heatRemaining, heatLimit;
+        public bool NeedsCooling=>guest.id=="snowy"&&(state==VisitState.Order||state==VisitState.Waiting);
+        public bool HeatWarning=>NeedsCooling&&heatRemaining<=5;
         public bool mimiAttempted;
         public float mimiAway, mimiWarningTime;
         public bool MimiWarning=>guest.id=="mimi"&&state==VisitState.Waiting&&!mimiAttempted&&mimiAway>=3;
@@ -68,6 +71,12 @@ namespace Sunflower
             if(ended)return "今日营业结束。";
             var thief=visitors.Find(v=>v.MimiWarning);
             if(thief!=null){target=thief.seat;return "Mimi 伸手了！去 P"+target+" 互动打断，手中的饮品会保留。";}
+            var hot=visitors.Find(v=>v.HeatWarning);
+            if(hot!=null&&hand==null)
+            {
+                if(hot.state==VisitState.Order){target=hot.seat;return "Snowy快热化了！去 P"+target+" 接单。";}
+                if(ready!=null&&ready.owner==hot.id){target=0;return "快给Snowy降温：去出酒口取杯，再送到 P"+hot.seat+"。";}
+            }
             if(hand!=null){var owner=visitors.Find(v=>v.id==hand.owner);if(owner!=null){target=owner.seat;return "③ 送达：去 P"+target+"，再互动把饮品交给客人。";}}
             var payment=visitors.Where(v=>v.state==VisitState.Payment).OrderBy(v=>v.timer).FirstOrDefault();
             if(payment!=null){target=payment.seat;return "④ 收钱：去 P"+target+" 互动，金币才会入账！";}
@@ -113,7 +122,7 @@ namespace Sunflower
                     hand=null;v.deliveredCups++;
                     if(v.deliveredCups<v.guest.cups){v.bubble=2.5f;message="已送 "+v.deliveredCups+"/"+v.guest.cups+" 杯，再去取剩下的饮品。";break;}
                     v.tip=v.patience>=17.5f?3:v.patience>=7.5f?1:0;v.state=VisitState.Drinking;v.timer=2;
-                    message="送达！喝完之后记得收钱。";break;
+                    message=v.guest.id=="snowy"?"Snowy：终于从雪水切回雪人模式了。喝完记得收钱！":"送达！喝完之后记得收钱。";break;
                 case VisitState.Payment:
                     combo++;bestCombo=Math.Max(combo,bestCombo);int gain=v.guest.price+v.tip+Math.Min(5,Math.Max(0,combo-2));
                     tipRemainder+=v.tip*Math.Max(0,tipMultiplier-1);
@@ -175,11 +184,17 @@ namespace Sunflower
                 int seat=0;for(int n=0;n<7;n++){int s=(arrival.seat-1+n)%7+1;if(At(s)==null&&!Blocked(s)){seat=s;break;}}
                 if(seat==0)continue;
                 var v=new Visit{id=i,seat=seat,guest=Day.Guests[arrival.guestIndex],state=VisitState.Order,patience=25*patienceMultiplier};
+                if(v.guest.id=="snowy"){v.heatLimit=Assisted?18:12;v.heatRemaining=v.heatLimit;}
                 if(v.guest.id=="coco"){int b=seat%7+1;if(At(b)==null&&!Blocked(b))v.blocked=b;}
                 visitors.Add(v);spawned[i]=true;message=v.guest.name+" 入座了！";
             }
             foreach(var v in visitors.ToArray()) {
                 v.bubble=Math.Max(0,v.bubble-dt);
+                if(v.NeedsCooling)
+                {
+                    v.heatRemaining=Math.Max(0,v.heatRemaining-dt);
+                    if(v.heatRemaining<=0){Miss(v);message="Snowy：先撤了，再坐下去就得用杯子装我了。";continue;}
+                }
                 if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);else {UpdateGecko(v,dt);UpdateMimi(v,dt);}}
                 else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=(v.guest.id=="bobo"?6:12)*(Assisted?1.5f:1);}else Miss(v);}}
             }

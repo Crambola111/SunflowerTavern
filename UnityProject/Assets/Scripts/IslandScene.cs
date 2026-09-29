@@ -185,13 +185,15 @@ namespace Sunflower
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
                 labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.MimiWarning?"伸手中！互动打断 "+Mathf.CeilToInt((model.Assisted?4:2)-v.mimiWarningTime)+"s":v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.OrderText):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
+                if(v.NeedsCooling)labels[i].text+=" · 降温 "+Mathf.CeilToInt(v.heatRemaining)+"s";
                 bool payment=v.state==VisitState.Payment;
                 bool waiting=v.state==VisitState.Order||v.state==VisitState.Waiting;
-                bool urgent=payment?v.timer<=3:waiting&&v.patience<=7.5f;
+                bool urgent=payment?v.timer<=3:waiting&&(v.patience<=7.5f||v.HeatWarning);
                 if(urgent){labels[i].color=new Color(.65f,.12f,.07f);int line=labels[i].text.IndexOf('\n');labels[i].text="P"+i+" · 快走了"+labels[i].text.Substring(line);}
                 // Payment uses its own timer; patience no longer counts down after delivery.
                 float remaining=payment?v.timer:v.patience;
                 float maximum=payment?(v.guest.id=="bobo"?6:12):25*model.patienceMultiplier;
+                if(v.NeedsCooling&&v.heatRemaining/Mathf.Max(.01f,v.heatLimit)<remaining/maximum){remaining=v.heatRemaining;maximum=v.heatLimit;}
                 bars[i].color=urgent?new Color(.85f,.2f,.12f):payment?new Color(.95f,.65f,.1f):new Color(.35f,.72f,.29f);
                 var r=bars[i].rectTransform;r.pivot=new Vector2(0,.5f);r.anchoredPosition=new Vector2(0,3.5f);r.sizeDelta=new Vector2(145*Mathf.Clamp01(remaining/maximum),7);
             }
@@ -326,7 +328,7 @@ namespace Sunflower
             MakeButton(modal.transform,new Vector2(970,310),new Vector2(290,65),model.Assisted?"切换标准模式":"切换辅助模式",()=>RestartDay(!model.Assisted));
         }
         void Pause(){if(model.ended){Settlement();return;}Open("休息一下");MakeButton(modal.transform,new Vector2(800,470),new Vector2(300,70),"继续营业",Close);MakeButton(modal.transform,new Vector2(800,360),new Vector2(300,65),tutorialEnabled?"关闭教学提示":"重新开启教学",()=>{tutorialEnabled=!tutorialEnabled;tutorialBaseline=model.served;tutorialCompleteTime=0;Close();});}
-        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(675,485),55),v.NeedsTankAttention?null:v.guest.drink);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来"+v.guest.cups+"杯"+v.guest.drink+"！"),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
+        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(675,485),55),v.NeedsTankAttention?null:v.guest.drink);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来"+v.guest.cups+"杯"+v.guest.drink+"！"+(v.NeedsCooling?"\n请在剩余 "+Mathf.CeilToInt(v.heatRemaining)+" 秒内送到，快热化了！":"")),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
         void Codex(int selected)
         {
             Open("客人图鉴",true);

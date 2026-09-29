@@ -11,6 +11,47 @@ namespace Sunflower
             var model=new TavernModel{started=true};model.Update(8.1f);
             Require(model.visitors.Count==1,"First visitor did not arrive");return model;
         }
+        static TavernModel SnowyVisit(bool assisted=false)
+        {
+            var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateSnowy()},new[]{new ArrivalDefinition(1,0,3)});
+            var model=new TavernModel(day,assisted){started=true};model.Update(1.1f);return model;
+        }
+        static void CheckSnowy()
+        {
+            foreach(bool assisted in new[]{false,true})
+            {
+                var model=SnowyVisit(assisted);var guest=model.At(3);
+                Require(guest.NeedsCooling&&guest.heatLimit==(assisted?18:12),"Snowy heat budget incorrect");
+                float heat=guest.heatRemaining;model.direction=3;model.Update(1);
+                Require(Math.Abs(heat-guest.heatRemaining-1)<.01f,"Facing Snowy extended heat budget");
+                heat=guest.heatRemaining;model.paused=true;model.Interact();model.Update(20);
+                Require(guest.heatRemaining==heat&&guest.state==VisitState.Order&&model.queue.Count==0,"Paused Snowy advanced");model.paused=false;
+                model.Interact();Require(guest.heatRemaining==heat,"Accepting Snowy reset heat");
+                model.Update(3.1f);model.direction=0;model.Interact();model.direction=3;model.Interact();
+                heat=guest.heatRemaining;Require(!guest.NeedsCooling&&guest.state==VisitState.Drinking&&!model.codex.Contains("snowy"),"Cooling settled early");
+                model.Update(2.1f);Require(guest.heatRemaining==heat&&guest.state==VisitState.Payment,"Heat continued after delivery");
+                model.Interact();int coins=model.coins;model.Interact();
+                Require(model.served==1&&coins==13&&model.coins==coins&&model.codex.Contains("snowy"),"Snowy settlement/codex invalid");
+            }
+            foreach(int phase in new[]{0,1,2,3})
+            {
+                var model=SnowyVisit();var guest=model.At(3);model.coins=8;model.combo=2;model.direction=3;
+                if(phase>0){model.Interact();if(phase==1)model.brewSpeed=.01f;}
+                if(phase>=2)model.Update(3.1f);
+                if(phase==3){model.direction=0;model.Interact();}
+                guest.heatRemaining=.01f;model.Update(.1f);model.Interact();
+                Require(model.visitors.Count==0&&model.queue.Count==0&&model.ready==null&&model.hand==null&&model.coins==8&&model.missed==1&&model.combo==0&&!model.codex.Contains("snowy"),"Snowy expiry left order or changed earnings");
+            }
+            var normal=SnowyVisit();normal.direction=3;normal.Update(12);
+            var assist=SnowyVisit(true);assist.direction=3;assist.Update(12);
+            Require(normal.missed==1&&assist.visitors.Count==1,"Assist heat window not longer");assist.Update(6);Require(assist.missed==1,"Assist Snowy never left");
+            var warning=SnowyVisit();warning.Update(7.2f);int target;
+            Require(warning.At(3).HeatWarning&&warning.ServiceHint(out target).Contains("Snowy")&&target==3,"Heat warning/guide missing");
+            var ended=SnowyVisit();float frozen=ended.At(3).heatRemaining;ended.ended=true;ended.Update(30);
+            Require(ended.At(3).heatRemaining==frozen,"Heat advanced after end");
+            var wrong=SnowyVisit();wrong.direction=3;wrong.Interact();wrong.hand=new Cup{owner=99,drink="芒果冰沙"};float before=wrong.At(3).heatRemaining;wrong.Interact();
+            Require(wrong.At(3).NeedsCooling&&wrong.At(3).heatRemaining==before&&wrong.hand!=null,"Wrong cup cooled Snowy");
+        }
         static TavernModel SpfOrder()
         {
             var model=new TavernModel(new DayConfiguration(60,10,new[]{DayConfiguration.CreateSpf8()},new[]{new ArrivalDefinition(1,0,3)})){started=true};
@@ -221,6 +262,7 @@ namespace Sunflower
             CheckGecko();
             CheckMimi();
             CheckSpf8();
+            CheckSnowy();
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");
