@@ -49,4 +49,4 @@ godot --headless --path GodotProject --script res://scripts/import_unity_save.gd
 
 背景、桌前遮挡、按钮、对话框、图鉴书本、小葵现有静态/动作、5款饮品图标已迁移。Bobo/Coco/Horn/Tank/Gecko立绘用于对话和图鉴。
 
-Bobo/Coco的已确认Seated_v1静态座位图已接入CHIBIS；其余七位客人的座位图待归档，暂用名字和状态按钮保持可玩，不拿精细立绘冒充Q版。无需客人行走、多方向或饮用序列帧。缺图见 `../docs/Development/CODEX_ART_REQUEST.md`。
+Bobo/Coco/Horn/Mimi的已确认Seated_v1静态座位图已接入CHIBIS；其余五位客人的座位图待归档，暂用名字和状态按钮保持可玩，不拿精细立绘冒充Q版。无需客人行走、多方向或饮用序列帧。缺图见 `../docs/Development/CODEX_ART_REQUEST.md`。
