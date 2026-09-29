@@ -303,3 +303,11 @@ Tank/Gecko尚未接入立绘，暂用名字、订单和耐心条反馈；无新�
 
 
 
+
+
+## 2026-09-29 海面/烛光需求与座位素材第四批
+
+- 用户确认环境海面和烛光需要动态；详见 docs/Development/SCENE_AMBIENT_REQUIREMENTS.md（在 Development 内可直接打开同名文件）。当前仅需求同步，尚未在 Godot 实现或验收。
+- SPF8 / Snowy 座位Q版已生成透明PNG候选，待用户确认，未上传 Approved；Tank / Gecko 座位Q版仍待确认。已确认并同步的 Bobo / Coco / Horn / Mimi 不重复制作。
+- 下一步：完成 Jiwoo 座位图；针对实际运行背景制作水域遮罩、火苗/光晕和灯位清单，之后接入环境动效。图鉴独立全身图及 Coco 行李标记仍有缺口。
+
