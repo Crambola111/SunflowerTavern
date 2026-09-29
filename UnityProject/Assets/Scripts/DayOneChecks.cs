@@ -52,9 +52,31 @@ namespace Sunflower
             var expiry=GeckoOrder();var expiring=expiry.At(7);expiring.geckoWait=4.99f;expiring.patience=.001f;expiry.Update(.05f);
             Require(expiry.visitors.Count==0&&!expiring.geckoMoveAttempted,"Expired Gecko moved before removal");
         }
+        static void CheckSecondDay()
+        {
+            foreach(bool assisted in new[]{false,true})
+            {
+                var day=new TavernModel(DayConfiguration.ForDay(2),assisted){started=true};
+                for(int step=0;step<2500&&!day.ended;step++)
+                {
+                    foreach(var visitor in day.visitors.ToArray())
+                    {day.direction=visitor.seat;if(visitor.state==VisitState.Order||visitor.state==VisitState.Payment)day.Interact();}
+                    if(day.ready!=null&&day.hand==null){day.direction=0;day.Interact();}
+                    if(day.hand!=null){var owner=day.visitors.Find(v=>v.id==day.hand.owner);Require(owner!=null,"Day2 orphan cup");day.direction=owner.seat;day.Interact();}
+                    day.Update(.05f);
+                }
+                Require(day.ended&&day.Passed&&day.served==7&&day.missed==0&&day.coins==124&&day.codex.Count==5,"Perfect Day2 expected 7 guests / 124 coins / 5 codex, got "+day.served+" / "+day.coins);
+                Require(day.TryClaimSettlement(out int income)&&income==124&&!day.TryClaimSettlement(out income),"Day2 duplicate settlement");
+                var retry=new TavernModel(DayConfiguration.ForDay(2),assisted);
+                Require(retry.Day.TargetCoins==90&&retry.Day.Arrivals.Count==7&&retry.elapsed==0&&retry.coins==0&&retry.Assisted==assisted,"Day2 retry lost configuration");
+            }
+            bool refused=false;try{DayConfiguration.ForDay(3);}catch(ArgumentOutOfRangeException){refused=true;}
+            Require(refused&&!DayConfiguration.IsPlayable(0)&&!DayConfiguration.IsPlayable(3),"Unimplemented day exposed");
+        }
         public static string Run()
         {
             ProgressChecks.Run();
+            CheckSecondDay();
             var custom=new TavernModel(new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(1,1,7)})){started=true};
             custom.Update(1.1f);Require(custom.visitors.Count==1&&custom.At(7).guest.id=="coco","Configured guest/seat not used");
             custom.coins=5;custom.Update(9);Require(custom.ended&&custom.elapsed==10&&custom.Passed,"Configured duration/target not used");

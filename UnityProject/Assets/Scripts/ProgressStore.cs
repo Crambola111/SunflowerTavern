@@ -56,6 +56,7 @@ namespace Sunflower
         }
 
         public bool IsUnlocked(int day)=>day>=1&&day<=MapDays&&(day==1||IsCleared(day-1));
+        public bool CanEnterDay(int day)=>DayConfiguration.IsPlayable(day)&&IsUnlocked(day);
         public bool IsCleared(int day)=>day>=1&&day<=MapDays&&(cleared[day-1,0]||cleared[day-1,1]);
         public bool IsCleared(int day,bool assisted)=>day>=1&&day<=MapDays&&cleared[day-1,assisted?1:0];
         public int BestIncome(int day,bool assisted)=>day>=1&&day<=MapDays?bestIncome[day-1,assisted?1:0]:0;

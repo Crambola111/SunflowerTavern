@@ -55,6 +55,23 @@ namespace Sunflower
             new GuestDefinition("coco","Coco · 寄居蟹","椰子水",14,5,2,"旅行只带一点行李：自己的房子和房子的备用房子。"),
             new GuestDefinition("horn","Horn · 犀鸟导游","青柠苏打",12,4,4,"讲景点能讲三小时，点单却只说两秒半：职业之外，节约用嗓。")
         };
+        public static GuestDefinition[] CreateAvailableGuests()
+        {
+            var first=CreateFirstDayGuests();
+            return new[]{first[0],first[1],first[2],CreateTank(),CreateGecko()};
+        }
+        public static bool IsPlayable(int day)=>day==1||day==2;
+        public static DayConfiguration ForDay(int day)
+        {
+            if(day==1)return FirstDay();
+            if(day==2)return SecondDay();
+            throw new ArgumentOutOfRangeException(nameof(day),"This day is not implemented yet.");
+        }
+        public static DayConfiguration SecondDay()=>new DayConfiguration(120,90,CreateAvailableGuests(),new[]{
+            new ArrivalDefinition(8,3,2),new ArrivalDefinition(24,4,7),new ArrivalDefinition(40,0,5),
+            new ArrivalDefinition(48,1,3),new ArrivalDefinition(66,2,6),new ArrivalDefinition(84,3,1),
+            new ArrivalDefinition(98,4,4)
+        });
         public static DayConfiguration FirstDay()=>new DayConfiguration(120,70,CreateFirstDayGuests(),new[]{
             new ArrivalDefinition(8,0,2),new ArrivalDefinition(25,2,5),new ArrivalDefinition(48,1,3),
             new ArrivalDefinition(75,0,6),new ArrivalDefinition(96,2,1)

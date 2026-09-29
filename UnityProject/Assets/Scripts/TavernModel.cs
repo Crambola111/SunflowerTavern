@@ -158,7 +158,7 @@ namespace Sunflower
                 else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=(v.guest.id=="bobo"?6:12)*(Assisted?1.5f:1);}else Miss(v);}}
             }
             if(ready==null&&queue.Count>0){queue[0].remaining-=dt*brewSpeed;if(queue[0].remaining<=0){ready=queue[0];queue.RemoveAt(0);message="饮品做好了，去出酒口取杯。";}}
-            if(elapsed>=Day.Duration){ended=true;message=Passed?"首日目标达成！":"今天差一点，重开再试一次。";}
+            if(elapsed>=Day.Duration){ended=true;message=Passed?"今日目标达成！":"今天差一点，重开再试一次。";}
         }
     }
 }
