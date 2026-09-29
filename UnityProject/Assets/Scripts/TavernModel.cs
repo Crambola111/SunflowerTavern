@@ -53,6 +53,21 @@ namespace Sunflower
         public bool Passed => ended && coins>=70;
         public Visit At(int seat) => visitors.Find(v=>v.seat==seat);
         public bool Blocked(int seat) => visitors.Any(v=>v.blocked==seat && seat!=0);
+        // Read-only guidance: derive the next useful action from actual order ownership.
+        public string ServiceHint(out int target)
+        {
+            target=-1;
+            if(ended)return "今日营业结束。";
+            if(hand!=null){var owner=visitors.Find(v=>v.id==hand.owner);if(owner!=null){target=owner.seat;return "③ 送达：去 P"+target+"，再互动把饮品交给客人。";}}
+            var payment=visitors.Where(v=>v.state==VisitState.Payment).OrderBy(v=>v.timer).FirstOrDefault();
+            if(payment!=null){target=payment.seat;return "④ 收钱：去 P"+target+" 互动，金币才会入账！";}
+            if(ready!=null){target=0;return "② 取杯：饮品做好了，去下方出酒口互动。";}
+            if(queue.Count>0)return "② 制作中：饮品会自动做好，留意下方出酒口。";
+            var order=visitors.Where(v=>v.state==VisitState.Order).OrderBy(v=>v.patience).FirstOrDefault();
+            if(order!=null){target=order.seat;return "① 接单：点击 P"+target+" 转向，再次点击与客人交谈。";}
+            if(visitors.Any(v=>v.state==VisitState.Drinking))return "④ 等客人喝完，再互动收钱；上酒后还没入账。";
+            return "客人正在路上。点击客位可转向，绿色客位是教学目标。";
+        }
         public void Turn(int delta) { if(started&&!paused&&!ended) direction=(direction+delta+8)%8; }
         public void Interact()
         {
@@ -75,7 +90,7 @@ namespace Sunflower
                     if(hand.owner!=v.id){
                         v.patience=Math.Max(0,v.patience-2);v.bubble=2.5f;
                         if(v.patience<=0)Miss(v);
-                        else message="不是这位客人的杯子，耐心 -2 秒。";
+                        else {var owner=visitors.Find(g=>g.id==hand.owner);message="送错了，耐心 -2 秒。"+(owner==null?"":"这杯请送到 P"+owner.seat+"。");}
                         break;
                     }
                     hand=null;v.tip=v.patience>=17.5f?3:v.patience>=7.5f?1:0;v.state=VisitState.Drinking;v.timer=2;

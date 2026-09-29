@@ -13,6 +13,16 @@ namespace Sunflower
         }
         public static string Run()
         {
+            var guide=FirstGuest();int target;
+            guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
+            guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");
+            guide.Update(3.1f);guide.ServiceHint(out target);Require(target==0,"Ready cup must guide to outlet");
+            guide.direction=0;guide.Interact();guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Held cup must guide to its owner");
+            var guideCup=guide.hand;float guideTime=guide.elapsed;guide.ServiceHint(out target);
+            Require(guide.hand==guideCup&&guide.elapsed==guideTime,"Guidance mutated gameplay");
+            guide.direction=target;guide.Interact();guide.Update(2.1f);guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point to payment");
+            guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Guide retained departed target");
+            guide.ended=true;guide.ServiceHint(out target);Require(target==-1,"Ended day retained tutorial target");
             var m=new TavernModel{started=true};
             Require(!m.TryClaimSettlement(out int income)&&income==0,"Unfinished day allowed settlement");
             for(int i=0;i<2500&&!m.ended;i++)
