@@ -4,7 +4,7 @@
 
 - 运行目录：`GodotProject/assets/`；映射：`scripts/art_catalog.gd`。立绘放PORTRAITS，座位Q版放CHIBIS，饮品放DRINKS；不得用立绘顶替座位Q版。
 - 已接入Godot对话/图鉴：Bobo、Coco、Horn、Tank、Gecko五张立绘；背景、桌前遮挡、UI、小葵已有动作和五款饮品复用。
-- 已接入座位静态图：Bobo_Seated_v1、Coco_Seated_v1。其余7客座位图待归档后接入；其他会话已生成的先核对，不重复制作。缺图客位的名字/状态仍可操作。
+- 已接入座位静态图：Bobo_Seated_v1、Coco_Seated_v1、Horn_Seated_v1、Mimi_Seated_v1。其余5客座位图待归档后接入；其他会话已生成的先核对，不重复制作。缺图客位的名字/状态仍可操作。
 - 待归档独立立绘：Mimi、SPF8、Snowy、Jiwoo，已有确认稿直接归档。普通客人仅点单/订单回看用对话形象，图鉴详情可复用完整立绘；惊喜客表情按剧本补。
 - 不需要普通客人额外表情组、入场行走、多方向、喝饮品/收款/偷钱/融化等动作帧。小葵已做素材继续使用。
 - 三件装饰实物仍待原第13轮；本轮不追加美术制作任务。
