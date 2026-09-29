@@ -41,3 +41,9 @@
 UnityProject/Assets/Scripts/DayConfiguration.cs 的 FirstDay() 是当前首日参数入口。包括Duration、TargetCoins、Guests（名称/饮品/价格/制作时长/小传）、Arrivals（秒数/客人索引/座位）。new TavernModel(config) 可用于后续日程与逻辑检查，默认构造仍加载首日。当前为C#配置，尚无Inspector编辑器或JSON导入。
 
 UI的目标、倒计时、开场说明和已实现客人图鉴从当前配置读取；第1天名称及9人收集目标仍为第一地图固定内容。后续新客人特殊行为/美术映射仍需开发，不能仅加配置便宣称新关卡完成。版本化存档将在第6轮B处理。
+
+## 存档规则（第6轮B）
+
+保存钱包、三件已购装饰、已收集客人、首次教学完成状态和小费小数余额。启动时载入，购买/解锁/打烊结算时保存。进行中的营业不保存，重新启动从首日重新开局；金币仍只在打烊结算入钱包。
+
+旧PlayerPrefs首次迁移至sunflower.progress.v1.*，版本键sunflower.progress.version=1。旧键保留用于恢复，迁移后不再叠加读取旧钱包。负钱包和无效小费小数清零；未来版本存档拒绝写入并停用当前营业。PlayerPrefs本地持久化并非云存档，也不承诺断电下跨字段事务性。结算去重继续由TavernModel单局领取保护负责。
