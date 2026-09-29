@@ -153,7 +153,7 @@ namespace Sunflower
             if(!model.paused){arrivalTime-=Time.deltaTime;foreach(var v in model.visitors)if(arrivals.Add(v.id)){toast.text="客人入场 · "+v.guest.name;arrivalTime=3;}}
             arrivalCard.SetActive(arrivalTime>0);
             foreach(var id in model.codex)progress.Unlock(id);
-            if(model.TryClaimSettlement(out int income)){progress.AddSettlement(income,model.tipRemainder);Settlement();}
+            if(model.TryClaimSettlement(out int income)){progress.CompleteDay(1,income,model.Day.TargetCoins,model.tipRemainder,model.Assisted);Settlement();}
             hud.text="南风岛 · 第1天 · "+(model.Assisted?"辅助":"标准")+"       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
             RefreshServiceFeedback();
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
@@ -283,10 +283,12 @@ namespace Sunflower
             // Reuse this day's configuration; reset only the transient simulation.
             assisted=useAssistance;ResetDay();Welcome();
         }
+        string DayProgressText()=>"第1天："+(progress.IsCleared(1)?"已通关":"未通关")+
+            " · 最佳收入 标准 "+progress.BestIncome(1,false)+" / 辅助 "+progress.BestIncome(1,true);
         void Welcome()
         {
             Open("南风岛 · 准备营业 · "+(model.Assisted?"辅助模式":"标准模式"));
-            Label(modal.transform,new Vector2(800,490),new Vector2(850,180),model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n"+(model.Assisted?"辅助：耐心消耗降低25%，收款等待延长50%":"标准：原始耐心与收款时间"),25);
+            Label(modal.transform,new Vector2(800,490),new Vector2(900,230),DayProgressText()+"\n"+model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n"+(model.Assisted?"辅助：耐心消耗降低25%，收款等待延长50%":"标准：原始耐心与收款时间"),25);
             MakeButton(modal.transform,new Vector2(620,310),new Vector2(290,65),"开始营业",Close);
             MakeButton(modal.transform,new Vector2(970,310),new Vector2(290,65),model.Assisted?"切换标准模式":"切换辅助模式",()=>RestartDay(!model.Assisted));
         }
@@ -309,7 +311,7 @@ namespace Sunflower
                 (model.Assisted?"辅助模式":"标准模式")+" · 营业收入 "+model.coins+" / "+model.Day.TargetCoins+
                 "\n服务 "+model.served+" 位 · 漏单 "+model.missed+" 次 · 最佳连击 "+model.bestCombo+
                 "\n"+(model.Passed?"目标达成，可重玩练习":"还差 "+shortfall+" 金币；重试保留钱包、装饰和图鉴")+
-                "\n金币已入账 · 钱包 "+wallet,24);
+                "\n金币已入账 · 钱包 "+wallet+"\n"+DayProgressText(),22);
             MakeButton(modal.transform,new Vector2(470,310),new Vector2(260,65),"装饰酒馆",Shop);
             MakeButton(modal.transform,new Vector2(800,310),new Vector2(300,65),model.Passed?"同模式重玩当天":"同模式重试当天",()=>RestartDay(model.Assisted));
             MakeButton(modal.transform,new Vector2(1130,310),new Vector2(290,65),model.Assisted?"标准模式重试":"辅助模式重试",()=>RestartDay(!model.Assisted));
