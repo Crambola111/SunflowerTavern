@@ -1,8 +1,11 @@
 # 已确认美术目录
 
-## Godot迁移 M1
+## 2026-09-29 21:20 · 南风岛四张座位Q版确认
 
-当前运行素材目录GodotProject/assets，29张PNG按原字节复用。Godot引用路径和用途写入manifest；旧Unity路径暂存作迁移对照，不再追加功能。Bobo/Coco/Horn/Tank/Gecko仅作为对话/图鉴立绘；Bobo/Coco已接入静态座位图；其余CHIBIS待归档，禁止用精细立绘冒充Q版。原稿、已确认状态保持不变。
+用户确认 Bobo、Coco、Horn、Mimi 座位静态Q版，原稿按 Art/Approved/Guests/<ID>/<ID>_Seated_v1.png 归档，1254×1254 RGBA。所有营业状态共用一张，通过图标/计时/短提示区分；不新增动作帧。四张已检查透明通道与缩小显示，Godot运行接入、座位遮挡、比例和点击区域待开发验收。本轮未修改引擎运行文件。
+
+Bobo/Coco/Horn点单与图鉴复用既有精细立绘；Mimi独立图鉴立绘与点单适配待补。Coco背壳保留，独立行李占邻座道具待补。后续补Tank/Gecko、SPF8/Snowy、Jiwoo座位图；惊喜客人Jiwoo的表情按实际剧本补。此前站姿Q版保留为造型参考，不作为最新座位交付替代品。
+
 
 ## 2026-09-29 20:47 用户确认：立绘与场内Q版分离
 
@@ -101,4 +104,5 @@ D0 Carry及Serve_00/01/02已复制至UnityProject/Assets/Resources/IslandUI，�
 ## 第11轮B饮品补接
 
 冰美式Drink_IcedAmericano_v1、夜间无酒精特调Drink_NightMocktail_v1已按确认原稿原字节入UnityProject/Assets/Resources/IslandUI，附meta并登记manifest。代码复用订单/出酒口/手持/对话图标接口；Jiwoo正式来访仍待Day4编排。导入沿用Drink_最大256设置，Unity实际导入/透明边缘验收未运行。美术需求以docs/Development/CODEX_ART_REQUEST.md为准。
+
 
