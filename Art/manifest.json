@@ -160,5 +160,41 @@
     ],
     "mode": "RGBA",
     "sha256": "9fa68c2c9a26870eb333100a99d12ff784297e80d598124b1cffd7a052c0ec16"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_Idle_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "6c003eef3f9d774dbcc8cc79aada210affadaaed59639ce440e2cc6810999f70"
+  },
+  {
+    "path": "Art/Approved/Sunny/Default/Sunny_Default_Carry_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "d79fe79f717d5945b756bb818854e584edcc7bd6c3f8a2a0f62b9ab34b419795"
+  },
+  {
+    "path": "Art/Approved/Sunny/Default/Sunny_Default_Idle_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1622791e557c1d63f3c7a075d18b28474e87e40400af5768584b07ced1516d40"
+  },
+  {
+    "path": "Art/Approved/Sunny/Default/Sunny_Default_Serve_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "ef560af24afffbbbfd462e1ab8569f7c6d1559bbb5b8e3d416d422f74dfba105"
   }
 ]
