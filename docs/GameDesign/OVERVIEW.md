@@ -1,5 +1,7 @@
 # 游戏方案 · 当前方向
 
+> 2026-09-29引擎迁移：当前入口为GodotProject/project.godot，Godot 4.5.1标准版/GDScript。既有机制已迁移，前三天开放、Day4仍待开发。本文旧Unity路径和轮次为历史记录；当前配置在GodotProject/data，检查与边界见docs/Development/GODOT_MIGRATION.md。
+
 ## 定位
 
 有趣的休闲经营与客人收集游戏。老板小葵喜欢旅行；客人有短小、有梗的人物小传，不以复杂文学故事推动进度。
