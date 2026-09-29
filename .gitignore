@@ -8,3 +8,5 @@ UnityProject/[Bb]uild*/
 **/obj/
 *.zip
 .DS_Store
+GodotProject/.godot/
+GodotProject/export*/

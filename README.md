@@ -1,20 +1,19 @@
 # SunflowerTavern · 向日葵酒馆
 
-正式仓库：Crambola111/SunflowerTavern。
+当前主工程：**Godot 4.5.1 标准版 / GDScript / 原生2D UI**。用户已确认从Unity迁移，后续开发均在Godot进行。
 
-Unity 6000.0.62f1 / C# / uGUI。当前目标完成第一地图。
+导入 `GodotProject/project.godot`，按F5运行。无需Unity或.NET。详细说明见 [GodotProject/README.md](GodotProject/README.md)。
 
 | 路径 | 内容 |
 |---|---|
-| [UnityProject/](UnityProject/) | 工程、场景、C#代码、运行美术 |
-| [docs/GameDesign/](docs/GameDesign/) | 整体方案与首日机制 |
-| [docs/Characters/](docs/Characters/) | 小葵与客人设定、小传 |
-| [Art/](Art/) | 确认参考、用途清单与文件校验 |
-| [docs/Development/](docs/Development/) | 计划、进度、美术需求 |
-| [tools/](tools/) | 检查工具 |
+| [GodotProject/](GodotProject/) | 当前主工程、GDScript、场景、配置、运行美术与检查 |
+| [docs/GameDesign/OVERVIEW.md](docs/GameDesign/OVERVIEW.md) | 游戏方案与已确认交互范围 |
+| [docs/Characters/](docs/Characters/) | 按地图整理的人物设定 |
+| [Art/](Art/) | 确认原稿、用途、文件校验 |
+| [docs/Development/map-01-godot-plan.md](docs/Development/map-01-godot-plan.md) | 当前开发计划 |
+| [docs/Development/GODOT_MIGRATION.md](docs/Development/GODOT_MIGRATION.md) | 迁移对照、实际检查、待验收与限制 |
+| UnityProject/ | 历史对照与旧存档导出入口，暂停功能开发 |
 
-Unity Hub 打开 UnityProject，运行 Assets/Scenes/NanfengIsland.unity。操作细节见 UnityProject/README.md。
+当前可玩前三天；Day4与第一地图结尾尚未实现。迁移经过Godot无界面启动、86项逻辑和26项界面操作检查；图形窗口画面、实际试玩和桌面导出待验收。座位Q版缺图不使用精细立绘冒充。
 
-第1轮用户已验收；第2、3轮待引擎验收。本环境未运行 Unity 编译或桌面构建。
-
-后续每轮同步代码、受影响的方案/设定、美术目录、进度与变更日志。直接提交源文件，不堆放历史轮次ZIP。已确认不等于已接入，已接入不等于已通过运行验收。
+每轮同步源文件树、相关方案/设定、美术状态和开发日志；已确认不等于已接入，已接入不等于已通过视觉验收。
