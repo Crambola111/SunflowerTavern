@@ -322,5 +322,45 @@
     "sha256": "88bee00f933e5cff4dde19925e52d112d7ccb3ece8e6d884f23d0ed3df9e2b78",
     "status": "runtime_integrated_pending_unity",
     "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_02.png"
+  },
+  {
+    "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Carry.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "62c574731b5dbfe1039322f89ba7cae12b0c94df88f4c6743bd2ad1f92093548",
+    "status": "design_approved_pending_normalization_and_unity"
+  },
+  {
+    "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_00.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "46b822d782e6144097e223b687a4ce19465b2c848910c9551338ee302a1da7b0",
+    "status": "design_approved_pending_normalization_and_unity"
+  },
+  {
+    "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_01.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "7842b3c89a3373ff3fc55fcca5a048e880af8164520e9df88723cf57e60ad1d5",
+    "status": "design_approved_pending_normalization_and_unity"
+  },
+  {
+    "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_02.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
+    "status": "design_approved_pending_normalization_and_unity"
   }
 ]
