@@ -126,6 +126,39 @@ func run() -> void:
 	check(ui.modal == null and ui.model.served == 1 and ui.seats[2].text.is_empty() and not ui.bubbles[2].visible, "Collection bypasses dialogue and frees table")
 	ui.restart(false)
 	check(ui.model.bills.is_empty() and ui.model.visitors.is_empty(), "Restart clears transient table state")
+	ui.close_modal()
+	await process_frame
+	await process_frame
+	ui.model = Model.new({"duration":60,"target":10,"guests":["horn"],"arrivals":[{"time":1,"guest":"horn","seat":2}]})
+	ui.model.started = true
+	ui.model.update(1.1)
+	ui.model.direction = 2
+	ui.model.interact()
+	ui.model.at(2).bubble = 0
+	ui.model.hand = {"drink":"芒果冰沙"}
+	ui._process(0)
+	check(ui.review_order.visible and not ui.review_order.disabled, "Held cup exposes explicit order review")
+	var review_patience: float = ui.model.at(2).patience
+	var review_jobs: int = ui.model.queue.size()
+	ui.review_order.pressed.emit()
+	check(ui.modal != null and ui.model.paused and ui.model.hand.drink == "芒果冰沙", "Review pauses and preserves held cup")
+	ui._process(3)
+	check(ui.model.at(2).patience == review_patience and ui.model.queue.size() == review_jobs, "Review neither penalizes nor duplicates orders")
+	ui.close_modal()
+	await process_frame
+	await process_frame
+	ui._process(0)
+	check(ui.model.at(2).bubble > 0 and ui.icons[2].texture != null, "Explicit review restores Horn short-lived bubble")
+	ui.tutorial = false
+	ui._process(0)
+	check(not ui.tutorial_label.visible and not ui.tutorial_panel.visible, "Hidden tutorial also removes empty panel")
+	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_OUT)
+	var focus_time: float = ui.model.elapsed
+	ui._process(2)
+	check(ui.model.elapsed == focus_time and ui.model.paused, "Focus loss freezes gameplay with review controls present")
+	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_IN)
+	ui.close_modal()
+	ui.restart(false)
 	var ambient_path := "user://ambient_smoke_only.cfg"
 	ui.ambient.settings_path = ambient_path
 	ui.ambient.set_reduced_motion(false)

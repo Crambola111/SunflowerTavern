@@ -188,6 +188,7 @@ func _initialize() -> void:
 	check(m.visitors.any(func(v):return v.guest.id=="jiwoo" and v.guest.drink=="冰美式"),"Reservation survives six seconds, priority and scheduled variant")
 	check(m.visitors.filter(func(v):return v.guest.id=="jiwoo").size()==1,"No duplicate surprise guest")
 	check_bills()
+	check_service_guidance()
 	check_shared_cups()
 	check_progress()
 	print("Godot regression: %d checks, %d failures" % [checks,failures])
@@ -358,3 +359,36 @@ func check_bills() -> void:
 	m.at(3).seat = 7
 	m.update(5.1)
 	check(m.at(3).guest.id == "gecko" and m.bills.has(2), "Gecko skips visitor and unpaid bill when changing seats")
+
+func check_service_guidance() -> void:
+	var m := isolated("horn")
+	m.interact()
+	m.at(2).bubble = 0
+	m.hand = {"drink":m.at(2).guest.drink}
+	var hidden: Dictionary = m.service_hint()
+	check(hidden.target == -1 and not hidden.text.contains(m.hand.drink), "Hidden Horn has no target or drink leak")
+	m.hand = {"drink":"芒果冰沙"}
+	check(m.service_hint() == hidden, "Hidden-order hint cannot reveal whether held cup matches")
+	m.at(2).bubble = 2.5
+	m.hand = {"drink":m.at(2).guest.drink}
+	check(m.service_hint().target == 2 and m.service_hint().text.contains("其他"), "Visible order gets nonexclusive suggestion")
+	m.remove_visit(m.at(2))
+	check(m.service_hint().target == -1 and m.service_hint().text.contains("留杯"), "Departed target leaves useful retained-cup guidance")
+	m = isolated("bobo")
+	finish_drink(m,2)
+	m.hand = {"drink":"椰子水"}
+	check(m.service_hint().target == 2 and m.service_hint().text.contains("保留"), "Held surplus does not block bill guidance")
+	m.interact()
+	check(m.service_hint().target == -1, "Collected bill never stays a suggested target")
+	m = Model.new({"duration":60,"target":10,"guests":["bobo"],"arrivals":[{"time":1,"guest":"bobo","seat":2},{"time":1,"guest":"bobo","seat":3}]})
+	m.started = true
+	m.update(1.1)
+	for seat in [2,3]:
+		m.direction = seat
+		m.interact()
+	m.hand = {"drink":"芒果冰沙"}
+	m.at(3).patience = 5
+	check(m.service_hint().target == 3, "Suggestion prioritizes lower patience among visible matches")
+	var before := JSON.stringify([m.visitors,m.hand,m.queue,m.coins])
+	m.service_hint()
+	check(before == JSON.stringify([m.visitors,m.hand,m.queue,m.coins]), "Guidance does not mutate gameplay")
