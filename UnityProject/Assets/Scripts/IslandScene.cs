@@ -161,7 +161,7 @@ namespace Sunflower
             if(Input.GetKeyDown(KeyCode.Escape)){if(modal!=null)Close();else Pause();}
             if(CanUseGameplayInput()){if(Input.GetKeyDown(KeyCode.LeftArrow))model.Turn(-1);if(Input.GetKeyDown(KeyCode.RightArrow))model.Turn(1);if(Input.GetKeyDown(KeyCode.Space))Interact();}
             model.Update(Time.deltaTime);
-            if(!model.paused){arrivalTime-=Time.deltaTime;foreach(var v in model.visitors)if(arrivals.Add(v.id)){toast.text="客人入场 · "+v.guest.name;arrivalTime=3;}}
+            if(!model.paused){arrivalTime-=Time.deltaTime;foreach(var v in model.visitors)if(arrivals.Add(v.id)){toast.text=(v.guest.id=="jiwoo"?"惊喜客人 · ":"客人入场 · ")+v.guest.name;arrivalTime=3;}}
             arrivalCard.SetActive(arrivalTime>0);
             foreach(var id in model.codex)progress.Unlock(id);
             if(model.TryClaimSettlement(out int income)){progress.CompleteDay(currentDay,income,model.Day.TargetCoins,model.tipRemainder,model.Assisted);Settlement();}
@@ -377,7 +377,7 @@ namespace Sunflower
         }
         void SetDrinkIcon(RawImage icon,string drink)
         {
-            string asset=drink=="芒果冰沙"?"Drink_MangoSlush_v1":drink=="椰子水"?"Drink_CoconutWater_v1":drink=="青柠苏打"?"Drink_LimeSoda_v1":null;
+            string asset=drink=="芒果冰沙"?"Drink_MangoSlush_v1":drink=="椰子水"?"Drink_CoconutWater_v1":drink=="青柠苏打"?"Drink_LimeSoda_v1":drink=="冰美式"?"Drink_IcedAmericano_v1":drink=="夜间无酒精特调"?"Drink_NightMocktail_v1":null;
             icon.texture=asset==null?null:Texture(asset);icon.enabled=icon.texture!=null;
         }
         Sprite Slice(string asset){if(!sprites.ContainsKey(asset)){var rect=asset=="Button_Gold"?new Rect(136,156,1900,419):new Rect(35,146,2103,416);sprites[asset]=Sprite.Create(Texture(asset),rect,new Vector2(.5f,.5f),100,0,SpriteMeshType.FullRect,new Vector4(160,110,160,110));}return sprites[asset];}

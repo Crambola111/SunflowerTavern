@@ -11,6 +11,32 @@ namespace Sunflower
             var model=new TavernModel{started=true};model.Update(8.1f);
             Require(model.visitors.Count==1,"First visitor did not arrive");return model;
         }
+        static void CheckJiwoo()
+        {
+            foreach(bool night in new[]{false,true})
+            {
+                float arrival=night?30:5;
+                var model=new TavernModel(new DayConfiguration(60,10,new[]{DayConfiguration.CreateJiwoo()},new[]{new ArrivalDefinition(arrival,0,3)})){started=true};
+                model.Update(arrival+.1f);var v=model.At(3);
+                Require(v!=null&&v.guest.drink==(night?"夜间无酒精特调":"冰美式")&&v.guest.price==(night?16:12),"Jiwoo time-slot order incorrect");
+                model.direction=3;model.Interact();model.Interact();Require(model.queue.Count==1,"Jiwoo duplicated order");
+                model.paused=true;float remaining=model.queue[0].remaining;model.Update(10);Require(model.queue[0].remaining==remaining,"Paused Jiwoo brewed");model.paused=false;
+                model.Update(v.guest.brew+.1f);model.direction=0;model.Interact();model.direction=3;model.Interact();
+                Require(!model.codex.Contains("jiwoo"),"Jiwoo unlocked before collection");model.Update(2.1f);model.Interact();int coins=model.coins;model.Interact();
+                Require(model.served==1&&coins==v.guest.price+3&&model.coins==coins&&model.codex.Contains("jiwoo"),"Jiwoo settlement invalid");
+            }
+            var first=DayConfiguration.CreateFirstDayGuests();
+            var waiting=new TavernModel(new DayConfiguration(60,10,new[]{first[0],first[1],DayConfiguration.CreateJiwoo(),first[2]},new[]{
+                new ArrivalDefinition(1,0,1),new ArrivalDefinition(1,1,2),new ArrivalDefinition(20,2,5),new ArrivalDefinition(35,3,6)})){started=true};
+            waiting.Update(1.1f);foreach(var v in waiting.visitors)v.patience=100;
+            waiting.Update(34);Require(waiting.visitors.Count==2,"Full seating displaced an existing guest");
+            waiting.visitors.RemoveAt(0);waiting.Update(.1f);
+            var delayed=waiting.visitors.Find(v=>v.guest.id=="jiwoo");
+            Require(delayed!=null&&delayed.guest.drink=="冰美式"&&waiting.visitors.Count==2,"Reserved Jiwoo skipped, switched drink, or lost seat priority");
+            waiting.Update(.1f);Require(waiting.visitors.FindAll(v=>v.guest.id=="jiwoo").Count==1,"Jiwoo spawned twice");
+            waiting.ended=true;int count=waiting.visitors.Count;waiting.Update(10);Require(waiting.visitors.Count==count,"Ended day spawned guest");
+            Require(DayConfiguration.CreateAvailableGuests().Length==7&&!DayConfiguration.IsPlayable(4),"Jiwoo prematurely opened Day4/catalog");
+        }
         static TavernModel SnowyVisit(bool assisted=false)
         {
             var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateSnowy()},new[]{new ArrivalDefinition(1,0,3)});
@@ -263,6 +289,7 @@ namespace Sunflower
             CheckMimi();
             CheckSpf8();
             CheckSnowy();
+            CheckJiwoo();
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");

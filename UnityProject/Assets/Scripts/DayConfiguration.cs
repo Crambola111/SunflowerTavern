@@ -44,6 +44,9 @@ namespace Sunflower
             Guests=Array.AsReadOnly(copy);Arrivals=Array.AsReadOnly((ArrivalDefinition[])arrivals.Clone());
         }
 
+        public static GuestDefinition CreateJiwoo(bool night=false)=>new GuestDefinition("jiwoo","Jiwoo · 韩国学生",night?"夜间无酒精特调":"冰美式",night?16:12,night?4:3,8,
+            "电脑带到了海岛，作业也跟到了海岛。白天点冰美式，晚上认真切换养生模式——唯一没切换的是还没写完的作业。");
+
         public static GuestDefinition CreateSnowy()=>new GuestDefinition("snowy","Snowy · 雪人游客","芒果冰沙",10,3,7,
             "订酒店时只看了海景，没看气温。围巾一条没少带，回程行李可能只剩一根胡萝卜。");
 

@@ -176,17 +176,21 @@ namespace Sunflower
         void Tick(float dt)
         {
             elapsed=Math.Min(Day.Duration,elapsed+dt);
-            for(int i=0;i<Day.Arrivals.Count;i++) {
+            // Due surprise reservations take the next free seat before ordinary arrivals.
+            foreach(int i in Enumerable.Range(0,Day.Arrivals.Count).OrderByDescending(n=>
+                !spawned[n]&&elapsed>=Day.Arrivals[n].time&&Day.Guests[Day.Arrivals[n].guestIndex].id=="jiwoo")) {
                 var arrival=Day.Arrivals[i];
                 if(spawned[i]||elapsed<arrival.time)continue;
-                if(elapsed>arrival.time+6){spawned[i]=true;continue;}
+                bool surprise=Day.Guests[arrival.guestIndex].id=="jiwoo";
+                if(!surprise&&elapsed>arrival.time+6){spawned[i]=true;continue;}
+                if(surprise&&visitors.Any(g=>g.guest.id=="jiwoo"))continue;
                 if(visitors.Count>=2)continue;
                 int seat=0;for(int n=0;n<7;n++){int s=(arrival.seat-1+n)%7+1;if(At(s)==null&&!Blocked(s)){seat=s;break;}}
                 if(seat==0)continue;
-                var v=new Visit{id=i,seat=seat,guest=Day.Guests[arrival.guestIndex],state=VisitState.Order,patience=25*patienceMultiplier};
+                var v=new Visit{id=i,seat=seat,guest=surprise?DayConfiguration.CreateJiwoo(arrival.time>=Day.Duration*.5f):Day.Guests[arrival.guestIndex],state=VisitState.Order,patience=25*patienceMultiplier};
                 if(v.guest.id=="snowy"){v.heatLimit=Assisted?18:12;v.heatRemaining=v.heatLimit;}
                 if(v.guest.id=="coco"){int b=seat%7+1;if(At(b)==null&&!Blocked(b))v.blocked=b;}
-                visitors.Add(v);spawned[i]=true;message=v.guest.name+" 入座了！";
+                visitors.Add(v);spawned[i]=true;message=(surprise?"惊喜客人 · ":"")+v.guest.name+" 入座了！";
             }
             foreach(var v in visitors.ToArray()) {
                 v.bubble=Math.Max(0,v.bubble-dt);
