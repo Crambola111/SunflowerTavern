@@ -25,6 +25,8 @@ namespace Sunflower
         Button actionButton;
         readonly GameObject[] guestHits=new GameObject[8];
         RawImage sunny;
+        Texture sunnyFront;
+        readonly Texture2D[] sunnyDirections=new Texture2D[8];
         readonly int[] visualVisits={-1,-1,-1,-1,-1,-1,-1,-1};
         readonly float[] guestVisibility=new float[8];
         float servicePulse;
@@ -67,6 +69,9 @@ namespace Sunflower
             sunny=Art(root,new Vector2(800,465),new Vector2(175,175),"Sunny_Chibi");
             var islandUniform=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_Idle_v1");
             if(islandUniform!=null)sunny.texture=islandUniform;
+            sunnyFront=sunny.texture;
+            sunnyDirections[2]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D2_Idle");
+            sunnyDirections[6]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D6_Idle");
             hornPortrait=Resources.Load<Texture2D>("IslandUI/Horn_Portrait");
             if(hornPortrait==null){hornFallback=Resources.Load<Texture2D>("Art/GuestLineup");Debug.LogWarning("Round 3 art pending: Horn_Portrait.png. Using lineup placeholder.");}
             var guestLayer=Node("GuestLayer",root,new Vector2(800,450),new Vector2(1600,900)).transform;
@@ -191,8 +196,22 @@ namespace Sunflower
             servicePulse=Mathf.Max(0,servicePulse-dt);
             float pulse=servicePulse>0?Mathf.Sin((1-servicePulse/.32f)*Mathf.PI):0;
             Vector2 reach=(seats[serviceDirection]-new Vector2(800,465)).normalized;
-            sunny.rectTransform.anchoredPosition=new Vector2(800,465)+reach*(8*pulse);
-            sunny.rectTransform.localScale=new Vector3(model.direction>4?-1:1,1,1)*(1+.035f*pulse);
+            // Keep approved asymmetric accessories intact; never mirror the character.
+            var directionArt=sunnyDirections[model.direction];
+            sunny.texture=directionArt!=null?directionArt:sunnyFront;
+            float size=175;
+            float offsetY=0;
+            if(directionArt!=null)
+            {
+                // Original 1254px canvases; align the opaque height and bottom to D0.
+                float height=model.direction==2?1167:1140;
+                float bottom=model.direction==2?1221:1219;
+                size=175*1170/height;
+                offsetY=(bottom/1254f-.5f)*size-(1223/1254f-.5f)*175;
+            }
+            sunny.rectTransform.sizeDelta=new Vector2(size,size);
+            sunny.rectTransform.anchoredPosition=new Vector2(800,465+offsetY)+reach*(8*pulse);
+            sunny.rectTransform.localScale=Vector3.one*(1+.035f*pulse);
             for(int i=1;i<8;i++)
             {
                 var visit=model.At(i);
