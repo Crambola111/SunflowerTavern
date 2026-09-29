@@ -16,7 +16,7 @@ namespace Sunflower.Editor
             importer.npotScale=TextureImporterNPOTScale.None;
             importer.wrapMode=TextureWrapMode.Clamp;
             importer.filterMode=FilterMode.Bilinear;
-            importer.maxTextureSize=4096;
+            importer.maxTextureSize=assetPath.Contains("/Drink_")?256:4096;
             importer.textureCompression=TextureImporterCompression.Uncompressed;
         }
     }

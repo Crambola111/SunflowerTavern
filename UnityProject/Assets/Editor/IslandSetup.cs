@@ -27,6 +27,14 @@ namespace Sunflower.Editor
             }
             Debug.Log("Round 3 art file checks: "+ready+" / 8. This is NOT visual acceptance; check transparency, character scale and foreground alignment in Game View.");
         }
+        [MenuItem("Sunflower/Check Integrated Drinks And D6")]
+        public static void CheckIntegratedArt()
+        {
+            foreach(var name in new[]{"Drink_MangoSlush_v1","Drink_CoconutWater_v1","Drink_LimeSoda_v1",
+                "Sunny_Southwind_D6_Carry","Sunny_Southwind_D6_Serve_00","Sunny_Southwind_D6_Serve_01","Sunny_Southwind_D6_Serve_02"})
+                if(!ValidArtFile(name,false))throw new Exception("Missing or invalid RGBA art: "+name);
+            Debug.Log("Seven approved textures imported. Game View layout, alpha edges and animation remain to be verified.");
+        }
         static bool ValidArtFile(string name,bool fullCanvas)
         {
             string path="Assets/Resources/IslandUI/"+name+".png";
