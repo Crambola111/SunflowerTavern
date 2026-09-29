@@ -331,7 +331,8 @@
     ],
     "mode": "RGBA",
     "sha256": "62c574731b5dbfe1039322f89ba7cae12b0c94df88f4c6743bd2ad1f92093548",
-    "status": "design_approved_pending_normalization_and_unity"
+    "status": "design_approved_pending_normalization_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Carry.png"
   },
   {
     "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_00.png",
@@ -341,7 +342,8 @@
     ],
     "mode": "RGBA",
     "sha256": "46b822d782e6144097e223b687a4ce19465b2c848910c9551338ee302a1da7b0",
-    "status": "design_approved_pending_normalization_and_unity"
+    "status": "design_approved_pending_normalization_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_00.png"
   },
   {
     "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_01.png",
@@ -351,7 +353,8 @@
     ],
     "mode": "RGBA",
     "sha256": "7842b3c89a3373ff3fc55fcca5a048e880af8164520e9df88723cf57e60ad1d5",
-    "status": "design_approved_pending_normalization_and_unity"
+    "status": "design_approved_pending_normalization_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_01.png"
   },
   {
     "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_02.png",
@@ -361,7 +364,8 @@
     ],
     "mode": "RGBA",
     "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
-    "status": "design_approved_pending_normalization_and_unity"
+    "status": "design_approved_pending_normalization_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_02.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_LimeSoda_v1.png",
@@ -371,7 +375,8 @@
     ],
     "mode": "RGBA",
     "sha256": "f75e5b903255680c2136c4d28c3bbc40f647d15f6a04e31d9d636578df36e5ac",
-    "status": "design_approved_pending_256_export_and_unity"
+    "status": "design_approved_pending_256_export_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Drink_LimeSoda_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_CoconutWater_v1.png",
@@ -381,7 +386,8 @@
     ],
     "mode": "RGBA",
     "sha256": "2029fc981f657da50549b30799c6aa6d1fa169455bbe8d906151320f548c07c9",
-    "status": "design_approved_pending_256_export_and_unity"
+    "status": "design_approved_pending_256_export_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Drink_CoconutWater_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_MangoSlush_v1.png",
@@ -391,7 +397,8 @@
     ],
     "mode": "RGBA",
     "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
-    "status": "design_approved_pending_256_export_and_unity"
+    "status": "design_approved_pending_256_export_and_unity",
+    "runtime_path": "UnityProject/Assets/Resources/IslandUI/Drink_MangoSlush_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Nordic/Drink_LingonberryTea_v2.png",
@@ -422,6 +429,83 @@
     "mode": "RGBA",
     "sha256": "449e4c5eeff34aaab65b42dd8b352ced40dabf600566ba5fac046e089eebd955",
     "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_02.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_02.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_00.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "46b822d782e6144097e223b687a4ce19465b2c848910c9551338ee302a1da7b0",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_00.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_01.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "7842b3c89a3373ff3fc55fcca5a048e880af8164520e9df88723cf57e60ad1d5",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_01.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Carry.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "62c574731b5dbfe1039322f89ba7cae12b0c94df88f4c6743bd2ad1f92093548",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Carry.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Drink_LimeSoda_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f75e5b903255680c2136c4d28c3bbc40f647d15f6a04e31d9d636578df36e5ac",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_LimeSoda_v1.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Drink_CoconutWater_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "2029fc981f657da50549b30799c6aa6d1fa169455bbe8d906151320f548c07c9",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_CoconutWater_v1.png"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Drink_MangoSlush_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
+    "status": "runtime_integrated_pending_unity",
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_MangoSlush_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_IcedAmericano_v1.png",
