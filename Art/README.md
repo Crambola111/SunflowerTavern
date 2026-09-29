@@ -55,3 +55,7 @@ D0端杯与递送00/01/02于19:01获用户确认；D2右上背侧、D6左侧于1
 用户已确认方向素材。本轮将 D2 配件修正版、D6 花饰修正版接入运行目录 Sunny_Southwind_D2_Idle.png / Sunny_Southwind_D6_Idle.png；来源和哈希见 manifest。上文“待用户确认”为历史状态，此处覆盖。原始1254×1254透明PNG保留，未重绘或镜像；显示高度和脚底由UI参数校准。D0沿用原路径，其余方向暂回退原待机图，不能称为完整八方向接入。其他方向稿和Carry/Serve仍待逐张归档与接入。
 
 并行美术会话保留了D2/D6原稿副本，本轮保留以免覆盖他人上传；运行版本以UnityProject路径为准，后续统一清理重复归档。D0 Carry/Serve已确认并归档，下一轮接入。
+
+## 第4轮C：青柠苏打端杯/递送接入
+D0 Carry及Serve_00/01/02已复制至UnityProject/Assets/Resources/IslandUI，原始确认稿保留在Art/Approved/Sunny/Southwind用于追溯。manifest以source_path记录关系；运行只加载Resources。原PNG保持1254×1254和原哈希，未裁切重绘。
+仅青柠苏打使用这组带固定饮品的动作图。正面动作暂用于各方向，非完整方向动画；其他饮品仍使用待机及原服务脉冲。共同显示比例/脚底已在UI中设置，Unity视觉验收未执行。后续优先补同方向其他饮品或角色/托盘/杯分层，并扩展方向动作。
