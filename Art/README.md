@@ -1,5 +1,9 @@
 # 已确认美术目录
 
+## Godot迁移 M1
+
+当前运行素材目录GodotProject/assets，31张PNG按原字节复用。Godot引用路径和用途写入manifest；旧Unity路径暂存作迁移对照，不再追加功能。Bobo/Coco/Horn/Tank/Gecko仅作为对话/图鉴立绘；Bobo/Coco/Horn/Mimi已接入静态座位图；其余CHIBIS待归档，禁止用精细立绘冒充Q版。原稿、已确认状态保持不变。
+
 ## 2026-09-29 21:20 · 南风岛四张座位Q版确认
 
 用户确认 Bobo、Coco、Horn、Mimi 座位静态Q版，原稿按 Art/Approved/Guests/<ID>/<ID>_Seated_v1.png 归档，1254×1254 RGBA。所有营业状态共用一张，通过图标/计时/短提示区分；不新增动作帧。四张已检查透明通道与缩小显示，Godot运行接入、座位遮挡、比例和点击区域待开发验收。本轮未修改引擎运行文件。

@@ -87,7 +87,8 @@
       1254
     ],
     "mode": "RGBA",
-    "sha256": "644ce8f1099131312064ea899ada23f0408b09ec75b79375add6c06b3212fc61"
+    "sha256": "644ce8f1099131312064ea899ada23f0408b09ec75b79375add6c06b3212fc61",
+    "godot_runtime_path": "GodotProject/assets/Bobo_Portrait.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Button_Gold.png",
@@ -96,7 +97,8 @@
       724
     ],
     "mode": "RGBA",
-    "sha256": "549c0ef1d54bc9313678cfb64e6d7b511d5a3bd7188b1f98fdb4ee308b87b8e0"
+    "sha256": "549c0ef1d54bc9313678cfb64e6d7b511d5a3bd7188b1f98fdb4ee308b87b8e0",
+    "godot_runtime_path": "GodotProject/assets/Button_Gold.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Coco_Portrait.png",
@@ -105,7 +107,8 @@
       1254
     ],
     "mode": "RGBA",
-    "sha256": "f5824fc251b6bf55621f9f576599744f813dfeb7f8a0808d2cd2ea3bb05fc804"
+    "sha256": "f5824fc251b6bf55621f9f576599744f813dfeb7f8a0808d2cd2ea3bb05fc804",
+    "godot_runtime_path": "GodotProject/assets/Coco_Portrait.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Codex_Book.png",
@@ -114,7 +117,8 @@
       941
     ],
     "mode": "RGBA",
-    "sha256": "030c022cad90eaf37e3cc1acd20435b4e20503ce800fce5835a9740d9008c781"
+    "sha256": "030c022cad90eaf37e3cc1acd20435b4e20503ce800fce5835a9740d9008c781",
+    "godot_runtime_path": "GodotProject/assets/Codex_Book.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Dialogue_Panel.png",
@@ -123,7 +127,8 @@
       724
     ],
     "mode": "RGBA",
-    "sha256": "d9a9026cdd5e88314beec9e7480012395f1e154ce3c6cc00ad6d2693fd2a132b"
+    "sha256": "d9a9026cdd5e88314beec9e7480012395f1e154ce3c6cc00ad6d2693fd2a132b",
+    "godot_runtime_path": "GodotProject/assets/Dialogue_Panel.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Horn_Portrait.png",
@@ -132,7 +137,8 @@
       1254
     ],
     "mode": "RGBA",
-    "sha256": "e8e5d7852b0af1d9d38df71c2b94327e4f1842afed43a17aebdb04be67647504"
+    "sha256": "e8e5d7852b0af1d9d38df71c2b94327e4f1842afed43a17aebdb04be67647504",
+    "godot_runtime_path": "GodotProject/assets/Horn_Portrait.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Island_Background.png",
@@ -141,7 +147,8 @@
       941
     ],
     "mode": "RGB",
-    "sha256": "9587ee5ab3f0ba448b9b6a744e3f48f54ba277e5b0f044a0d9d9e52e6a61dc2b"
+    "sha256": "9587ee5ab3f0ba448b9b6a744e3f48f54ba277e5b0f044a0d9d9e52e6a61dc2b",
+    "godot_runtime_path": "GodotProject/assets/Island_Background.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Chibi.png",
@@ -150,7 +157,8 @@
       1254
     ],
     "mode": "RGBA",
-    "sha256": "04836c86160bc61fe806eaa20dfc8a6173fd83d65a61ae789422f21ce2e4726f"
+    "sha256": "04836c86160bc61fe806eaa20dfc8a6173fd83d65a61ae789422f21ce2e4726f",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Chibi.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/TableFront_Combined.png",
@@ -159,7 +167,8 @@
       941
     ],
     "mode": "RGBA",
-    "sha256": "9fa68c2c9a26870eb333100a99d12ff784297e80d598124b1cffd7a052c0ec16"
+    "sha256": "9fa68c2c9a26870eb333100a99d12ff784297e80d598124b1cffd7a052c0ec16",
+    "godot_runtime_path": "GodotProject/assets/TableFront_Combined.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_Idle_v1.png",
@@ -168,7 +177,8 @@
       1254
     ],
     "mode": "RGBA",
-    "sha256": "6c003eef3f9d774dbcc8cc79aada210affadaaed59639ce440e2cc6810999f70"
+    "sha256": "6c003eef3f9d774dbcc8cc79aada210affadaaed59639ce440e2cc6810999f70",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_Idle_v1.png"
   },
   {
     "path": "Art/Approved/Sunny/Default/Sunny_Default_Carry_v1.png",
@@ -266,7 +276,8 @@
     "mode": "RGBA",
     "sha256": "0312ddc89a75901e5ff570abe8326fba21f2b639c02814de4a9464c0cebf702f",
     "library_file_id": "libfile_a7dfbb6cf1d88191b09267a7e4dda596",
-    "source_version": 0
+    "source_version": 0,
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D2_Idle.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Idle.png",
@@ -277,7 +288,8 @@
     "mode": "RGBA",
     "sha256": "fc1ae4d9e59291a9fa55c4d23577c7760e2a1ff279b66331cc6173e0bf7b45c5",
     "library_file_id": "libfile_8e73649406988191a309ac39fb957b29",
-    "source_version": 0
+    "source_version": 0,
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D6_Idle.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Carry.png",
@@ -288,7 +300,8 @@
     "mode": "RGBA",
     "sha256": "cfbf6d09dd134c4b3f2ca752a3ce14af0e04d4720748abb02eff3545e394f0ff",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Carry.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Carry.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D0_Carry.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_00.png",
@@ -299,7 +312,8 @@
     "mode": "RGBA",
     "sha256": "e794af4a399cac187c134bccdc7be5c4797c99970a2ade0f3ddd40d4ca705595",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_00.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_00.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D0_Serve_00.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_01.png",
@@ -310,7 +324,8 @@
     "mode": "RGBA",
     "sha256": "1bffdb0ffad564c64beba75a226ed02fd1a58143abbc664ea3de24f99bb02054",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_01.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_01.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D0_Serve_01.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_02.png",
@@ -321,7 +336,8 @@
     "mode": "RGBA",
     "sha256": "88bee00f933e5cff4dde19925e52d112d7ccb3ece8e6d884f23d0ed3df9e2b78",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_02.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D0_Serve_02.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D0_Serve_02.png"
   },
   {
     "path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Carry.png",
@@ -439,7 +455,8 @@
     "mode": "RGBA",
     "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_02.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_02.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D6_Serve_02.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_00.png",
@@ -450,7 +467,8 @@
     "mode": "RGBA",
     "sha256": "46b822d782e6144097e223b687a4ce19465b2c848910c9551338ee302a1da7b0",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_00.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_00.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D6_Serve_00.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_01.png",
@@ -461,7 +479,8 @@
     "mode": "RGBA",
     "sha256": "7842b3c89a3373ff3fc55fcca5a048e880af8164520e9df88723cf57e60ad1d5",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_01.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Serve_01.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D6_Serve_01.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Carry.png",
@@ -472,7 +491,8 @@
     "mode": "RGBA",
     "sha256": "62c574731b5dbfe1039322f89ba7cae12b0c94df88f4c6743bd2ad1f92093548",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Carry.png"
+    "source_path": "Art/Approved/Sunny/Southwind/Sunny_Southwind_D6_Carry.png",
+    "godot_runtime_path": "GodotProject/assets/Sunny_Southwind_D6_Carry.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Drink_LimeSoda_v1.png",
@@ -483,7 +503,8 @@
     "mode": "RGBA",
     "sha256": "f75e5b903255680c2136c4d28c3bbc40f647d15f6a04e31d9d636578df36e5ac",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Drinks/Southwind/Drink_LimeSoda_v1.png"
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_LimeSoda_v1.png",
+    "godot_runtime_path": "GodotProject/assets/Drink_LimeSoda_v1.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Drink_CoconutWater_v1.png",
@@ -494,7 +515,8 @@
     "mode": "RGBA",
     "sha256": "2029fc981f657da50549b30799c6aa6d1fa169455bbe8d906151320f548c07c9",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Drinks/Southwind/Drink_CoconutWater_v1.png"
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_CoconutWater_v1.png",
+    "godot_runtime_path": "GodotProject/assets/Drink_CoconutWater_v1.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Drink_MangoSlush_v1.png",
@@ -505,7 +527,8 @@
     "mode": "RGBA",
     "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Drinks/Southwind/Drink_MangoSlush_v1.png"
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_MangoSlush_v1.png",
+    "godot_runtime_path": "GodotProject/assets/Drink_MangoSlush_v1.png"
   },
   {
     "path": "Art/Approved/Drinks/Southwind/Drink_IcedAmericano_v1.png",
@@ -538,7 +561,8 @@
     "mode": "RGBA",
     "sha256": "407f05a37a15af94567db39b08cc378b580031f3e5573030925f4cd7cae5df5d",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Drinks/Southwind/Drink_IcedAmericano_v1.png"
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_IcedAmericano_v1.png",
+    "godot_runtime_path": "GodotProject/assets/Drink_IcedAmericano_v1.png"
   },
   {
     "path": "UnityProject/Assets/Resources/IslandUI/Drink_NightMocktail_v1.png",
@@ -549,7 +573,8 @@
     "mode": "RGBA",
     "sha256": "50c2dc4f5503910c097ec4a9cf704beacfb726ffaa7bcdb6c999ab23d9700e59",
     "status": "runtime_integrated_pending_unity",
-    "source_path": "Art/Approved/Drinks/Southwind/Drink_NightMocktail_v1.png"
+    "source_path": "Art/Approved/Drinks/Southwind/Drink_NightMocktail_v1.png",
+    "godot_runtime_path": "GodotProject/assets/Drink_NightMocktail_v1.png"
   },
   {
     "path": "Art/Approved/Guests/Tank/Tank_Portrait.png",
@@ -563,7 +588,8 @@
     "usage": [
       "dialogue",
       "codex_detail"
-    ]
+    ],
+    "godot_runtime_path": "GodotProject/assets/Tank_Portrait.png"
   },
   {
     "path": "Art/Approved/Guests/Gecko/Gecko_Portrait.png",
@@ -577,7 +603,8 @@
     "usage": [
       "dialogue",
       "codex_detail"
-    ]
+    ],
+    "godot_runtime_path": "GodotProject/assets/Gecko_Portrait.png"
   },
   {
     "path": "Art/Approved/Guests/Bobo/Bobo_Seated_v1.png",
@@ -587,8 +614,9 @@
     ],
     "mode": "RGBA",
     "sha256": "b28d2eac4a89ddac84138f782a9806050d4adb6b9cbd8d122a5d2ba1e2a45b6d",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "seated_all_gameplay_states"
+    "status": "approved_seated_static",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Bobo_Seated_v1.png"
   },
   {
     "path": "Art/Approved/Guests/Coco/Coco_Seated_v1.png",
@@ -598,8 +626,9 @@
     ],
     "mode": "RGBA",
     "sha256": "d574834bd2c9bae7fe2b25d573559a75eae44458946add76c758b4cd312ff06c",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "seated_all_gameplay_states"
+    "status": "approved_seated_static",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Coco_Seated_v1.png"
   },
   {
     "path": "Art/Approved/Guests/Horn/Horn_Seated_v1.png",
@@ -610,7 +639,8 @@
     "mode": "RGBA",
     "sha256": "968232effa59e0b3f481ac698f00f8e0b30b34765a2de21c1b2745826499a18e",
     "status": "user_approved_pending_godot_integration",
-    "usage": "seated_all_gameplay_states"
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Horn_Seated_v1.png"
   },
   {
     "path": "Art/Approved/Guests/Mimi/Mimi_Seated_v1.png",
@@ -621,7 +651,379 @@
     "mode": "RGBA",
     "sha256": "f122532a442fe1cf95e968db5a960e9ce5afcd35694be5f809a71019ebc82c56",
     "status": "user_approved_pending_godot_integration",
-    "usage": "seated_all_gameplay_states"
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Mimi_Seated_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/Bobo_Portrait.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Bobo_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "644ce8f1099131312064ea899ada23f0408b09ec75b79375add6c06b3212fc61",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "dialogue_and_codex_only"
+  },
+  {
+    "path": "GodotProject/assets/Button_Gold.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Button_Gold.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "549c0ef1d54bc9313678cfb64e6d7b511d5a3bd7188b1f98fdb4ee308b87b8e0",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Coco_Portrait.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Coco_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f5824fc251b6bf55621f9f576599744f813dfeb7f8a0808d2cd2ea3bb05fc804",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "dialogue_and_codex_only"
+  },
+  {
+    "path": "GodotProject/assets/Codex_Book.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Codex_Book.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGBA",
+    "sha256": "030c022cad90eaf37e3cc1acd20435b4e20503ce800fce5835a9740d9008c781",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Dialogue_Panel.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Dialogue_Panel.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "d9a9026cdd5e88314beec9e7480012395f1e154ce3c6cc00ad6d2693fd2a132b",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Drink_CoconutWater_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Drink_CoconutWater_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "2029fc981f657da50549b30799c6aa6d1fa169455bbe8d906151320f548c07c9",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Drink_IcedAmericano_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Drink_IcedAmericano_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "407f05a37a15af94567db39b08cc378b580031f3e5573030925f4cd7cae5df5d",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Drink_LimeSoda_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Drink_LimeSoda_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f75e5b903255680c2136c4d28c3bbc40f647d15f6a04e31d9d636578df36e5ac",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Drink_MangoSlush_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Drink_MangoSlush_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Drink_NightMocktail_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Drink_NightMocktail_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "50c2dc4f5503910c097ec4a9cf704beacfb726ffaa7bcdb6c999ab23d9700e59",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Gecko_Portrait.png",
+    "source_path": "Art/Approved/Guests/Gecko/Gecko_Portrait.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "sha256": "7be0dd9da94f3692c5e2f3662572af0887bedfacd4580d14f5a58d760bce8f56",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "dialogue_and_codex_only"
+  },
+  {
+    "path": "GodotProject/assets/Horn_Portrait.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Horn_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "e8e5d7852b0af1d9d38df71c2b94327e4f1842afed43a17aebdb04be67647504",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "dialogue_and_codex_only"
+  },
+  {
+    "path": "GodotProject/assets/Island_Background.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Island_Background.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "9587ee5ab3f0ba448b9b6a744e3f48f54ba277e5b0f044a0d9d9e52e6a61dc2b",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Chibi.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Chibi.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "04836c86160bc61fe806eaa20dfc8a6173fd83d65a61ae789422f21ce2e4726f",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D0_Carry.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Carry.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "cfbf6d09dd134c4b3f2ca752a3ce14af0e04d4720748abb02eff3545e394f0ff",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D0_Serve_00.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_00.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "e794af4a399cac187c134bccdc7be5c4797c99970a2ade0f3ddd40d4ca705595",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D0_Serve_01.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_01.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1bffdb0ffad564c64beba75a226ed02fd1a58143abbc664ea3de24f99bb02054",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D0_Serve_02.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D0_Serve_02.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "88bee00f933e5cff4dde19925e52d112d7ccb3ece8e6d884f23d0ed3df9e2b78",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D2_Idle.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D2_Idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "0312ddc89a75901e5ff570abe8326fba21f2b639c02814de4a9464c0cebf702f",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D6_Carry.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Carry.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "62c574731b5dbfe1039322f89ba7cae12b0c94df88f4c6743bd2ad1f92093548",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D6_Idle.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Idle.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "fc1ae4d9e59291a9fa55c4d23577c7760e2a1ff279b66331cc6173e0bf7b45c5",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D6_Serve_00.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_00.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "46b822d782e6144097e223b687a4ce19465b2c848910c9551338ee302a1da7b0",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D6_Serve_01.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_01.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "7842b3c89a3373ff3fc55fcca5a048e880af8164520e9df88723cf57e60ad1d5",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_D6_Serve_02.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_D6_Serve_02.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_Idle_v1.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/Sunny_Southwind_Idle_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "6c003eef3f9d774dbcc8cc79aada210affadaaed59639ce440e2cc6810999f70",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/TableFront_Combined.png",
+    "source_path": "UnityProject/Assets/Resources/IslandUI/TableFront_Combined.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGBA",
+    "sha256": "9fa68c2c9a26870eb333100a99d12ff784297e80d598124b1cffd7a052c0ec16",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "godot_runtime"
+  },
+  {
+    "path": "GodotProject/assets/Tank_Portrait.png",
+    "source_path": "Art/Approved/Guests/Tank/Tank_Portrait.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "sha256": "5fe298edc342692b1ac02dc927145bde614b7054a75c4f1c705fd704497f27e1",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "dialogue_and_codex_only"
+  },
+  {
+    "path": "GodotProject/assets/Bobo_Seated_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "b28d2eac4a89ddac84138f782a9806050d4adb6b9cbd8d122a5d2ba1e2a45b6d",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "source_path": "Art/Approved/Guests/Bobo/Bobo_Seated_v1.png",
+    "usage": "seated_all_states"
+  },
+  {
+    "path": "GodotProject/assets/Coco_Seated_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "d574834bd2c9bae7fe2b25d573559a75eae44458946add76c758b4cd312ff06c",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "source_path": "Art/Approved/Guests/Coco/Coco_Seated_v1.png",
+    "usage": "seated_all_states"
+  },
+  {
+    "path": "GodotProject/assets/Horn_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Horn/Horn_Seated_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "968232effa59e0b3f481ac698f00f8e0b30b34765a2de21c1b2745826499a18e",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "seated_all_states"
+  },
+  {
+    "path": "GodotProject/assets/Mimi_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Mimi/Mimi_Seated_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f122532a442fe1cf95e968db5a960e9ce5afcd35694be5f809a71019ebc82c56",
+    "status": "godot_integrated_pending_visual_acceptance",
+    "usage": "seated_all_states"
   }
 ]
-
