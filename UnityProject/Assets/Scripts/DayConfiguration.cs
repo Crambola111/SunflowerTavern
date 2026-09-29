@@ -47,6 +47,9 @@ namespace Sunflower
         public static GuestDefinition CreateTank()=>new GuestDefinition("tank","Tank · 海龟潜水员","椰子水",14,5,3,
             "上岸半小时还戴着呼吸器。点单全靠冒泡，以为老板也会水下手语。");
 
+        public static GuestDefinition CreateGecko()=>new GuestDefinition("gecko","Gecko · 座位测评员","青柠苏打",12,4,5,
+            "饮品还没喝，座位已经测评三轮。记录板上只有一句：隔壁那桌可能更好。");
+
         public static GuestDefinition[] CreateFirstDayGuests()=>new[]{
             new GuestDefinition("bobo","Bobo · 冲浪海牛","芒果冰沙",10,3,0,"来岛上三天，冲浪板下水零次。每天都说：明天浪好，我再出手。"),
             new GuestDefinition("coco","Coco · 寄居蟹","椰子水",14,5,2,"旅行只带一点行李：自己的房子和房子的备用房子。"),

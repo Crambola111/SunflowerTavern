@@ -11,6 +11,47 @@ namespace Sunflower
             var model=new TavernModel{started=true};model.Update(8.1f);
             Require(model.visitors.Count==1,"First visitor did not arrive");return model;
         }
+        static TavernModel GeckoOrder()
+        {
+            var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateGecko()},new[]{new ArrivalDefinition(1,0,7)});
+            var model=new TavernModel(day){started=true};model.Update(1.1f);model.direction=7;model.Interact();return model;
+        }
+        static void CheckGecko()
+        {
+            // Exercise each cup location at the moment of moving.
+            foreach(int phase in new[]{0,1,2})
+            {
+                var model=GeckoOrder();var guest=model.At(7);var cup=model.queue[0];
+                if(phase==0)model.brewSpeed=.1f;
+                model.Update(3.1f);Require(guest.GeckoMoveWarning,"Gecko warning missing");
+                float wait=guest.geckoWait,patience=guest.patience;
+                model.paused=true;model.Update(10);Require(guest.geckoWait==wait&&guest.patience==patience&&guest.seat==7,"Pause advanced Gecko move");model.paused=false;
+                model.Update(1.1f);
+                if(phase==2){model.direction=0;model.Interact();Require(model.hand==cup,"Gecko cup pickup failed");}
+                // P1 occupied and P2 blocked: next valid seat is P3, wrapping from P7.
+                model.visitors.Add(new Visit{id=99,seat=1,blocked=2,guest=DayConfiguration.CreateTank(),state=VisitState.Order});
+                patience=guest.patience;model.Update(1);
+                Require(guest.seat==3&&model.At(7)==null&&model.At(3)==guest&&guest.geckoMoveAttempted&&!guest.GeckoMoveWarning,"Gecko move/occupancy invalid");
+                Require(guest.patience<patience&&cup.owner==guest.id,"Gecko reset patience or changed cup owner");
+                Require(phase==0?model.queue.Count==1&&model.queue[0]==cup:phase==1?model.ready==cup:model.hand==cup,"Gecko lost/recreated cup when moving");
+                model.direction=7;model.Interact();Require(guest.state==VisitState.Waiting,"Old seat accepted delivery");
+                if(phase==0){model.brewSpeed=1;model.Update(4);}
+                if(model.hand==null){model.direction=0;model.Interact();}
+                int target;model.ServiceHint(out target);Require(target==3,"Held-cup guidance did not follow Gecko");
+                model.direction=3;model.Interact();model.Update(2.1f);model.Interact();int coins=model.coins;model.Interact();
+                Require(model.served==1&&model.coins==coins&&model.codex.Contains("gecko")&&model.At(3)==null,"Gecko collection duplicated or failed");
+            }
+            var early=GeckoOrder();var servedGuest=early.At(7);early.Update(4.1f);early.direction=0;early.Interact();early.direction=7;early.Interact();early.Update(2.1f);
+            Require(servedGuest.seat==7&&!servedGuest.geckoMoveAttempted&&!servedGuest.GeckoMoveWarning,"Delivered Gecko moved");
+            var full=GeckoOrder();var staying=full.At(7);
+            for(int seat=1;seat<=6;seat++)full.visitors.Add(new Visit{id=100+seat,seat=seat,guest=DayConfiguration.CreateTank(),state=VisitState.Order});
+            full.Update(5.1f);Require(staying.seat==7&&staying.geckoMoveAttempted,"Full seats caused invalid move");
+            full.visitors.RemoveAt(1);full.Update(1);Require(staying.seat==7,"Gecko retried a skipped move");
+            var timeout=GeckoOrder();var leaving=timeout.At(7);timeout.Update(5.1f);timeout.direction=0;timeout.Interact();timeout.Update(30);
+            Require(timeout.visitors.Count==0&&timeout.queue.Count==0&&timeout.ready==null&&timeout.hand==null&&timeout.missed==1,"Moved Gecko left orphan occupancy or cup");
+            var expiry=GeckoOrder();var expiring=expiry.At(7);expiring.geckoWait=4.99f;expiring.patience=.001f;expiry.Update(.05f);
+            Require(expiry.visitors.Count==0&&!expiring.geckoMoveAttempted,"Expired Gecko moved before removal");
+        }
         public static string Run()
         {
             ProgressChecks.Run();
@@ -50,6 +91,7 @@ namespace Sunflower
             Require(tank.served==1&&tank.codex.Contains("tank")&&tank.At(3)==null,"Tank full service did not finish");
             var abandonedTank=new TavernModel(tankDay){started=true};abandonedTank.Update(1.1f);abandonedTank.direction=3;abandonedTank.Interact();abandonedTank.direction=0;abandonedTank.Update(30);
             Require(abandonedTank.visitors.Count==0&&abandonedTank.queue.Count==0&&abandonedTank.missed==1&&!abandonedTank.codex.Contains("tank"),"Tank attention step prevented timeout or unlocked codex early");
+            CheckGecko();
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");

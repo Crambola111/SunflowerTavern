@@ -19,6 +19,9 @@ namespace Sunflower
         public GuestDefinition guest;
         public VisitState state;
         public bool tankReady;
+        public bool geckoMoveAttempted;
+        public float geckoWait;
+        public bool GeckoMoveWarning=>guest.id=="gecko"&&state==VisitState.Waiting&&!geckoMoveAttempted&&geckoWait>=3;
         public bool NeedsTankAttention=>guest.id=="tank"&&!tankReady;
         public float patience=25, timer, bubble=2.5f;
     }
@@ -109,6 +112,24 @@ namespace Sunflower
                 default:message="客人正在喝饮品。";break;
             }
         }
+        void UpdateGecko(Visit v,float dt)
+        {
+            if(v.guest.id!="gecko"||v.state!=VisitState.Waiting||v.geckoMoveAttempted)return;
+            v.geckoWait+=dt;
+            if(v.geckoWait<5)return;
+            v.geckoMoveAttempted=true;
+            // Cup ownership uses visit ID; changing seats never recreates the order.
+            int previous=v.seat;
+            for(int n=1;n<7;n++)
+            {
+                int next=(previous-1+n)%7+1;
+                if(At(next)!=null||Blocked(next))continue;
+                v.seat=next;v.bubble=2.5f;
+                message="Gecko：这边光线好。P"+previous+" → P"+next+"，原订单继续！";
+                return;
+            }
+            message="Gecko：没有空座？那先给这张桌子打五星。";
+        }
         void Remove(Visit v)
         { visitors.Remove(v);queue.RemoveAll(c=>c.owner==v.id);if(ready?.owner==v.id)ready=null;if(hand?.owner==v.id)hand=null; }
         void Miss(Visit v){missed++;combo=0;Remove(v);message=v.guest.name+" 走了。下一单继续！";}
@@ -133,7 +154,7 @@ namespace Sunflower
             }
             foreach(var v in visitors.ToArray()) {
                 v.bubble=Math.Max(0,v.bubble-dt);
-                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);}
+                if(v.state==VisitState.Order||v.state==VisitState.Waiting){v.patience-=dt*(direction==v.seat?.5f:1)*(Assisted?.75f:1);if(v.patience<=0)Miss(v);else UpdateGecko(v,dt);}
                 else {v.timer-=dt;if(v.timer<=0){if(v.state==VisitState.Drinking){v.state=VisitState.Payment;v.timer=(v.guest.id=="bobo"?6:12)*(Assisted?1.5f:1);}else Miss(v);}}
             }
             if(ready==null&&queue.Count>0){queue[0].remaining-=dt*brewSpeed;if(queue[0].remaining<=0){ready=queue[0];queue.RemoveAt(0);message="饮品做好了，去出酒口取杯。";}}

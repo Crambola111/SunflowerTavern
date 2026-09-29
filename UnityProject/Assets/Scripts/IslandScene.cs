@@ -169,7 +169,7 @@ namespace Sunflower
                 labels[i].color=new Color(.25f,.12f,.05f);
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
-                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
+                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
                 bool payment=v.state==VisitState.Payment;
                 bool waiting=v.state==VisitState.Order||v.state==VisitState.Waiting;
                 bool urgent=payment?v.timer<=3:waiting&&v.patience<=7.5f;
