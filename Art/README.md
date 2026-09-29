@@ -1,5 +1,9 @@
 # 已确认美术目录
 
+## Godot迁移 M1
+
+当前运行素材目录GodotProject/assets，29张PNG按原字节复用。Godot引用路径和用途写入manifest；旧Unity路径暂存作迁移对照，不再追加功能。Bobo/Coco/Horn/Tank/Gecko仅作为对话/图鉴立绘；Bobo/Coco已接入静态座位图；其余CHIBIS待归档，禁止用精细立绘冒充Q版。原稿、已确认状态保持不变。
+
 ## 2026-09-29 20:47 用户确认：立绘与场内Q版分离
 
 Tank、Gecko精细全身立绘已确认，归档 Art/Approved/Guests/Tank/Tank_Portrait.png 与 Art/Approved/Guests/Gecko/Gecko_Portrait.png，仅用于对话/图鉴详情。原稿1024×1536 RGBA，透明通道已检查，未接入Unity。
