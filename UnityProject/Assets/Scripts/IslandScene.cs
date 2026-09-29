@@ -40,9 +40,9 @@ namespace Sunflower
         readonly string[] items={"向日葵花瓶","藤编小灯","顺手托盘"};
         readonly string[] effects={"客人耐心 +5%","小费 +5%（累计取整）","制作速度 +5%"};
         readonly int[] prices={30,45,60};
-        const string SaveKey="sunflower.island.";
+        ProgressStore progress;
         bool focusPaused;
-        int wallet;
+        int wallet=>progress.Wallet;
         int inputBlockedFrame=-1;
         float arrivalTime;
         Texture2D hornPortrait, hornFallback;
@@ -106,11 +106,13 @@ namespace Sunflower
             tutorialCard=Card(root,new Vector2(800,119),new Vector2(780,40));
             tutorialLabel=Label(tutorialCard.transform,new Vector2(390,20),new Vector2(755,36),"",18);
             arrivalCard=Card(root,new Vector2(280,760),new Vector2(480,70));toast=Label(arrivalCard.transform,new Vector2(240,35),new Vector2(440,50),"",21);
-            wallet=PlayerPrefs.GetInt(SaveKey+"wallet",0);ResetDay();Welcome();
+            try{progress=new ProgressStore(new PlayerPrefsProgressStorage());}
+            catch(InvalidOperationException error){Label(root,new Vector2(800,450),new Vector2(1000,180),error.Message,28);canvas.GetComponent<GraphicRaycaster>().enabled=false;enabled=false;return;}
+            ResetDay();Welcome();
         }
-        bool Owned(int n)=>PlayerPrefs.GetInt(SaveKey+"decor."+n,0)==1;
+        bool Owned(int n)=>progress.Owns(n);
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel{started=true,tipRemainder=PlayerPrefs.GetFloat(SaveKey+"tipRemainder",0)};Bonuses();foreach(var g in model.Day.Guests)if(PlayerPrefs.GetInt("sunflower.codex."+g.id,0)==1)model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=PlayerPrefs.GetInt(SaveKey+"tutorialDone",0)==0;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel{started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in model.Day.Guests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
@@ -123,8 +125,8 @@ namespace Sunflower
             model.Update(Time.deltaTime);
             if(!model.paused){arrivalTime-=Time.deltaTime;foreach(var v in model.visitors)if(arrivals.Add(v.id)){toast.text="客人入场 · "+v.guest.name;arrivalTime=3;}}
             arrivalCard.SetActive(arrivalTime>0);
-            foreach(var id in model.codex)if(PlayerPrefs.GetInt("sunflower.codex."+id,0)==0){PlayerPrefs.SetInt("sunflower.codex."+id,1);PlayerPrefs.Save();}
-            if(model.TryClaimSettlement(out int income)){wallet+=income;PlayerPrefs.SetInt(SaveKey+"wallet",wallet);PlayerPrefs.SetFloat(SaveKey+"tipRemainder",model.tipRemainder);PlayerPrefs.Save();Settlement();}
+            foreach(var id in model.codex)progress.Unlock(id);
+            if(model.TryClaimSettlement(out int income)){progress.AddSettlement(income,model.tipRemainder);Settlement();}
             hud.text="南风岛 · 第1天       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
             RefreshServiceFeedback();
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
@@ -174,7 +176,7 @@ namespace Sunflower
             if(!tutorialEnabled||model.ended)return -1;
             if(model.served>tutorialBaseline)
             {
-                if(PlayerPrefs.GetInt(SaveKey+"tutorialDone",0)==0){PlayerPrefs.SetInt(SaveKey+"tutorialDone",1);PlayerPrefs.Save();}
+                progress.CompleteTutorial();
                 tutorialLabel.text="完成！接单 → 取杯 → 送达 → 收钱。继续招呼下一位吧！";
                 if(!model.paused&&!focusPaused)tutorialCompleteTime+=Time.deltaTime;
                 if(tutorialCompleteTime>=3){tutorialEnabled=false;tutorialCard.SetActive(false);}
@@ -233,7 +235,7 @@ namespace Sunflower
         void Shop()
         {
             Open("装饰酒馆 · 钱包 "+wallet);bool allowed=model.elapsed==0||model.ended;
-            for(int i=0;i<3;i++){int n=i;float x=510+i*290;Label(modal.transform,new Vector2(x,495),new Vector2(270,150),items[i]+"\n"+effects[i]+"\n"+prices[i]+" 金币",23);var b=MakeButton(modal.transform,new Vector2(x,340),new Vector2(240,65),Owned(i)?"已拥有":allowed?"购买":"打烊后购买",()=>{if(Owned(n)||wallet<prices[n]||!allowed)return;wallet-=prices[n];PlayerPrefs.SetInt(SaveKey+"wallet",wallet);PlayerPrefs.SetInt(SaveKey+"decor."+n,1);PlayerPrefs.Save();if(model.elapsed==0)Bonuses();Shop();});b.interactable=allowed&&!Owned(i)&&wallet>=prices[i];}
+            for(int i=0;i<3;i++){int n=i;float x=510+i*290;Label(modal.transform,new Vector2(x,495),new Vector2(270,150),items[i]+"\n"+effects[i]+"\n"+prices[i]+" 金币",23);var b=MakeButton(modal.transform,new Vector2(x,340),new Vector2(240,65),Owned(i)?"已拥有":allowed?"购买":"打烊后购买",()=>{if(Owned(n)||wallet<prices[n]||!allowed)return;if(!progress.Purchase(n,prices[n]))return;if(model.elapsed==0)Bonuses();Shop();});b.interactable=allowed&&!Owned(i)&&wallet>=prices[i];}
         }
         void Open(string title,bool book=false){Close();model.paused=true;modal=Solid(root,new Vector2(800,450),new Vector2(1600,900),new Color(0,0,0,.55f));modal.name="Modal";if(book)Art(modal.transform,new Vector2(800,450),new Vector2(1250,690),"Codex_Book");else Card(modal.transform,new Vector2(800,450),new Vector2(1100,600));Label(modal.transform,new Vector2(800,book?745:660),new Vector2(950,70),title,32);MakeButton(modal.transform,new Vector2(1330,book?745:660),new Vector2(70,55),"×",Close);}
         void Close(){if(modal!=null){inputBlockedFrame=Time.frameCount;modal.SetActive(false);Destroy(modal);modal=null;}if(model!=null)model.paused=focusPaused;}

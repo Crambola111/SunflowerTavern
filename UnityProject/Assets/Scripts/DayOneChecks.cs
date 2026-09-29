@@ -13,6 +13,7 @@ namespace Sunflower
         }
         public static string Run()
         {
+            ProgressChecks.Run();
             var custom=new TavernModel(new DayConfiguration(10,5,DayConfiguration.CreateFirstDayGuests(),new[]{new ArrivalDefinition(1,1,7)})){started=true};
             custom.Update(1.1f);Require(custom.visitors.Count==1&&custom.At(7).guest.id=="coco","Configured guest/seat not used");
             custom.coins=5;custom.Update(9);Require(custom.ended&&custom.elapsed==10&&custom.Passed,"Configured duration/target not used");
