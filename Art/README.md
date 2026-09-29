@@ -1,5 +1,15 @@
 # 已确认美术目录
 
+## 2026-09-29 22:06 · 六类海岛装修确认与开发素材交付
+
+- 用户确认v2浅海度假风，场景替换位为吧台、座椅、灯具、栏杆、客桌、地板；旧三摆件方案废弃，前三项效果按旧购买映射保留，新增候位/错杯/连击三项。
+- 交付7个透明PNG部件、7个AtlasTexture、7个可实例化Godot场景、实际生成的.import设置与尺寸/锚点/SHA256清单。吧台去掉吊灯，灯具拆为桌灯和吊灯；客桌无灯具，支持独立替换。原始带灯吧台确认稿保留在Art。
+- 验证：7张PNG解码/RGBA/Alpha通过；Godot4.5.1隔离工程headless导入通过，7个纹理与7个场景加载/实例化通过。
+- 未完成：主游戏挂载、六项商店/加成/存档迁移、干净背景与原版独立层、各座位/栏杆透视适配及视觉验收；当前不能称G8已完成。灯光图有静态亮芯，独立火苗层仍待拆分（若需要火苗形变）。
+- 同步现有OVERVIEW/MAP01_RULES、Godot计划和Art清单；不另建玩法方案。新增三项价格待G8平衡，未虚构已经确认价格。
+
+
+
 ## Godot迁移 M1
 
 当前运行素材目录GodotProject/assets，31张PNG按原字节复用。Godot引用路径和用途写入manifest；旧Unity路径暂存作迁移对照，不再追加功能。Bobo/Coco/Horn/Tank/Gecko仅作为对话/图鉴立绘；Bobo/Coco/Horn/Mimi已接入静态座位图；其余CHIBIS待归档，禁止用精细立绘冒充Q版。原稿、已确认状态保持不变。
@@ -120,3 +130,4 @@ D0 Carry及Serve_00/01/02已复制至UnityProject/Assets/Resources/IslandUI，�
 
 
 - 21:45追加：用户要求扩大海岛场景在屏幕中的占比，UI按 Art/Approved/UIReference/01_Gameplay.png 还原（左上地图牌、顶部收入目标、右上计时暂停、桌旁订单气泡、底部图标操作区）。具体要求已加入 SCENE_AMBIENT_REQUIREMENTS.md；布局和动画均待开发实现/验收。
+
