@@ -362,5 +362,35 @@
     "mode": "RGBA",
     "sha256": "ce64e2e5a462b165f8de9092a29e9971bbbf6f23f12b704465639609e838316c",
     "status": "design_approved_pending_normalization_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Southwind/Drink_LimeSoda_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f75e5b903255680c2136c4d28c3bbc40f647d15f6a04e31d9d636578df36e5ac",
+    "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Southwind/Drink_CoconutWater_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "2029fc981f657da50549b30799c6aa6d1fa169455bbe8d906151320f548c07c9",
+    "status": "design_approved_pending_256_export_and_unity"
+  },
+  {
+    "path": "Art/Approved/Drinks/Southwind/Drink_MangoSlush_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1fea586809440f73cd9e9aa69b33f903881be39efb76200a633ba7abaa4ad4f2",
+    "status": "design_approved_pending_256_export_and_unity"
   }
 ]
