@@ -5,9 +5,9 @@
 ## 已实现（待Unity验收）
 
 - 游戏内图鉴入口、书本背景、九个条目位置和锁定状态。
-- Day1/2五位客人数据：Bobo、Coco、Horn、Tank、Gecko；正常收钱解锁，存档保存，跨营业日查看小传和喜欢饮品。
+- Day1/2/3七位客人数据：Bobo、Coco、Horn、Tank、Gecko、Mimi、SPF-8；正常收钱解锁，存档保存，跨营业日查看小传和喜欢饮品。
 - Bobo/Coco/Horn独立图已接入；Tank/Gecko文字可用，缺独立图；列表目前为文字按钮，并非肖像网格。
-- Mimi/SPF-8有机制及小传代码，未加入正式日程/可见图鉴；Snowy/Jiwoo尚待开发。完整九客收藏、挑战备注和头像列表留第14轮。
+- Mimi/SPF-8已加入Day3正式日程/可见图鉴，待独立立绘接入；Snowy/Jiwoo尚待开发。完整九客收藏、挑战备注和头像列表留第14轮。
 
 ## 素材制作任务（无需重画整页UI）
 
@@ -15,8 +15,8 @@
 |---|---|---|---|
 | 当前优先 | Tank_Portrait.png | 海龟潜水员，沿用确认造型 | Day2场内、对话、图鉴 |
 | 当前优先 | Gecko_Portrait.png | 花衬衫、眼镜、记录板的壁虎 | Day2场内、对话、图鉴 |
-| Day3前 | Mimi_Portrait.png | 猴子游客，手机/自拍杆、海岛装 | 场内、对话、图鉴 |
-| Day3前 | SPF8_Portrait.png | 防晒章鱼、草帽、防晒用品 | 场内、对话、图鉴 |
+| 当前优先（Day3已编排） | Mimi_Portrait.png | 猴子游客，手机/自拍杆、海岛装 | 场内、对话、图鉴 |
+| 当前优先（Day3已编排） | SPF8_Portrait.png | 防晒章鱼、草帽、防晒用品 | 场内、对话、图鉴 |
 | Day4前 | Snowy_Portrait.png | 来海岛度假的雪人，沿用确认造型 | 场内、对话、图鉴 |
 | Day4前 | Jiwoo_Portrait.png | 已确认黑发韩国学生，耳机、电脑/背包 | 惊喜客人、对话、图鉴 |
 
