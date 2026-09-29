@@ -345,7 +345,16 @@ func service_hint() -> Dictionary:
 			if not ready.is_empty() and accepts(v, ready):
 				return {"target": 0, "text": "去出酒口取杯，快给Snowy降温！"}
 	if not hand.is_empty():
-		return {"target": -1, "text": "③ 送达：同款可互送；忘记订单可先清空手持再回看。无需求可主动倒掉。"}
+		var candidates: Array = visitors.filter(func(v): return accepts(v, hand) and not (v.guest.id == "horn" and v.bubble <= 0))
+		candidates.sort_custom(func(a, b): return a.patience < b.patience)
+		if not candidates.is_empty():
+			return {"target": candidates[0].seat, "text": "③ 建议送到 P%d；其他已点同款的客人也能接收。" % candidates[0].seat}
+		# Never test the hidden order's drink when deciding which message to show.
+		if visitors.any(func(v): return v.state == State.WAITING and v.guest.id == "horn" and v.bubble <= 0):
+			return {"target": -1, "text": "③ 有订单已隐藏；面向客人点「回看订单」，杯子保留。"}
+		if not bills.is_empty():
+			return {"target": bills.keys()[0], "text": "④ 可先收钱清台，手持杯会保留；之后继续找同款订单。"}
+		return {"target": -1, "text": "③ 暂无可送订单；可留杯等新客，或点「清理成品」主动倒掉。"}
 	if not bills.is_empty():
 		return {"target": bills.keys()[0], "text": "④ 收钱并自动清台，之后新客才能入座。"}
 	if not ready.is_empty():

@@ -25,6 +25,8 @@ var bubbles: Array[TextureRect] = []
 var status: Label
 var queue_label: Label
 var tutorial_label: Label
+var tutorial_panel: Panel
+var review_order: Button
 var toast: Label
 var selection: Label
 var action: Button
@@ -118,9 +120,10 @@ func _ready() -> void:
 	queue_label = label(self, Vector2(837,827), Vector2(650,32), "", 19)
 	held_icon = texture(self, Vector2(455,827), Vector2(38,38), null)
 	status = label(self, Vector2(800,863), Vector2(740,30), "", 17)
-	card(self, Vector2(800,781), Vector2(780,40))
+	tutorial_panel = card(self, Vector2(800,781), Vector2(780,40))
 	tutorial_label = label(self, Vector2(800,781), Vector2(755,36), "", 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
+	review_order = button(self, Vector2(930,730), Vector2(160,42), "回看订单", review_selected_order)
 	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
 	progress = Progress.new()
 	if not progress.error.is_empty():
@@ -273,10 +276,11 @@ func _process(delta: float) -> void:
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
 	var hint: Dictionary = model.service_hint()
 	tutorial_label.visible = tutorial and not model.ended and modal == null
+	tutorial_panel.visible = tutorial_label.visible
 	tutorial_label.text = hint.text
 	if tutorial and model.served > tutorial_baseline:
 		progress.complete_tutorial()
-		tutorial_label.text = "完成！接单 → 取杯 → 送达 → 收钱。"
+		tutorial_label.text = "完成！收钱后自动清台，新客就能入座。"
 		tutorial_time += dt
 		if tutorial_time >= 3:
 			tutorial = false
@@ -376,6 +380,8 @@ func refresh_action() -> void:
 	else:
 		action.text = "饮用中"
 		actionable = false
+	review_order.visible = not v.is_empty() and v.state == Model.State.WAITING
+	review_order.disabled = not can_input() or (not v.is_empty() and model.mimi_warning(v))
 	action.disabled = not can_input() or not actionable
 	action_caption.text = action.text
 	action.tooltip_text = action.text + " · Space"
@@ -443,6 +449,15 @@ func pause_game() -> void:
 		tutorial_baseline = model.served
 		tutorial_time = 0
 		close_modal())
+
+func review_selected_order() -> void:
+	if not can_input():
+		return
+	var v: Dictionary = model.at(model.direction)
+	if v.is_empty() or v.state != Model.State.WAITING or model.mimi_warning(v):
+		return
+	v.bubble = 2.5
+	dialogue(v, true)
 
 func dialogue(v: Dictionary, review := false) -> void:
 	open_modal(v.guest.name)
