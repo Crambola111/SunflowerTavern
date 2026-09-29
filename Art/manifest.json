@@ -1,0 +1,164 @@
+[
+  {
+    "path": "Art/Approved/CharacterDesign/Sunny_TwinTails_Design_v2.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "sha256": "7806575839c504a63c6a6f0da123d34c323c15e756fa9d814927a05abf56fbca"
+  },
+  {
+    "path": "Art/Approved/UIReference/01_Gameplay.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "de4e89d7b23b407128dab2b2002665c2d66f8f723f9066b7d4c7de7c33c7b75a"
+  },
+  {
+    "path": "Art/Approved/UIReference/02_Arrival.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "3880c122b7b6c856150356b231f1e7ee5a3ec3cfcfb208980c4ac576b49e0cd3"
+  },
+  {
+    "path": "Art/Approved/UIReference/03_Dialogue.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "3169845d5edf6bd22efb28615c38240f107f9ae0f4aeca55bd16a434ed1853d7"
+  },
+  {
+    "path": "Art/Approved/UIReference/04_Codex.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "7d20e7b0d3bce1766bf6b140921b08501f095046935b0917c7bba46aff5ee8ac"
+  },
+  {
+    "path": "Art/Approved/UIReference/05_Settlement.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "3fac6b1168ac4541c8605a706c49b6c77a4674e5f03ae597dd6f20c2c15848c2"
+  },
+  {
+    "path": "Art/Approved/UIReference/06_Decoration.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "da9627353ec1ea39e9286719e34ccbc9bd0d9264666222ad611cab44aedff33a"
+  },
+  {
+    "path": "Art/Approved/WorldReference/GuestLineup.jpg",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "sha256": "014e5a4d0f6ee038d3ef4bc25394eb08fdf5a78dca41b9a95eed3e2236575112"
+  },
+  {
+    "path": "Art/Approved/WorldReference/IslandReference.jpg",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "sha256": "b2eeb48ebcfce40dda7466057370005bd740f525939a56d72252a5942ee652c9"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Bobo_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "644ce8f1099131312064ea899ada23f0408b09ec75b79375add6c06b3212fc61"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Button_Gold.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "549c0ef1d54bc9313678cfb64e6d7b511d5a3bd7188b1f98fdb4ee308b87b8e0"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Coco_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "f5824fc251b6bf55621f9f576599744f813dfeb7f8a0808d2cd2ea3bb05fc804"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Codex_Book.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGBA",
+    "sha256": "030c022cad90eaf37e3cc1acd20435b4e20503ce800fce5835a9740d9008c781"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Dialogue_Panel.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "sha256": "d9a9026cdd5e88314beec9e7480012395f1e154ce3c6cc00ad6d2693fd2a132b"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Horn_Portrait.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "e8e5d7852b0af1d9d38df71c2b94327e4f1842afed43a17aebdb04be67647504"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Island_Background.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "sha256": "9587ee5ab3f0ba448b9b6a744e3f48f54ba277e5b0f044a0d9d9e52e6a61dc2b"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/Sunny_Chibi.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "04836c86160bc61fe806eaa20dfc8a6173fd83d65a61ae789422f21ce2e4726f"
+  },
+  {
+    "path": "UnityProject/Assets/Resources/IslandUI/TableFront_Combined.png",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGBA",
+    "sha256": "9fa68c2c9a26870eb333100a99d12ff784297e80d598124b1cffd7a052c0ec16"
+  }
+]
