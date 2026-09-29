@@ -45,6 +45,11 @@ func panel(asset: String) -> StyleBoxTexture:
 
 # Runtime atlas crops keep the approved PNG originals intact.
 const UI_REGIONS := {
+	"UI_Icon_Pause_Southwind_v1": Rect2(339, 312, 577, 630),
+	"UI_Icon_Codex_Southwind_v1": Rect2(200, 157, 898, 961),
+	"UI_Icon_Decorate_Southwind_v1": Rect2(159, 152, 976, 954),
+	"UI_Icon_TurnRight_Southwind_v1": Rect2(111, 171, 1076, 928),
+	"UI_Icon_TurnLeft_Southwind_v1": Rect2(133, 165, 996, 920),
 	"UI_TimerPlate_Southwind_v1": Rect2(112, 143, 1836, 450),
 	"UI_RoundButtonBase_Southwind_v1": Rect2(74, 72, 1106, 1098),
 	"UI_MapNamePlate_Southwind_v1": Rect2(33, 143, 2090, 408),

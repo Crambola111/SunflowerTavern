@@ -460,20 +460,47 @@ func review_selected_order() -> void:
 	dialogue(v, true)
 
 func dialogue(v: Dictionary, review := false) -> void:
-	open_modal(v.guest.name)
-	texture(modal,Vector2(515,420),Vector2(250,300),art.portrait(v.guest.id))
-	texture(modal,Vector2(675,415),Vector2(55,55),art.drink(v.guest.drink) if not model.tank_attention(v) else null)
+	# Native bottom dialogue overlay; a modal pauses service without hiding the scene.
+	close_modal()
+	model.paused = true
+	modal = Control.new()
+	modal.name = "OrderDialogue"
+	modal.size = Vector2(1600,900)
+	modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(modal)
+	var shade := ColorRect.new()
+	place(shade, modal, Vector2(800,450), Vector2(1600,900))
+	shade.color = Color(0,0,0,0.38)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var guest_portrait := texture(modal, Vector2(325,449), Vector2(500,480), art.portrait(v.guest.id))
+	guest_portrait.name = "GuestPortrait"
+	# Explicit temporary presentation; replace with an approved dialogue portrait when supplied.
+	var host := texture(modal, Vector2(1290,464), Vector2(410,450), art.texture("Sunny_Chibi"))
+	host.name = "SunnyDialogueFallback"
+	var panel := card(modal, Vector2(800,765), Vector2(1530,230))
+	panel.name = "DialoguePanel"
+	texture(modal, Vector2(245,647), Vector2(355,69), art.ui_texture("UI_MapNamePlate_Southwind_v1"))
+	var name_label := label(modal, Vector2(275,646), Vector2(255,48), v.guest.name.split(" ")[0], 26)
+	name_label.add_theme_color_override("font_color", Color("fff0bd"))
 	var order := "咕噜咕噜……（呼吸器还没摘）" if model.tank_attention(v) else "来%d杯%s！" % [v.guest.cups,v.guest.drink]
+	if review:
+		order = "还需要%d杯%s。" % [v.guest.cups-v.delivered,v.guest.drink]
 	if model.needs_cooling(v):
 		order += "\n请在剩余 %d 秒内送到！" % ceili(v.heat_remaining)
-	label(modal,Vector2(945,420),Vector2(470,230),v.guest.bio+"\n\n"+order,24)
+	var content := label(modal, Vector2(620,754), Vector2(890,135), order, 28)
+	content.name = "OrderText"
+	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	texture(modal,Vector2(111,751),Vector2(66,80),art.drink(v.guest.drink) if not model.tank_attention(v) else null)
+	label(modal,Vector2(620,840),Vector2(900,30),"回看期间已暂停 · 手持饮品保留" if review else "交谈期间已暂停 · 确认后才接单",18)
+	button(modal,Vector2(1430,140),Vector2(210,55),"返回营业",close_modal)
 	if review:
-		button(modal,Vector2(940,590),Vector2(300,65),"记住了",close_modal)
+		button(modal,Vector2(1300,740),Vector2(350,66),"记住了",close_modal)
 		return
-	button(modal,Vector2(940,590),Vector2(300,65),"先摘呼吸器吧" if model.tank_attention(v) else "马上来！",func():
+	button(modal,Vector2(1300,727),Vector2(350,66),"先摘呼吸器吧" if model.tank_attention(v) else "马上来！",func():
 		close_modal()
 		model.direction = v.seat
 		model.interact())
+	button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
 
 func codex(selected: int) -> void:
 	open_modal("客人图鉴",true)
@@ -599,7 +626,13 @@ func button(parent: Node, center: Vector2, dimensions: Vector2, text: String, ca
 	return control
 
 func round_button(center: Vector2, caption: String, callback: Callable) -> Button:
-	var control := button(self, center, Vector2(72,72), caption, callback)
+	var control := button(self, center, Vector2(72,72), "", callback)
+	control.tooltip_text = caption
+	var icon_names := {"图鉴":"Codex", "装饰":"Decorate", "←":"TurnLeft", "→":"TurnRight", "Ⅱ":"Pause"}
+	var icon := texture(control, Vector2(36,36), Vector2(43,43), art.ui_texture("UI_Icon_%s_Southwind_v1" % icon_names[caption]))
+	icon.name = "ButtonIcon"
+	if caption in ["图鉴", "装饰"]:
+		label(self, center+Vector2(0,49), Vector2(90,25), caption, 16)
 	var box := StyleBoxTexture.new()
 	box.texture = art.ui_texture("UI_RoundButtonBase_Southwind_v1")
 	for state in ["normal", "hover", "pressed", "disabled"]:
