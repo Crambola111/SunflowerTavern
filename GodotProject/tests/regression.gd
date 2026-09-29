@@ -28,7 +28,8 @@ func play(m: RefCounted) -> void:
 			m.direction = 0
 			m.interact()
 		if not m.hand.is_empty():
-			var v: Dictionary = m.owner(m.hand)
+			var matches: Array = m.visitors.filter(func(v): return m.accepts(v, m.hand))
+			var v: Dictionary = matches[0] if not matches.is_empty() else {}
 			if not v.is_empty():
 				m.direction = v.seat
 				m.interact()
@@ -75,7 +76,7 @@ func _initialize() -> void:
 	check(m.at(2).is_empty() and m.at(3).guest.id == "gecko","Gecko moves after five seconds")
 	m.direction = 0
 	m.interact()
-	check(m.owner(m.hand).seat == 3,"Cup follows visit across seat change")
+	check(m.accepts(m.at(3), m.hand),"Drink type accepted after seat change")
 	m.direction = 3
 	m.interact()
 	check(m.at(3).state == Model.State.DRINKING,"Delivery to moved customer")
@@ -120,7 +121,7 @@ func _initialize() -> void:
 	m.update(2.1)
 	m.interact()
 	check(m.served == 1 and m.coins == 31 and m.codex.has("spf8"),"Two cups settle once")
-	# Wrong recipient consumes patience, not the cup; cleanup removes all order stages.
+	# Wrong drink consumes patience, not the cup; departures preserve finished drinks.
 	m = Model.new({"duration":60,"target":10,"guests":["bobo","spf8"],"arrivals":[{"time":1,"guest":"bobo","seat":2},{"time":1,"guest":"spf8","seat":4}]})
 	m.started = true
 	m.update(1.1)
@@ -136,7 +137,7 @@ func _initialize() -> void:
 	check(m.at(2).patience == patience-2 and not m.hand.is_empty(),"Wrong cup retained, patience -2")
 	m.at(4).patience = 0.01
 	m.update(0.05)
-	check(m.hand.is_empty() and not m.queue.any(func(c):return c.owner==1),"Miss cleans hand and queued second cup")
+	check(not m.hand.is_empty() and not m.queue.any(func(c):return c.drink=="椰子水" and not c.started),"Miss preserves hand and cancels unstarted surplus")
 	for assisted in [false,true]:
 		m = isolated("snowy",assisted)
 		var heat: float = m.at(2).heat_remaining
@@ -148,7 +149,7 @@ func _initialize() -> void:
 		m.interact()
 		check(m.at(2).heat_remaining == heat,"Accepting does not reset heat")
 		m.update(heat+0.1)
-		check(m.visitors.is_empty() and m.queue.is_empty() and m.ready.is_empty() and m.missed==1,"Snowy timeout cleans once")
+		check(m.visitors.is_empty() and m.queue.is_empty() and not m.ready.is_empty() and m.missed==1,"Snowy timeout preserves completed cup")
 	m = isolated("snowy")
 	m.interact()
 	m.update(3.1)
@@ -183,6 +184,7 @@ func _initialize() -> void:
 	m.update(0.1)
 	check(m.visitors.any(func(v):return v.guest.id=="jiwoo" and v.guest.drink=="冰美式"),"Reservation survives six seconds, priority and scheduled variant")
 	check(m.visitors.filter(func(v):return v.guest.id=="jiwoo").size()==1,"No duplicate surprise guest")
+	check_shared_cups()
 	check_progress()
 	print("Godot regression: %d checks, %d failures" % [checks,failures])
 	quit(1 if failures else 0)
@@ -212,3 +214,79 @@ func check_progress() -> void:
 	var future := Progress.new(path)
 	check(not future.error.is_empty() and not future.save() and FileAccess.get_file_as_string(path)=='{"version":999}',"Future or corrupt save preserved")
 	DirAccess.remove_absolute(path)
+
+func pair(first: String, second: String) -> RefCounted:
+	var m := Model.new({"duration":60,"target":10,"guests":[first,second],"arrivals":[{"time":1,"guest":first,"seat":2},{"time":1,"guest":second,"seat":5}]})
+	m.started = true
+	m.update(1.1)
+	return m
+
+func check_shared_cups() -> void:
+	var m := pair("bobo", "snowy")
+	m.direction = 2
+	m.interact()
+	m.update(3.1)
+	m.direction = 0
+	m.interact()
+	check(not m.hand.has("owner"), "Finished cup contains no visitor ownership")
+	check(not m.accepts(m.at(5), m.hand), "Unordered same-drink visitor cannot receive")
+	m.direction = 5
+	m.interact()
+	check(m.queue.size() == 1, "Two same-drink orders minus held supply require exactly one new job")
+	m.interact()
+	check(m.at(5).state == Model.State.DRINKING and m.at(2).state == Model.State.WAITING, "Bobo's first produced drink serves Snowy")
+	check(m.queue.size() == 1, "Remaining Bobo demand retains exactly one queued cup")
+	m.update(2.1)
+	m.interact()
+	check(m.codex.has("snowy") and not m.codex.has("bobo") and m.coins == 13, "Actual recipient receives codex and payout")
+	m.remove_visit(m.at(2))
+	check(m.queue.size() == 1 and m.queue[0].started, "Already started drink survives cancelled demand")
+	m.update(1.1)
+	check(not m.ready.is_empty() and m.queue.is_empty(), "Orphan in-progress drink finishes")
+	m.paused = true
+	m.discard_cup(false)
+	check(not m.ready.is_empty(), "Paused discard is ignored")
+	m.paused = false
+	m.discard_cup(false)
+	check(m.ready.is_empty() and m.queue.is_empty(), "Discard orphan does not brew without demand")
+	m = pair("coco", "spf8")
+	m.direction = 2
+	m.interact()
+	m.update(5.1)
+	m.direction = 5
+	m.interact()
+	check(m.queue.size() == 2, "Three coconut demands minus one ready yields two jobs")
+	m.remove_visit(m.at(2))
+	check(not m.ready.is_empty() and m.queue.size() == 1, "Departure retains ready and trims last unstarted surplus")
+	for n in 2:
+		m.direction = 0
+		m.interact()
+		m.direction = 5
+		m.interact()
+		if n == 0:
+			check(m.at(5).delivered == 1 and m.coins == 0 and not m.codex.has("spf8"), "SPF accepts shared first cup without payout")
+			m.update(5.1)
+	check(m.at(5).state == Model.State.DRINKING and m.queue.is_empty(), "SPF accepts two generic cups with no duplicate jobs")
+	m = isolated("horn")
+	m.interact()
+	m.update(4.1)
+	m.direction = 0
+	m.interact()
+	check(m.service_hint().target == -1, "Held cup does not reveal hidden Horn seat")
+	m.discard_cup(true)
+	check(m.hand.is_empty() and m.queue.size() == 1, "Discard demanded cup replaces exactly one job")
+	m.reconcile_queue()
+	check(m.queue.size() == 1, "Repeated reconciliation cannot duplicate jobs")
+	m.update(4.1)
+	m.remove_visit(m.visitors[0])
+	check(not m.ready.is_empty(), "Completed cup survives departure")
+	m.update(60)
+	check(m.ready.is_empty() and m.hand.is_empty() and m.queue.is_empty(), "Closing clears all transient drink supply")
+	m = isolated("spf8")
+	m.interact()
+	m.hand = {"drink":"椰子水"}
+	m.ready = {"drink":"椰子水"}
+	m.reconcile_queue()
+	check(m.queue.is_empty(), "Two existing cups cover SPF demand")
+	m.discard_cup(false)
+	check(not m.hand.is_empty() and m.ready.is_empty() and m.queue.size() == 1, "Discard outlet does not delete held cup")

@@ -83,6 +83,25 @@ func run() -> void:
 		ui._process(0)
 		ui.dialogue(ui.model.at(2))
 		check(ui.modal!=null,"Special guest dialogue: "+id)
+	ui.close_modal()
+	ui.model.hand = {"drink":"芒果冰沙"}
+	ui.model.ready = {"drink":"椰子水"}
+	await process_frame
+	await process_frame
+	ui.confirm_discard()
+	check(ui.modal != null and ui.model.paused, "Discard confirmation pauses gameplay")
+	ui.close_modal()
+	check(not ui.model.hand.is_empty() and not ui.model.ready.is_empty(), "Cancel preserves both cups")
+	await process_frame
+	await process_frame
+	ui.confirm_discard()
+	for child in ui.modal.get_children():
+		if child is Button and child.text.begins_with("确认倒掉出酒口"):
+			child.pressed.emit()
+			break
+	check(ui.model.ready.is_empty() and not ui.model.hand.is_empty() and ui.modal == null, "Confirm targets only selected supply slot")
+	ui._process(0)
+	check(ui.queue_label.text == "手持：芒果冰沙 · 同款可互送", "HUD does not assign an exclusive recipient")
 	ui.queue_free()
 	await process_frame
 	DirAccess.remove_absolute(path)
