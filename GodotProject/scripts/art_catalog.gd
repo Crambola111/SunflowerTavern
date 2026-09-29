@@ -42,3 +42,19 @@ func panel(asset: String) -> StyleBoxTexture:
 	box.texture_margin_top = 12
 	box.texture_margin_bottom = 12
 	return box
+
+# Runtime atlas crops keep the approved PNG originals intact.
+const UI_REGIONS := {
+	"UI_TimerPlate_Southwind_v1": Rect2(112, 143, 1836, 450),
+	"UI_RoundButtonBase_Southwind_v1": Rect2(74, 72, 1106, 1098),
+	"UI_MapNamePlate_Southwind_v1": Rect2(33, 143, 2090, 408),
+	"UI_IncomeGoalPlate_Southwind_v1": Rect2(25, 158, 2125, 355),
+	"UI_OrderBubble_Southwind_v1": Rect2(85, 105, 1465, 758),
+	"UI_InteractButton_Southwind_v1": Rect2(57, 59, 1133, 1138)
+}
+
+func ui_texture(asset: String) -> AtlasTexture:
+	var atlas := AtlasTexture.new()
+	atlas.atlas = texture(asset)
+	atlas.region = UI_REGIONS[asset]
+	return atlas

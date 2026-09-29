@@ -17,6 +17,11 @@ var current_day := 1
 var assisted := false
 var modal: Control
 var hud: Label
+var income_label: Label
+var wallet_label: Label
+var timer_label: Label
+var action_caption: Label
+var bubbles: Array[TextureRect] = []
 var status: Label
 var queue_label: Label
 var tutorial_label: Label
@@ -68,23 +73,47 @@ func _ready() -> void:
 	for i in 8:
 		var selected := i
 		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(200,70), "", func(): select_seat(selected)))
-		seats[i].add_theme_font_size_override("font_size", 16)
+		seats[i].add_theme_font_size_override("font_size", 15)
+		var bubble := texture(self, SEATS[i]+Vector2(0,65), Vector2(190,98), art.ui_texture("UI_OrderBubble_Southwind_v1"))
+		bubbles.append(bubble)
+		# Bubble is below the transparent button; the whole table remains clickable.
+		move_child(bubble, seats[i].get_index())
+		if i > 0:
+			for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+				seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
+			seats[i].size = Vector2(156,70)
+			seats[i].position.x += 6
+			seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
+			seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
 		var bar := ProgressBar.new()
 		place(bar, self, SEATS[i]+Vector2(0,106), Vector2(150,7))
 		bar.show_percentage = false
 		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		bars.append(bar)
-		icons.append(texture(self, SEATS[i]+Vector2(83,4) if i > 0 else SEATS[i]+Vector2(0,-58), Vector2(48,48), null))
-	card(self, Vector2(800,50), Vector2(1540,88))
-	hud = label(self, Vector2(760,50), Vector2(1390,65), "", 24)
-	button(self, Vector2(1520,50), Vector2(65,50), "Ⅱ", pause_game)
-	button(self, Vector2(100,835), Vector2(150,64), "客人图鉴", func(): codex(0))
-	button(self, Vector2(270,835), Vector2(150,64), "装饰酒馆", shop)
-	button(self, Vector2(1300,835), Vector2(70,64), "←", func(): turn(-1))
-	action = button(self, Vector2(1400,835), Vector2(120,64), "互动", interact)
-	button(self, Vector2(1500,835), Vector2(70,64), "→", func(): turn(1))
-	card(self, Vector2(1400,768), Vector2(300,46))
-	selection = label(self, Vector2(1400,768), Vector2(280,34), "", 18)
+		icons.append(texture(self, SEATS[i]+Vector2(69,53) if i > 0 else SEATS[i]+Vector2(0,-58), Vector2(32,32), null))
+	texture(self, Vector2(220,48), Vector2(405,79), art.ui_texture("UI_MapNamePlate_Southwind_v1"))
+	hud = label(self, Vector2(247,48), Vector2(300,45), "", 22)
+	hud.add_theme_color_override("font_color", Color("fff0bd"))
+	texture(self, Vector2(790,48), Vector2(600,100), art.ui_texture("UI_IncomeGoalPlate_Southwind_v1"))
+	income_label = label(self, Vector2(704,48), Vector2(275,45), "", 20)
+	wallet_label = label(self, Vector2(961,48), Vector2(185,45), "", 20)
+	texture(self, Vector2(1340,48), Vector2(250,65), art.ui_texture("UI_TimerPlate_Southwind_v1"))
+	timer_label = label(self, Vector2(1364,48), Vector2(190,50), "", 19)
+	timer_label.add_theme_color_override("font_color", Color("fff0bd"))
+	round_button(Vector2(1520,48), "Ⅱ", pause_game)
+	round_button(Vector2(100,835), "图鉴", func(): codex(0))
+	round_button(Vector2(205,835), "装饰", shop)
+	round_button(Vector2(1290,835), "←", func(): turn(-1))
+	action = button(self, Vector2(1400,816), Vector2(92,92), "互动", interact)
+	round_button(Vector2(1510,835), "→", func(): turn(1))
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		action.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_disabled_color", "font_focus_color"]:
+		action.add_theme_color_override(state, Color.TRANSPARENT)
+	texture(action, Vector2(46,46), Vector2(92,92), art.ui_texture("UI_InteractButton_Southwind_v1"))
+	action_caption = label(self, Vector2(1400,878), Vector2(180,30), "", 18)
+	card(self, Vector2(1400,748), Vector2(300,46))
+	selection = label(self, Vector2(1400,748), Vector2(280,34), "", 18)
 	card(self, Vector2(800,845), Vector2(780,82))
 	queue_label = label(self, Vector2(837,827), Vector2(650,32), "", 19)
 	held_icon = texture(self, Vector2(455,827), Vector2(38,38), null)
@@ -210,7 +239,10 @@ func _process(delta: float) -> void:
 	if not progress.error.is_empty():
 		show_error(progress.error)
 		return
-	hud.text = "南风岛 · 第%d天 · %s       今日 %d / %d       钱包 %d       %d 秒" % [current_day, "辅助" if assisted else "标准", model.coins, model.day.target, progress.data.wallet, ceili(model.day.duration-model.elapsed)]
+	hud.text = "南风岛 · 第%d天" % current_day
+	income_label.text = "收入 %d / %d" % [model.coins, model.day.target]
+	wallet_label.text = "钱包 %d" % progress.data.wallet
+	timer_label.text = "%s · %d 秒" % ["辅助" if assisted else "标准", maxi(0, ceili(model.day.duration-model.elapsed))]
 	var dt := 0.0 if model.paused or model.ended or focus_paused else delta
 	ambient.advance(dt)
 	feedback_time = maxf(0, feedback_time-dt)
@@ -256,6 +288,8 @@ func refresh_seats(dt: float, hint: int) -> void:
 	for i in 8:
 		seats[i].modulate = Color("b6ffb6") if hint == i else (Color("ffc24a") if model.direction == i else Color.WHITE)
 		bars[i].visible = false
+		bubbles[i].visible = i > 0 and (not model.at(i).is_empty() or model.bills.has(i) or model.blocked(i))
+		bubbles[i].modulate = seats[i].modulate
 		if i == 0:
 			seats[i].text = "出酒口 · 取杯" if not model.ready.is_empty() else "出酒口"
 			continue
@@ -274,7 +308,8 @@ func refresh_seats(dt: float, hint: int) -> void:
 			seats[i].text = "P%d · 待收款\n金币 · 用过的杯子 ×%d" % [i, model.bills[i].cups]
 			continue
 		if v.is_empty():
-			seats[i].text = "P%d · %s" % [i, "行李占座" if model.blocked(i) else "空位"]
+			seats[i].text = "行李占座" if model.blocked(i) else ""
+			seats[i].tooltip_text = "P%d · 空位" % i
 			if visibility[i] == 0:
 				visit_ids.erase(i)
 			continue
@@ -342,6 +377,9 @@ func refresh_action() -> void:
 		action.text = "饮用中"
 		actionable = false
 	action.disabled = not can_input() or not actionable
+	action_caption.text = action.text
+	action.tooltip_text = action.text + " · Space"
+	action.modulate = Color(1,1,1,0.5) if action.disabled else Color.WHITE
 
 func choose_day(day: int) -> void:
 	if not progress.can_enter(day) or (not model.ended and model.elapsed > 0):
@@ -543,4 +581,16 @@ func button(parent: Node, center: Vector2, dimensions: Vector2, text: String, ca
 		control.add_theme_color_override("font_"+state+"_color",Color("48270e"))
 	control.add_theme_color_override("font_color",Color("48270e"))
 	control.pressed.connect(callback)
+	return control
+
+func round_button(center: Vector2, caption: String, callback: Callable) -> Button:
+	var control := button(self, center, Vector2(72,72), caption, callback)
+	var box := StyleBoxTexture.new()
+	box.texture = art.ui_texture("UI_RoundButtonBase_Southwind_v1")
+	for state in ["normal", "hover", "pressed", "disabled"]:
+		control.add_theme_stylebox_override(state, box)
+	for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		control.add_theme_color_override(state, Color("fff0bd"))
+	control.mouse_entered.connect(func(): control.modulate = Color(1.15,1.15,1.15))
+	control.mouse_exited.connect(func(): control.modulate = Color.WHITE)
 	return control
