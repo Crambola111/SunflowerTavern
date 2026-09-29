@@ -3,7 +3,7 @@ extends RefCounted
 
 # Explicit separation: a portrait is never silently substituted for an in-game chibi.
 const PORTRAITS := {"bobo": "Bobo_Portrait", "coco": "Coco_Portrait", "horn": "Horn_Portrait", "gecko": "Gecko_Portrait", "tank": "Tank_Portrait"}
-const CHIBIS := {} # Add confirmed *_Chibi sprites here as they enter the repository.
+const CHIBIS := {"bobo": "Bobo_Seated_v1", "coco": "Coco_Seated_v1"} # Approved static seated sprites.
 const DRINKS := {"芒果冰沙": "Drink_MangoSlush_v1", "椰子水": "Drink_CoconutWater_v1", "青柠苏打": "Drink_LimeSoda_v1", "冰美式": "Drink_IcedAmericano_v1", "夜间无酒精特调": "Drink_NightMocktail_v1"}
 var cache := {}
 
