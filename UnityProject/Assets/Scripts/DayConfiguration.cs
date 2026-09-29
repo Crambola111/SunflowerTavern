@@ -29,9 +29,9 @@ namespace Sunflower
             for(int i=0;i<guests.Length;i++)
             {
                 var g=guests[i];
-                if(g==null||string.IsNullOrWhiteSpace(g.id)||!ids.Add(g.id)||string.IsNullOrWhiteSpace(g.name)||string.IsNullOrWhiteSpace(g.drink)||g.price<=0||float.IsNaN(g.brew)||float.IsInfinity(g.brew)||g.brew<=0)
+                if(g==null||string.IsNullOrWhiteSpace(g.id)||!ids.Add(g.id)||string.IsNullOrWhiteSpace(g.name)||string.IsNullOrWhiteSpace(g.drink)||g.price<=0||g.cups<1||g.cups>2||float.IsNaN(g.brew)||float.IsInfinity(g.brew)||g.brew<=0)
                     throw new ArgumentException("Guest IDs must be unique; names, drinks, price and brew time must be valid.");
-                copy[i]=new GuestDefinition(g.id,g.name,g.drink,g.price,g.brew,g.portrait,g.bio);
+                copy[i]=new GuestDefinition(g.id,g.name,g.drink,g.price,g.brew,g.portrait,g.bio){cups=g.cups};
             }
             float previous=-1;
             foreach(var a in arrivals)
@@ -43,6 +43,9 @@ namespace Sunflower
             Duration=duration;TargetCoins=targetCoins;
             Guests=Array.AsReadOnly(copy);Arrivals=Array.AsReadOnly((ArrivalDefinition[])arrivals.Clone());
         }
+
+        public static GuestDefinition CreateSpf8()=>new GuestDefinition("spf8","SPF-8 · 防晒章鱼","椰子水",28,5,1,
+            "八只手，七只补防晒，剩下一只嫌忙。点两杯不是请朋友，是怕换手的时候没得喝。") {cups=2};
 
         public static GuestDefinition CreateMimi()=>new GuestDefinition("mimi","Mimi · 猴子游客","芒果冰沙",10,3,6,
             "旅行攻略只有两条：自拍找角度，零钱找机会。被老板抓包就举起手机：别误会，我在拍金币特写。");

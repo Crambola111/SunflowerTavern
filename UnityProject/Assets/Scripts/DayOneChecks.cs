@@ -11,6 +11,41 @@ namespace Sunflower
             var model=new TavernModel{started=true};model.Update(8.1f);
             Require(model.visitors.Count==1,"First visitor did not arrive");return model;
         }
+        static TavernModel SpfOrder()
+        {
+            var model=new TavernModel(new DayConfiguration(60,10,new[]{DayConfiguration.CreateSpf8()},new[]{new ArrivalDefinition(1,0,3)})){started=true};
+            model.Update(1.1f);model.direction=3;model.Interact();return model;
+        }
+        static void CheckSpf8()
+        {
+            var model=SpfOrder();var guest=model.At(3);model.Interact();
+            Require(model.queue.Count==2&&model.queue.TrueForAll(c=>c.owner==guest.id),"SPF duplicate or wrong-owner cups");
+            model.Update(5.1f);model.direction=0;model.Interact();model.direction=3;
+            float patience=guest.patience;model.Interact();model.Interact();
+            Require(guest.deliveredCups==1&&guest.state==VisitState.Waiting&&guest.patience==patience&&model.coins==0&&!model.codex.Contains("spf8"),"Partial SPF order settled or reset patience");
+            var cup=model.queue[0];float remaining=cup.remaining;
+            model.paused=true;model.Update(8);model.Interact();
+            Require(cup.remaining==remaining&&guest.deliveredCups==1,"Paused SPF advanced");model.paused=false;
+            model.Update(5.1f);model.direction=0;model.Interact();model.direction=3;model.Interact();model.Interact();
+            Require(guest.deliveredCups==2&&guest.state==VisitState.Drinking&&model.hand==null,"SPF final cup invalid");
+            model.Update(2.1f);model.Interact();int income=model.coins;model.Interact();
+            Require(model.served==1&&model.combo==1&&income==28+guest.tip&&model.coins==income&&model.codex.Contains("spf8"),"SPF charged twice or incorrect price");
+            foreach(int phase in new[]{0,1,2})
+            {
+                var expired=SpfOrder();var v=expired.At(3);
+                expired.Update(5.1f);expired.direction=0;expired.Interact();expired.direction=3;expired.Interact();
+                if(phase>0)expired.Update(5.1f);
+                if(phase==2){expired.direction=0;expired.Interact();}
+                v.patience=.001f;expired.Update(.1f);
+                Require(expired.visitors.Count==0&&expired.queue.Count==0&&expired.ready==null&&expired.hand==null&&expired.missed==1&&expired.coins==0&&!expired.codex.Contains("spf8"),"Partial SPF timeout left cups/reward");
+            }
+            var wrong=SpfOrder();var target=wrong.At(3);wrong.hand=new Cup{owner=99,drink=target.guest.drink};wrong.Interact();
+            Require(target.deliveredCups==0&&wrong.hand!=null&&target.patience<25,"Wrong cup advanced SPF progress");
+            var source=DayConfiguration.CreateSpf8();var config=new DayConfiguration(60,10,new[]{source},new[]{new ArrivalDefinition(1,0,3)});source.cups=1;
+            Require(config.Guests[0].cups==2,"Configuration lost or shared cup count");
+            bool rejected=false;source.cups=3;try{new DayConfiguration(60,10,new[]{source},new[]{new ArrivalDefinition(1,0,3)});}catch(ArgumentException){rejected=true;}
+            Require(rejected,"Invalid cup count accepted");
+        }
         static TavernModel MimiOrder(bool assisted=false)
         {
             var day=new DayConfiguration(60,10,new[]{DayConfiguration.CreateMimi()},new[]{new ArrivalDefinition(1,0,3)});
@@ -158,6 +193,7 @@ namespace Sunflower
             Require(abandonedTank.visitors.Count==0&&abandonedTank.queue.Count==0&&abandonedTank.missed==1&&!abandonedTank.codex.Contains("tank"),"Tank attention step prevented timeout or unlocked codex early");
             CheckGecko();
             CheckMimi();
+            CheckSpf8();
             var guide=FirstGuest();int target;
             guide.ServiceHint(out target);Require(target==guide.visitors[0].seat,"Guide must point at first order");
             guide.direction=target;guide.Interact();guide.ServiceHint(out target);Require(target==-1,"Brewing must not point at an empty outlet");

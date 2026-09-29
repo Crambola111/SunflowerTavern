@@ -9,13 +9,15 @@ namespace Sunflower
     {
         public string id, name, drink, bio;
         public int price, portrait;
+        public int cups=1;
         public float brew;
         public GuestDefinition(string id, string name, string drink, int price, float brew, int portrait, string bio)
         { this.id=id; this.name=name; this.drink=drink; this.price=price; this.brew=brew; this.portrait=portrait; this.bio=bio; }
     }
     public sealed class Visit
     {
-        public int id, seat, blocked, tip;
+        public int id, seat, blocked, tip, deliveredCups;
+        public string OrderText=>guest.drink+(guest.cups>1?" · 已送 "+deliveredCups+"/"+guest.cups+" 杯":"");
         public GuestDefinition guest;
         public VisitState state;
         public bool mimiAttempted;
@@ -97,18 +99,20 @@ namespace Sunflower
                         break;
                     }
                     v.state=VisitState.Waiting;v.bubble=2.5f;
-                    queue.Add(new Cup{owner=v.id,drink=v.guest.drink,remaining=v.guest.brew,duration=v.guest.brew});
+                    for(int n=0;n<v.guest.cups;n++)queue.Add(new Cup{owner=v.id,drink=v.guest.drink,remaining=v.guest.brew,duration=v.guest.brew});
                     message="订单已送到出酒口，自动开始制作。";break;
                 case VisitState.Waiting:
                     if(v.MimiWarning){v.mimiAttempted=true;message="Mimi：我只是帮金币拍张游客照！已打断，再互动可送饮品。";break;}
-                    if(hand==null){v.bubble=2.5f;message=v.guest.name+"："+v.guest.drink;break;}
+                    if(hand==null){v.bubble=2.5f;message=v.guest.name+"："+v.OrderText;break;}
                     if(hand.owner!=v.id){
                         v.patience=Math.Max(0,v.patience-2);v.bubble=2.5f;
                         if(v.patience<=0)Miss(v);
                         else {var owner=visitors.Find(g=>g.id==hand.owner);message="送错了，耐心 -2 秒。"+(owner==null?"":"这杯请送到 P"+owner.seat+"。");}
                         break;
                     }
-                    hand=null;v.tip=v.patience>=17.5f?3:v.patience>=7.5f?1:0;v.state=VisitState.Drinking;v.timer=2;
+                    hand=null;v.deliveredCups++;
+                    if(v.deliveredCups<v.guest.cups){v.bubble=2.5f;message="已送 "+v.deliveredCups+"/"+v.guest.cups+" 杯，再去取剩下的饮品。";break;}
+                    v.tip=v.patience>=17.5f?3:v.patience>=7.5f?1:0;v.state=VisitState.Drinking;v.timer=2;
                     message="送达！喝完之后记得收钱。";break;
                 case VisitState.Payment:
                     combo++;bestCombo=Math.Max(combo,bestCombo);int gain=v.guest.price+v.tip+Math.Min(5,Math.Max(0,combo-2));

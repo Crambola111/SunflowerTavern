@@ -184,7 +184,7 @@ namespace Sunflower
                 labels[i].color=new Color(.25f,.12f,.05f);
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
-                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.MimiWarning?"伸手中！互动打断 "+Mathf.CeilToInt((model.Assisted?4:2)-v.mimiWarningTime)+"s":v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.guest.drink):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
+                labels[i].text="P"+i+" · "+v.guest.name.Split(' ')[0]+"\n"+(v.state==VisitState.Order?(v.NeedsTankAttention?"提醒摘呼吸器":"点单"):v.state==VisitState.Waiting?(v.MimiWarning?"伸手中！互动打断 "+Mathf.CeilToInt((model.Assisted?4:2)-v.mimiWarningTime)+"s":v.GeckoMoveWarning?"准备换座 "+Mathf.CeilToInt(5-v.geckoWait)+"s":v.guest.id=="horn"&&v.bubble<=0?"再问一次":v.OrderText):v.state==VisitState.Drinking?"饮用中":"收钱 "+Mathf.CeilToInt(v.timer));
                 bool payment=v.state==VisitState.Payment;
                 bool waiting=v.state==VisitState.Order||v.state==VisitState.Waiting;
                 bool urgent=payment?v.timer<=3:waiting&&v.patience<=7.5f;
@@ -324,7 +324,7 @@ namespace Sunflower
             MakeButton(modal.transform,new Vector2(970,310),new Vector2(290,65),model.Assisted?"切换标准模式":"切换辅助模式",()=>RestartDay(!model.Assisted));
         }
         void Pause(){if(model.ended){Settlement();return;}Open("休息一下");MakeButton(modal.transform,new Vector2(800,470),new Vector2(300,70),"继续营业",Close);MakeButton(modal.transform,new Vector2(800,360),new Vector2(300,65),tutorialEnabled?"关闭教学提示":"重新开启教学",()=>{tutorialEnabled=!tutorialEnabled;tutorialBaseline=model.served;tutorialCompleteTime=0;Close();});}
-        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(675,485),55),v.NeedsTankAttention?null:v.guest.drink);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来一杯"+v.guest.drink+"！"),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
+        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(675,485),55),v.NeedsTankAttention?null:v.guest.drink);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来"+v.guest.cups+"杯"+v.guest.drink+"！"),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
         void Codex(int selected)
         {
             Open("客人图鉴",true);
@@ -332,7 +332,7 @@ namespace Sunflower
             var g=codexGuests[Mathf.Clamp(selected,0,codexGuests.Length-1)];bool unlocked=model.codex.Contains(g.id);
             if(unlocked){var a=Art(modal.transform,new Vector2(1060,510),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,g);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(810,295),65),g.drink);}
             Label(modal.transform,new Vector2(1060,670),new Vector2(440,60),unlocked?g.name:"未知客人",25);
-            Label(modal.transform,new Vector2(1060,295),new Vector2(420,165),unlocked?g.bio+"\n喜欢："+g.drink:"完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23);
+            Label(modal.transform,new Vector2(1060,295),new Vector2(420,165),unlocked?g.bio+"\n喜欢："+g.drink+(g.cups>1?" × "+g.cups:""):"完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23);
         }
         void Settlement()
         {
