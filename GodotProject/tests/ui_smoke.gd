@@ -122,6 +122,40 @@ func run() -> void:
 	check(ui.modal == null and ui.model.served == 1 and ui.seats[2].text.contains("空位"), "Collection bypasses dialogue and frees table")
 	ui.restart(false)
 	check(ui.model.bills.is_empty() and ui.model.visitors.is_empty(), "Restart clears transient table state")
+	var ambient_path := "user://ambient_smoke_only.cfg"
+	ui.ambient.settings_path = ambient_path
+	ui.ambient.set_reduced_motion(false)
+	ui.close_modal()
+	var clock: float = ui.ambient.clock
+	ui._process(0.5)
+	check(ui.ambient.clock > clock, "Ambient runs during service")
+	ui.pause_game()
+	clock = ui.ambient.clock
+	ui._process(1)
+	check(ui.ambient.clock == clock, "Paused ambient clock freezes")
+	ui.close_modal()
+	ui.focus_paused = true
+	ui._process(1)
+	check(ui.ambient.clock == clock, "Focus loss freezes ambient")
+	ui.focus_paused = false
+	check(ui.ambient.set_reduced_motion(true) == OK, "Reduced motion preference saves")
+	ui._process(1)
+	check(ui.ambient.clock == clock and ui.ambient.water_material.get_shader_parameter("motion_amount") == 0.0, "Reduced motion disables water and light updates")
+	var preferences := ConfigFile.new()
+	check(preferences.load(ambient_path) == OK and preferences.get_value("accessibility","reduced_motion") == true, "Reduced motion persists on disk")
+	ui.ambient.set_reduced_motion(false)
+	check(ui.ambient.light_strength(0) != ui.ambient.light_strength(1), "Lamps have independent phases")
+	var bounded := true
+	for n in 600:
+		ui.ambient.advance(1.0/60.0)
+		for i in 8:
+			bounded = bounded and ui.ambient.light_strength(i) >= 0.61 and ui.ambient.light_strength(i) <= 0.95
+	check(bounded, "Ten second light envelope bounded")
+	ui.model.ended = true
+	clock = ui.ambient.clock
+	ui._process(0.5)
+	check(ui.ambient.clock == clock, "Closing freezes ambient")
+	DirAccess.remove_absolute(ambient_path)
 	ui.queue_free()
 	await process_frame
 	DirAccess.remove_absolute(path)
