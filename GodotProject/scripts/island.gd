@@ -1,5 +1,8 @@
 extends Control
 
+const Ambient = preload("res://scripts/island_ambient.gd")
+var ambient: Control
+
 const Model = preload("res://scripts/tavern_model.gd")
 const Config = preload("res://scripts/day_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
@@ -51,7 +54,10 @@ func _ready() -> void:
 	system_font.font_names = PackedStringArray(["Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Zen Hei"])
 	add_theme_font_override("font", system_font)
 	add_theme_color_override("font_color", Color("48270e"))
-	texture(self, Vector2(800,450), Vector2(1600,900), art.texture("Island_Background"))
+	var background := texture(self, Vector2(800,450), Vector2(1600,900), art.texture("Island_Background"))
+	ambient = Ambient.new()
+	add_child(ambient)
+	ambient.setup(background)
 	var guest_layer := Control.new()
 	guest_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(guest_layer)
@@ -206,6 +212,7 @@ func _process(delta: float) -> void:
 		return
 	hud.text = "南风岛 · 第%d天 · %s       今日 %d / %d       钱包 %d       %d 秒" % [current_day, "辅助" if assisted else "标准", model.coins, model.day.target, progress.data.wallet, ceili(model.day.duration-model.elapsed)]
 	var dt := 0.0 if model.paused or model.ended or focus_paused else delta
+	ambient.advance(dt)
 	feedback_time = maxf(0, feedback_time-dt)
 	var stolen: int = model.stolen_coins - previous_stolen
 	var earned: int = model.coins - previous_coins + stolen
@@ -388,6 +395,11 @@ func pause_game() -> void:
 		return
 	open_modal("休息一下")
 	button(modal,Vector2(800,430),Vector2(300,70),"继续营业",close_modal)
+	button(modal,Vector2(800,630),Vector2(420,55),"环境动态：关闭（低动态）" if ambient.reduced_motion else "环境动态：开启",func():
+		var result: Error = ambient.set_reduced_motion(not ambient.reduced_motion)
+		if result != OK:
+			model.message = "环境动态已切换，但设置未能保存。"
+		pause_game())
 	button(modal,Vector2(800,540),Vector2(300,65),"关闭教学提示" if tutorial else "重新开启教学",func():
 		tutorial = not tutorial
 		tutorial_baseline = model.served
