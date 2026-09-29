@@ -1212,8 +1212,9 @@
       255
     ],
     "sha256": "27ad94f959d6d27ac1cb868b30d8aae803819eaff62a782b9c17948dc6ca36bc",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_icon_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_icon_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Codex_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png",
@@ -1227,8 +1228,9 @@
       255
     ],
     "sha256": "45afe41b8e659e110fb8013009a994c7472d2d667a8a0b7a46897cf1effa0aa5",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_icon_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_icon_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png",
@@ -1242,8 +1244,9 @@
       255
     ],
     "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_icon_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_icon_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png",
@@ -1257,8 +1260,9 @@
       255
     ],
     "sha256": "7588bdf940a7c73c04fe7ad2de976298531e2d647280b9a8bddded1657727c25",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_icon_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_icon_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Pause_Southwind_v1.png",
@@ -1272,8 +1276,9 @@
       255
     ],
     "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_icon_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_icon_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_IncomeGoalPlate_Southwind_v1.png",
@@ -1572,5 +1577,160 @@
     "mode": "RGBA",
     "sha256": "3a4e02829a995eea681c0fb20512a38eb9ddc934b85234f98c0cd24e43d68af0",
     "usage": "确认原稿：仅美术追溯，运行使用去吊灯版本"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Codex_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "27ad94f959d6d27ac1cb868b30d8aae803819eaff62a782b9c17948dc6ca36bc",
+    "status": "user_approved_pending_godot_integration",
+    "usage": "ui_icon_overlay",
+    "approved_at": "2026-09-29T22:16:57+08:00"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "45afe41b8e659e110fb8013009a994c7472d2d667a8a0b7a46897cf1effa0aa5",
+    "status": "user_approved_pending_godot_integration",
+    "usage": "ui_icon_overlay",
+    "approved_at": "2026-09-29T22:16:57+08:00"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
+    "status": "user_approved_pending_godot_integration",
+    "usage": "ui_icon_overlay",
+    "approved_at": "2026-09-29T22:16:57+08:00"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "7588bdf940a7c73c04fe7ad2de976298531e2d647280b9a8bddded1657727c25",
+    "status": "user_approved_pending_godot_integration",
+    "usage": "ui_icon_overlay",
+    "approved_at": "2026-09-29T22:16:57+08:00"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
+    "status": "user_approved_pending_godot_integration",
+    "usage": "ui_icon_overlay",
+    "approved_at": "2026-09-29T22:16:57+08:00"
+  },
+  {
+    "path": "Art/Review/UI/Southwind/UI_Icon_Close_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "dab6256f55cc4775af54bca144310dbadb9e5ede881d4012fb5c80828a11fae4",
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_overlay"
+  },
+  {
+    "path": "Art/Review/UI/Southwind/UI_Icon_Lock_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "a170dcbc8ef66be124d5fa54d19526114dc78a889f8703d5eea25064dae8bbad",
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_overlay"
+  },
+  {
+    "path": "Art/Review/UI/Southwind/UI_Icon_Coin_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "feccafbe5193dd9dd07c6e380b6fb14d6327a2018f1e8543e3938ae3ae7efd9d",
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_overlay"
+  },
+  {
+    "path": "Art/Review/UI/Southwind/UI_QueuePanel_Southwind_v1.png",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3d96cdeda34cb602bbfdaababd01040c7baf2bb18037a3acb1908688cf722547",
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_overlay"
+  },
+  {
+    "path": "Art/Review/UI/Southwind/UI_DrinkSlot_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "24875786d75a74ad6564944e7d3d7f55b8e0f35c68885d1a9a1f25ddcfbe2b86",
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_overlay"
   }
 ]
