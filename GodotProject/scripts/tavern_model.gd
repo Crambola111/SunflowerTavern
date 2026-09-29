@@ -2,10 +2,11 @@ class_name TavernModel
 extends RefCounted
 
 const Config = preload("res://scripts/day_config.gd")
-enum State { ORDER, WAITING, DRINKING, PAYMENT }
+enum State { ORDER, WAITING, DRINKING }
 var day: Dictionary
 var assisted := false
 var visitors: Array[Dictionary] = []
+var bills: Dictionary = {}
 var queue: Array[Dictionary] = []
 var codex := {}
 var ready: Dictionary = {}
@@ -49,6 +50,31 @@ func at(seat: int) -> Dictionary:
 		if v.seat == seat:
 			return v
 	return {}
+
+func seat_free(seat: int) -> bool:
+	return seat >= 1 and seat <= 7 and at(seat).is_empty() and not bills.has(seat) and not blocked(seat)
+
+func leave_bill(v: Dictionary) -> void:
+	bills[v.seat] = {"guest_id": v.guest.id, "visit_id": v.id, "drink": v.guest.drink,
+		"cups": v.delivered, "base": v.guest.price, "tip": v.tip}
+	remove_visit(v)
+	message = "客人已离场，桌上留有款项；收钱后自动清台。"
+
+func collect_bill(seat: int) -> void:
+	if not started or paused or ended or not bills.has(seat):
+		return
+	var bill: Dictionary = bills[seat]
+	bills.erase(seat)
+	combo += 1
+	best_combo = maxi(combo, best_combo)
+	var gain: int = int(bill.base + bill.tip) + mini(5, maxi(0, combo - 2))
+	tip_remainder += bill.tip * maxf(0, tip_multiplier - 1)
+	var extra := int(floor(tip_remainder))
+	tip_remainder -= extra
+	coins += gain + extra
+	served += 1
+	codex[bill.guest_id] = true
+	message = "收到 %d 金币，已自动清台！" % (gain + extra)
 
 func blocked(seat: int) -> bool:
 	for v in visitors:
@@ -128,6 +154,9 @@ func interact() -> void:
 		else:
 			message = "正在制作，先照顾其他客人。" if not queue.is_empty() else "先向客人接单。"
 		return
+	if bills.has(direction):
+		collect_bill(direction)
+		return
 	var v := at(direction)
 	if v.is_empty():
 		message = "Coco 的行李占着这里。" if blocked(direction) else "这里暂时没有客人。"
@@ -171,18 +200,6 @@ func interact() -> void:
 			v.state = State.DRINKING
 			v.timer = 2.0
 			message = "Snowy：终于从雪水切回雪人模式了。喝完记得收钱！" if v.guest.id == "snowy" else "送达！喝完之后记得收钱。"
-		State.PAYMENT:
-			combo += 1
-			best_combo = maxi(combo, best_combo)
-			var gain: int = int(v.guest.price + v.tip) + mini(5, maxi(0, combo - 2))
-			tip_remainder += v.tip * maxf(0, tip_multiplier - 1)
-			var extra := int(floor(tip_remainder))
-			tip_remainder -= extra
-			coins += gain + extra
-			served += 1
-			codex[v.guest.id] = true
-			remove_visit(v)
-			message = "收到 %d 金币！" % (gain + extra)
 		_:
 			message = "客人正在喝饮品。"
 
@@ -226,7 +243,7 @@ func tick(dt: float) -> void:
 		var seat := 0
 		for n in 7:
 			var candidate := (int(arrival.seat) - 1 + n) % 7 + 1
-			if at(candidate).is_empty() and not blocked(candidate):
+			if seat_free(candidate):
 				seat = candidate
 				break
 		if seat == 0:
@@ -240,7 +257,7 @@ func tick(dt: float) -> void:
 			v.heat_remaining = v.heat_limit
 		if v.guest.id == "coco":
 			var b: int = seat % 7 + 1
-			if at(b).is_empty() and not blocked(b):
+			if seat_free(b):
 				v.blocked = b
 		visitors.append(v)
 		spawned[i] = true
@@ -263,11 +280,7 @@ func tick(dt: float) -> void:
 		else:
 			v.timer -= dt
 			if v.timer <= 0:
-				if v.state == State.DRINKING:
-					v.state = State.PAYMENT
-					v.timer = (6.0 if v.guest.id == "bobo" else 12.0) * (1.5 if assisted else 1.0)
-				else:
-					miss(v)
+				leave_bill(v)
 	if ready.is_empty() and not queue.is_empty():
 		queue[0].started = true
 		queue[0].remaining -= dt * brew_speed
@@ -279,6 +292,8 @@ func tick(dt: float) -> void:
 		hand = {}
 		ready = {}
 		queue.clear()
+		bills.clear()
+		visitors.clear()
 		message = "今日目标达成！" if passed() else "今天差一点，重开再试一次。"
 
 func update_gecko(v: Dictionary, dt: float) -> void:
@@ -291,7 +306,7 @@ func update_gecko(v: Dictionary, dt: float) -> void:
 	var previous: int = v.seat
 	for n in range(1, 7):
 		var next := (previous - 1 + n) % 7 + 1
-		if not at(next).is_empty() or blocked(next):
+		if not seat_free(next):
 			continue
 		v.seat = next
 		v.bubble = 2.5
@@ -331,10 +346,8 @@ func service_hint() -> Dictionary:
 				return {"target": 0, "text": "去出酒口取杯，快给Snowy降温！"}
 	if not hand.is_empty():
 		return {"target": -1, "text": "③ 送达：同款可互送；忘记订单可先清空手持再回看。无需求可主动倒掉。"}
-	var payments: Array = visitors.filter(func(v): return v.state == State.PAYMENT)
-	payments.sort_custom(func(a, b): return a.timer < b.timer)
-	if not payments.is_empty():
-		return {"target": payments[0].seat, "text": "④ 收钱：金币收取后才会入账！"}
+	if not bills.is_empty():
+		return {"target": bills.keys()[0], "text": "④ 收钱并自动清台，之后新客才能入座。"}
 	if not ready.is_empty():
 		return {"target": 0, "text": "② 取杯：去下方出酒口互动。"}
 	if not queue.is_empty():

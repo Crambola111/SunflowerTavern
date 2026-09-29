@@ -260,6 +260,12 @@ func refresh_seats(dt: float, hint: int) -> void:
 			sprites[i].texture = art.chibi(v.guest.id)
 		visibility[i] = move_toward(float(visibility.get(i,0)), 0.0 if v.is_empty() else 1.0, dt/0.22)
 		sprites[i].modulate.a = visibility[i]
+		if model.bills.has(i):
+			visibility[i] = 0.0
+			sprites[i].modulate.a = 0.0
+			visit_ids.erase(i)
+			seats[i].text = "P%d · 待收款\n金币 · 用过的杯子 ×%d" % [i, model.bills[i].cups]
+			continue
 		if v.is_empty():
 			seats[i].text = "P%d · %s" % [i, "行李占座" if model.blocked(i) else "空位"]
 			if visibility[i] == 0:
@@ -279,12 +285,11 @@ func refresh_seats(dt: float, hint: int) -> void:
 				elif v.guest.id == "gecko" and not v.gecko_attempted and v.gecko_wait >= 3:
 					text = "准备换座 %ds" % ceili(5-v.gecko_wait)
 			Model.State.DRINKING: text = "饮用中"
-			Model.State.PAYMENT: text = "收钱 %ds" % ceili(v.timer)
 		if model.needs_cooling(v):
 			text += " · 降温 %ds" % ceili(v.heat_remaining)
 		seats[i].text = "P%d · %s\n%s" % [i, v.guest.name.split(" ")[0], text]
 		bars[i].visible = v.state != Model.State.DRINKING
-		var ratio: float = v.timer/((6.0 if v.guest.id == "bobo" else 12.0)*(1.5 if assisted else 1.0)) if v.state == Model.State.PAYMENT else v.patience/(25.0*model.patience_multiplier)
+		var ratio: float = v.patience/(25.0*model.patience_multiplier)
 		if model.needs_cooling(v):
 			ratio = minf(ratio, v.heat_remaining/v.heat_limit)
 		bars[i].value = clampf(ratio,0,1)*100
@@ -312,11 +317,13 @@ func refresh_motion(dt: float) -> void:
 
 func refresh_action() -> void:
 	var v: Dictionary = model.at(model.direction)
-	selection.text = "面向：出酒口" if model.direction == 0 else "面向：P%d · %s" % [model.direction, v.guest.name.split(" ")[0] if not v.is_empty() else ("行李占座" if model.blocked(model.direction) else "空位")]
+	selection.text = "面向：出酒口" if model.direction == 0 else "面向：P%d · %s" % [model.direction, v.guest.name.split(" ")[0] if not v.is_empty() else ("待收款" if model.bills.has(model.direction) else ("行李占座" if model.blocked(model.direction) else "空位"))]
 	var actionable := true
 	if model.direction == 0:
 		action.text = "先送饮品" if not model.hand.is_empty() else ("取杯" if not model.ready.is_empty() else ("制作中" if not model.queue.is_empty() else "先接单"))
 		actionable = model.hand.is_empty() and not model.ready.is_empty()
+	elif model.bills.has(model.direction):
+		action.text = "收钱清台"
 	elif v.is_empty():
 		action.text = "暂无客人"
 		actionable = false
@@ -324,8 +331,6 @@ func refresh_action() -> void:
 		action.text = "提醒Tank" if model.tank_attention(v) else "接单"
 	elif v.state == Model.State.WAITING:
 		action.text = "打断偷钱" if model.mimi_warning(v) else ("送达" if not model.hand.is_empty() else "问订单")
-	elif v.state == Model.State.PAYMENT:
-		action.text = "收钱"
 	else:
 		action.text = "饮用中"
 		actionable = false
@@ -348,7 +353,7 @@ func record_text() -> String:
 
 func welcome() -> void:
 	open_modal("南风岛 · 第%d天 · 准备营业 · %s模式" % [current_day, "辅助" if assisted else "标准"])
-	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%，收款等待延长50%" if assisted else "标准：原始耐心与收款时间"],25)
+	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%；待收桌位无倒计时" if assisted else "标准：正常耐心；收钱后自动清台"],25)
 	if current_day == 2:
 		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
 	if current_day == 3:
