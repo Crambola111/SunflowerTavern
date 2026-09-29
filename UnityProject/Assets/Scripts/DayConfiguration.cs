@@ -61,22 +61,33 @@ namespace Sunflower
             new GuestDefinition("coco","Coco · 寄居蟹","椰子水",14,5,2,"旅行只带一点行李：自己的房子和房子的备用房子。"),
             new GuestDefinition("horn","Horn · 犀鸟导游","青柠苏打",12,4,4,"讲景点能讲三小时，点单却只说两秒半：职业之外，节约用嗓。")
         };
-        public static GuestDefinition[] CreateAvailableGuests()
+        static GuestDefinition[] CreateSecondDayGuests()
         {
             var first=CreateFirstDayGuests();
             return new[]{first[0],first[1],first[2],CreateTank(),CreateGecko()};
         }
-        public static bool IsPlayable(int day)=>day==1||day==2;
+        public static GuestDefinition[] CreateAvailableGuests()
+        {
+            var second=CreateSecondDayGuests();
+            return new[]{second[0],second[1],second[2],second[3],second[4],CreateMimi(),CreateSpf8()};
+        }
+        public static bool IsPlayable(int day)=>day>=1&&day<=3;
         public static DayConfiguration ForDay(int day)
         {
             if(day==1)return FirstDay();
             if(day==2)return SecondDay();
+            if(day==3)return ThirdDay();
             throw new ArgumentOutOfRangeException(nameof(day),"This day is not implemented yet.");
         }
-        public static DayConfiguration SecondDay()=>new DayConfiguration(120,90,CreateAvailableGuests(),new[]{
+        public static DayConfiguration SecondDay()=>new DayConfiguration(120,90,CreateSecondDayGuests(),new[]{
             new ArrivalDefinition(8,3,2),new ArrivalDefinition(24,4,7),new ArrivalDefinition(40,0,5),
             new ArrivalDefinition(48,1,3),new ArrivalDefinition(66,2,6),new ArrivalDefinition(84,3,1),
             new ArrivalDefinition(98,4,4)
+        });
+        public static DayConfiguration ThirdDay()=>new DayConfiguration(120,140,CreateAvailableGuests(),new[]{
+            new ArrivalDefinition(8,0,2),new ArrivalDefinition(20,5,5),new ArrivalDefinition(34,6,3),
+            new ArrivalDefinition(50,2,6),new ArrivalDefinition(62,3,1),new ArrivalDefinition(76,4,7),
+            new ArrivalDefinition(88,1,3),new ArrivalDefinition(94,5,5),new ArrivalDefinition(104,6,2)
         });
         public static DayConfiguration FirstDay()=>new DayConfiguration(120,70,CreateFirstDayGuests(),new[]{
             new ArrivalDefinition(8,0,2),new ArrivalDefinition(25,2,5),new ArrivalDefinition(48,1,3),

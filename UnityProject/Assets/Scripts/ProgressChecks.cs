@@ -54,14 +54,19 @@ namespace Sunflower
             Require(loaded.IsCleared(4)&&!loaded.IsUnlocked(5),"Four-day progression exceeded map bounds");
             var malformed=new MemoryStorage();malformed.SetInt("sunflower.progress.version",2);malformed.SetInt("sunflower.progress.v2.day.3.clear.0",1);
             Require(!new ProgressStore(malformed).IsCleared(3),"Orphan clear bypassed ordered progression");
-            Require(loaded.CanEnterDay(1)&&loaded.CanEnterDay(2)&&!loaded.CanEnterDay(3)&&!loaded.CanEnterDay(4),"Unimplemented days became playable");
+            Require(loaded.CanEnterDay(1)&&loaded.CanEnterDay(2)&&loaded.CanEnterDay(3)&&!loaded.CanEnterDay(4),"Unimplemented days became playable");
             var dayMemory=new MemoryStorage();var days=new ProgressStore(dayMemory);
             Require(days.CanEnterDay(1)&&!days.CanEnterDay(2),"Fresh save bypassed Day2 lock");
             days.CompleteDay(1,79,70,0,false);days.Unlock("tank");days.Unlock("gecko");
             days.CompleteDay(2,60,90,0,false);
             Require(days.BestIncome(1,false)==79&&days.BestIncome(2,false)==60&&!days.IsCleared(2),"Day2 failure overwrote Day1 record");
             days.CompleteDay(2,124,90,0,true);days=new ProgressStore(dayMemory);
-            Require(days.CanEnterDay(2)&&!days.CanEnterDay(3)&&days.IsCleared(2,true)&&days.BestIncome(2,true)==124&&days.Knows("tank")&&days.Knows("gecko")&&days.Wallet==263,"Day2 reload lost progress or opened Day3");
+            Require(days.CanEnterDay(2)&&days.CanEnterDay(3)&&days.IsCleared(2,true)&&days.BestIncome(2,true)==124&&days.Knows("tank")&&days.Knows("gecko")&&days.Wallet==263,"Day2 reload lost progress or failed to unlock Day3");
+            days.CompleteDay(3,100,140,0,false);
+            Require(!days.IsCleared(3)&&!days.CanEnterDay(4)&&days.BestIncome(2,true)==124,"Day3 failure damaged progress");
+            days.Unlock("mimi");days.Unlock("spf8");days.CompleteDay(3,190,140,.25f,true);
+            days=new ProgressStore(dayMemory);
+            Require(days.CanEnterDay(3)&&!days.CanEnterDay(4)&&days.IsCleared(3,true)&&!days.IsCleared(3,false)&&days.BestIncome(3,true)==190&&days.BestIncome(3,false)==100&&days.Knows("mimi")&&days.Knows("spf8")&&days.Wallet==553&&days.TipRemainder==.25f,"Day3 reload lost records, codex or wallet");
             var fresh=new ProgressStore(new MemoryStorage());Require(fresh.Wallet==0&&!fresh.TutorialDone&&!fresh.Owns(0),"Fresh save has stale progress");
         }
     }

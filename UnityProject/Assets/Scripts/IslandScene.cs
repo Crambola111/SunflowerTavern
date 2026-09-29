@@ -313,11 +313,13 @@ namespace Sunflower
             Open("南风岛 · 第"+currentDay+"天 · 准备营业 · "+(model.Assisted?"辅助模式":"标准模式"));
             Label(modal.transform,new Vector2(800,490),new Vector2(900,230),DayProgressText()+"\n"+model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n"+(model.Assisted?"辅助：耐心消耗降低25%，收款等待延长50%":"标准：原始耐心与收款时间"),25);
             if(currentDay==2)Label(modal.transform,new Vector2(800,375),new Vector2(940,45),"Tank先摘呼吸器再点单；Gecko等久了会换座，留意杯子的目标座位。",20);
-            for(int day=1;day<=2;day++)
+            if(currentDay==3)Label(modal.transform,new Vector2(800,375),new Vector2(940,60),
+                "Mimi伸手时互动打断（"+(model.Assisted?"4":"2")+"秒）；打断后再送杯。\nSPF-8要两杯椰子水，分次取送，送齐再收钱。",20);
+            for(int day=1;day<=3;day++)
             {
                 int chosen=day;bool available=progress.CanEnterDay(day);
-                var button=MakeButton(modal.transform,new Vector2(day==1?620:970,225),new Vector2(290,55),
-                    day==currentDay?"当前：第"+day+"天":available?"选择第"+day+"天":"第2天 · 通关第1天解锁",()=>ChooseDay(chosen));
+                var button=MakeButton(modal.transform,new Vector2(470+(day-1)*330,225),new Vector2(290,55),
+                    day==currentDay?"当前：第"+day+"天":available?"选择第"+day+"天":"第"+day+"天 · 通关第"+(day-1)+"天解锁",()=>ChooseDay(chosen));
                 button.interactable=available&&day!=currentDay;
             }
             MakeButton(modal.transform,new Vector2(620,310),new Vector2(290,65),"开始营业",Close);
@@ -346,13 +348,13 @@ namespace Sunflower
             MakeButton(modal.transform,new Vector2(470,310),new Vector2(260,65),"装饰酒馆",Shop);
             MakeButton(modal.transform,new Vector2(800,310),new Vector2(300,65),model.Passed?"同模式重玩当天":"同模式重试当天",()=>RestartDay(model.Assisted));
             MakeButton(modal.transform,new Vector2(1130,310),new Vector2(290,65),model.Assisted?"标准模式重试":"辅助模式重试",()=>RestartDay(!model.Assisted));
-            if(currentDay==1&&progress.CanEnterDay(2))
-                MakeButton(modal.transform,new Vector2(800,225),new Vector2(300,55),"进入第2天",()=>ChooseDay(2));
-            else if(currentDay==2)
-            {
-                MakeButton(modal.transform,new Vector2(800,225),new Vector2(300,55),"返回第1天",()=>ChooseDay(1));
-                Label(modal.transform,new Vector2(800,175),new Vector2(900,35),"第3天尚未开放，后续继续南风岛旅行。",18);
-            }
+            int nextDay=currentDay+1;
+            if(progress.CanEnterDay(nextDay))
+                MakeButton(modal.transform,new Vector2(970,225),new Vector2(290,55),"进入第"+nextDay+"天",()=>ChooseDay(nextDay));
+            if(currentDay>1)
+                MakeButton(modal.transform,new Vector2(620,225),new Vector2(290,55),"返回第"+(currentDay-1)+"天",()=>ChooseDay(currentDay-1));
+            if(currentDay==3)
+                Label(modal.transform,new Vector2(800,175),new Vector2(900,35),"第4天尚未开放，南风岛尚未通关。",18);
         }
         void Shop()
         {
