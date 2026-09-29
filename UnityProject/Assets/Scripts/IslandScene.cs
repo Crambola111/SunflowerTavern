@@ -26,6 +26,10 @@ namespace Sunflower
         readonly GameObject[] guestHits=new GameObject[8];
         RawImage sunny;
         Texture sunnyFront;
+        Texture2D sunnyCarry;
+        readonly Texture2D[] sunnyServe=new Texture2D[3];
+        const float ServeDuration=.36f;
+        float serveTime;
         readonly Texture2D[] sunnyDirections=new Texture2D[8];
         readonly int[] visualVisits={-1,-1,-1,-1,-1,-1,-1,-1};
         readonly float[] guestVisibility=new float[8];
@@ -70,6 +74,9 @@ namespace Sunflower
             var islandUniform=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_Idle_v1");
             if(islandUniform!=null)sunny.texture=islandUniform;
             sunnyFront=sunny.texture;
+            sunnyCarry=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D0_Carry");
+            for(int frame=0;frame<sunnyServe.Length;frame++)
+                sunnyServe[frame]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D0_Serve_0"+frame);
             sunnyDirections[2]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D2_Idle");
             sunnyDirections[6]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D6_Idle");
             hornPortrait=Resources.Load<Texture2D>("IslandUI/Horn_Portrait");
@@ -117,11 +124,25 @@ namespace Sunflower
         }
         bool Owned(int n)=>progress.Owns(n);
         void Bonuses(){model.patienceMultiplier=Owned(0)?1.05f:1;model.tipMultiplier=Owned(1)?1.05f:1;model.brewSpeed=Owned(2)?1.05f:1;}
-        void ResetDay(){model=new TavernModel{started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in model.Day.Guests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
+        void ResetDay(){model=new TavernModel{started=true,tipRemainder=progress.TipRemainder};Bonuses();foreach(var g in model.Day.Guests)if(progress.Knows(g.id))model.codex.Add(g.id);arrivals.Clear();arrivalTime=0;servicePulse=0;serveTime=0;feedbackCoins=feedbackMissed=0;feedbackTime=0;serviceFeedback="";tutorialEnabled=!progress.TutorialDone;tutorialBaseline=0;tutorialCompleteTime=0;for(int i=1;i<8;i++){visualVisits[i]=-1;guestVisibility[i]=0;guests[i].gameObject.SetActive(false);}focusPaused=false;Close();}
         bool CanUseGameplayInput()=>model!=null&&!model.paused&&!model.ended&&!focusPaused&&modal==null&&Time.frameCount>inputBlockedFrame;
         void Turn(int delta){if(CanUseGameplayInput())model.Turn(delta);}
         void Select(int n){if(!CanUseGameplayInput())return;if(model.direction==n)Interact();else model.direction=n;}
-        void Interact(){if(!CanUseGameplayInput())return;var v=model.At(model.direction);if(v!=null&&v.state==VisitState.Order){Dialogue(v);return;}bool delivered=v!=null&&v.state==VisitState.Waiting&&model.hand!=null&&model.hand.owner==v.id;model.Interact();if(delivered){servicePulse=.32f;serviceDirection=model.direction;}}
+        void Interact()
+        {
+            if(!CanUseGameplayInput())return;
+            var v=model.At(model.direction);
+            if(v!=null&&v.state==VisitState.Order){Dialogue(v);return;}
+            bool delivered=v!=null&&v.state==VisitState.Waiting&&model.hand!=null&&model.hand.owner==v.id;
+            bool lime=model.hand!=null&&model.hand.drink=="青柠苏打";
+            model.Interact();
+            if(delivered)
+            {
+                servicePulse=.32f;serviceDirection=model.direction;
+                // Existing rules resolve delivery immediately; this clock is visual only.
+                serveTime=lime&&sunnyServe[0]!=null&&sunnyServe[1]!=null&&sunnyServe[2]!=null?ServeDuration:0;
+            }
+        }
         void Update()
         {
             if(model==null)return;
@@ -193,7 +214,10 @@ namespace Sunflower
         void RefreshCharacterMotion(float dt)
         {
             // Presentation only: never delay orders, payouts, or seat release.
+            if(model.ended||model.direction!=serviceDirection){servicePulse=0;serveTime=0;}
+            if(model.hand!=null)serveTime=0;
             servicePulse=Mathf.Max(0,servicePulse-dt);
+            serveTime=Mathf.Max(0,serveTime-dt);
             float pulse=servicePulse>0?Mathf.Sin((1-servicePulse/.32f)*Mathf.PI):0;
             Vector2 reach=(seats[serviceDirection]-new Vector2(800,465)).normalized;
             // Keep approved asymmetric accessories intact; never mirror the character.
@@ -208,6 +232,21 @@ namespace Sunflower
                 float bottom=model.direction==2?1221:1219;
                 size=175*1170/height;
                 offsetY=(bottom/1254f-.5f)*size-(1223/1254f-.5f)*175;
+            }
+            // Approved D0 actions temporarily serve all facings; never fake other drinks.
+            Texture2D actionArt=null;
+            if(serveTime>0)
+            {
+                int frame=Mathf.Clamp(Mathf.FloorToInt((ServeDuration-serveTime)/(ServeDuration/3)),0,2);
+                actionArt=sunnyServe[frame];
+            }
+            else if(!model.ended&&model.hand!=null&&model.hand.drink=="青柠苏打")actionArt=sunnyCarry;
+            if(actionArt!=null)
+            {
+                sunny.texture=actionArt;
+                // All four action canvases share one scale and foot baseline to avoid breathing.
+                size=175*1170/1179f;
+                offsetY=(1228/1254f-.5f)*size-(1223/1254f-.5f)*175;
             }
             sunny.rectTransform.sizeDelta=new Vector2(size,size);
             sunny.rectTransform.anchoredPosition=new Vector2(800,465+offsetY)+reach*(8*pulse);
