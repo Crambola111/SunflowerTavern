@@ -110,3 +110,13 @@ D0 Carry及Serve_00/01/02已复制至UnityProject/Assets/Resources/IslandUI，�
 冰美式Drink_IcedAmericano_v1、夜间无酒精特调Drink_NightMocktail_v1已按确认原稿原字节入UnityProject/Assets/Resources/IslandUI，附meta并登记manifest。代码复用订单/出酒口/手持/对话图标接口；Jiwoo正式来访仍待Day4编排。导入沿用Drink_最大256设置，Unity实际导入/透明边缘验收未运行。美术需求以docs/Development/CODEX_ART_REQUEST.md为准。
 
 
+
+
+## 2026-09-29 海面/烛光需求与座位素材第四批
+
+- 用户确认环境海面和烛光需要动态；详见 docs/Development/SCENE_AMBIENT_REQUIREMENTS.md（在 Development 内可直接打开同名文件）。当前仅需求同步，尚未在 Godot 实现或验收。
+- SPF8 / Snowy 座位Q版已生成透明PNG候选，待用户确认，未上传 Approved；Tank / Gecko 座位Q版仍待确认。已确认并同步的 Bobo / Coco / Horn / Mimi 不重复制作。
+- 下一步：完成 Jiwoo 座位图；针对实际运行背景制作水域遮罩、火苗/光晕和灯位清单，之后接入环境动效。图鉴独立全身图及 Coco 行李标记仍有缺口。
+
+
+- 21:45追加：用户要求扩大海岛场景在屏幕中的占比，UI按 Art/Approved/UIReference/01_Gameplay.png 还原（左上地图牌、顶部收入目标、右上计时暂停、桌旁订单气泡、底部图标操作区）。具体要求已加入 SCENE_AMBIENT_REQUIREMENTS.md；布局和动画均待开发实现/验收。
