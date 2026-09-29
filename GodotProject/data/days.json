@@ -1,0 +1,149 @@
+[
+  {
+    "day": 1,
+    "duration": 120,
+    "target": 70,
+    "guests": [
+      "bobo",
+      "coco",
+      "horn"
+    ],
+    "arrivals": [
+      {
+        "time": 8,
+        "guest": "bobo",
+        "seat": 2
+      },
+      {
+        "time": 25,
+        "guest": "horn",
+        "seat": 5
+      },
+      {
+        "time": 48,
+        "guest": "coco",
+        "seat": 3
+      },
+      {
+        "time": 75,
+        "guest": "bobo",
+        "seat": 6
+      },
+      {
+        "time": 96,
+        "guest": "horn",
+        "seat": 1
+      }
+    ]
+  },
+  {
+    "day": 2,
+    "duration": 120,
+    "target": 90,
+    "guests": [
+      "bobo",
+      "coco",
+      "horn",
+      "tank",
+      "gecko"
+    ],
+    "arrivals": [
+      {
+        "time": 8,
+        "guest": "tank",
+        "seat": 2
+      },
+      {
+        "time": 24,
+        "guest": "gecko",
+        "seat": 7
+      },
+      {
+        "time": 40,
+        "guest": "bobo",
+        "seat": 5
+      },
+      {
+        "time": 48,
+        "guest": "coco",
+        "seat": 3
+      },
+      {
+        "time": 66,
+        "guest": "horn",
+        "seat": 6
+      },
+      {
+        "time": 84,
+        "guest": "tank",
+        "seat": 1
+      },
+      {
+        "time": 98,
+        "guest": "gecko",
+        "seat": 4
+      }
+    ]
+  },
+  {
+    "day": 3,
+    "duration": 120,
+    "target": 140,
+    "guests": [
+      "bobo",
+      "coco",
+      "horn",
+      "tank",
+      "gecko",
+      "mimi",
+      "spf8"
+    ],
+    "arrivals": [
+      {
+        "time": 8,
+        "guest": "bobo",
+        "seat": 2
+      },
+      {
+        "time": 20,
+        "guest": "mimi",
+        "seat": 5
+      },
+      {
+        "time": 34,
+        "guest": "spf8",
+        "seat": 3
+      },
+      {
+        "time": 50,
+        "guest": "horn",
+        "seat": 6
+      },
+      {
+        "time": 62,
+        "guest": "tank",
+        "seat": 1
+      },
+      {
+        "time": 76,
+        "guest": "gecko",
+        "seat": 7
+      },
+      {
+        "time": 88,
+        "guest": "coco",
+        "seat": 3
+      },
+      {
+        "time": 94,
+        "guest": "mimi",
+        "seat": 5
+      },
+      {
+        "time": 104,
+        "guest": "spf8",
+        "seat": 2
+      }
+    ]
+  }
+]

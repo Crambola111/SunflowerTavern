@@ -1,0 +1,92 @@
+{
+  "snowy": {
+    "id": "snowy",
+    "name": "Snowy · 雪人游客",
+    "drink": "芒果冰沙",
+    "price": 10,
+    "brew": 3.0,
+    "portrait": 7,
+    "bio": "订酒店时只看了海景，没看气温。围巾一条没少带，回程行李可能只剩一根胡萝卜。",
+    "cups": 1
+  },
+  "spf8": {
+    "id": "spf8",
+    "name": "SPF-8 · 防晒章鱼",
+    "drink": "椰子水",
+    "price": 28,
+    "brew": 5.0,
+    "portrait": 1,
+    "bio": "八只手，七只补防晒，剩下一只嫌忙。点两杯不是请朋友，是怕换手的时候没得喝。",
+    "cups": 2
+  },
+  "mimi": {
+    "id": "mimi",
+    "name": "Mimi · 猴子游客",
+    "drink": "芒果冰沙",
+    "price": 10,
+    "brew": 3.0,
+    "portrait": 6,
+    "bio": "旅行攻略只有两条：自拍找角度，零钱找机会。被老板抓包就举起手机：别误会，我在拍金币特写。",
+    "cups": 1
+  },
+  "tank": {
+    "id": "tank",
+    "name": "Tank · 海龟潜水员",
+    "drink": "椰子水",
+    "price": 14,
+    "brew": 5.0,
+    "portrait": 3,
+    "bio": "上岸半小时还戴着呼吸器。点单全靠冒泡，以为老板也会水下手语。",
+    "cups": 1
+  },
+  "gecko": {
+    "id": "gecko",
+    "name": "Gecko · 座位测评员",
+    "drink": "青柠苏打",
+    "price": 12,
+    "brew": 4.0,
+    "portrait": 5,
+    "bio": "饮品还没喝，座位已经测评三轮。记录板上只有一句：隔壁那桌可能更好。",
+    "cups": 1
+  },
+  "bobo": {
+    "id": "bobo",
+    "name": "Bobo · 冲浪海牛",
+    "drink": "芒果冰沙",
+    "price": 10,
+    "brew": 3.0,
+    "portrait": 0,
+    "bio": "来岛上三天，冲浪板下水零次。每天都说：明天浪好，我再出手。",
+    "cups": 1
+  },
+  "coco": {
+    "id": "coco",
+    "name": "Coco · 寄居蟹",
+    "drink": "椰子水",
+    "price": 14,
+    "brew": 5.0,
+    "portrait": 2,
+    "bio": "旅行只带一点行李：自己的房子和房子的备用房子。",
+    "cups": 1
+  },
+  "horn": {
+    "id": "horn",
+    "name": "Horn · 犀鸟导游",
+    "drink": "青柠苏打",
+    "price": 12,
+    "brew": 4.0,
+    "portrait": 4,
+    "bio": "讲景点能讲三小时，点单却只说两秒半：职业之外，节约用嗓。",
+    "cups": 1
+  },
+  "jiwoo": {
+    "id": "jiwoo",
+    "name": "Jiwoo · 韩国学生",
+    "drink": "冰美式",
+    "price": 12,
+    "brew": 3.0,
+    "portrait": 8,
+    "bio": "电脑带到了海岛，作业也跟到了海岛。白天点冰美式，晚上认真切换养生模式——唯一没切换的是还没写完的作业。",
+    "cups": 1
+  }
+}
