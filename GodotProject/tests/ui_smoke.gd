@@ -102,6 +102,26 @@ func run() -> void:
 	check(ui.model.ready.is_empty() and not ui.model.hand.is_empty() and ui.modal == null, "Confirm targets only selected supply slot")
 	ui._process(0)
 	check(ui.queue_label.text == "手持：芒果冰沙 · 同款可互送", "HUD does not assign an exclusive recipient")
+	ui.close_modal()
+	ui.model = Model.new({"duration":60,"target":10,"guests":["bobo"],"arrivals":[{"time":1,"guest":"bobo","seat":2}]})
+	ui.model.started = true
+	ui.model.update(1.1)
+	ui.model.direction = 2
+	ui.model.interact()
+	ui.model.hand = {"drink":"芒果冰沙"}
+	ui.model.reconcile_queue()
+	ui.model.interact()
+	ui.model.update(2.1)
+	await process_frame
+	await process_frame
+	ui._process(0)
+	check(ui.sprites[2].modulate.a == 0 and not ui.bars[2].visible and ui.seats[2].text.contains("用过的杯子 ×1"), "Bill UI hides guest and timer, shows used cups")
+	check(ui.action.text == "收钱清台" and not ui.action.disabled, "Empty visitor table still exposes collection action")
+	ui.interact()
+	ui._process(0)
+	check(ui.modal == null and ui.model.served == 1 and ui.seats[2].text.contains("空位"), "Collection bypasses dialogue and frees table")
+	ui.restart(false)
+	check(ui.model.bills.is_empty() and ui.model.visitors.is_empty(), "Restart clears transient table state")
 	ui.queue_free()
 	await process_frame
 	DirAccess.remove_absolute(path)

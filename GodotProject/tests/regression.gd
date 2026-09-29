@@ -21,9 +21,12 @@ func isolated(id: String, assisted := false, arrival := 1.0) -> RefCounted:
 func play(m: RefCounted) -> void:
 	for n in 2500:
 		for v in m.visitors.duplicate():
-			if v.state in [Model.State.ORDER,Model.State.PAYMENT] or m.mimi_warning(v):
+			if v.state == Model.State.ORDER or m.mimi_warning(v):
 				m.direction = v.seat
 				m.interact()
+		for seat in m.bills.keys():
+			m.direction = seat
+			m.interact()
 		if m.hand.is_empty() and not m.ready.is_empty():
 			m.direction = 0
 			m.interact()
@@ -184,6 +187,7 @@ func _initialize() -> void:
 	m.update(0.1)
 	check(m.visitors.any(func(v):return v.guest.id=="jiwoo" and v.guest.drink=="冰美式"),"Reservation survives six seconds, priority and scheduled variant")
 	check(m.visitors.filter(func(v):return v.guest.id=="jiwoo").size()==1,"No duplicate surprise guest")
+	check_bills()
 	check_shared_cups()
 	check_progress()
 	print("Godot regression: %d checks, %d failures" % [checks,failures])
@@ -290,3 +294,67 @@ func check_shared_cups() -> void:
 	check(m.queue.is_empty(), "Two existing cups cover SPF demand")
 	m.discard_cup(false)
 	check(not m.hand.is_empty() and m.ready.is_empty() and m.queue.size() == 1, "Discard outlet does not delete held cup")
+
+func finish_drink(m: RefCounted, seat: int) -> void:
+	m.direction = seat
+	m.interact()
+	var cups: int = m.at(seat).guest.cups
+	for n in cups:
+		m.hand = {"drink":m.at(seat).guest.drink}
+		m.reconcile_queue()
+		m.interact()
+	m.update(2.1)
+
+func check_bills() -> void:
+	for assisted in [false,true]:
+		var m := isolated("bobo", assisted)
+		finish_drink(m,2)
+		check(m.visitors.is_empty() and m.bills.has(2) and not m.seat_free(2), "Departed guest leaves occupied bill table")
+		check(m.bills[2].guest_id == "bobo" and m.bills[2].cups == 1 and not m.bills[2].has("timer"), "Bill preserves recipient and used cups without timer")
+		m.update(20)
+		check(m.bills.has(2) and m.missed == 0 and m.coins == 0, "Bill survives old timeout in both modes")
+		m.hand = {"drink":"椰子水"}
+		m.ready = {"drink":"青柠苏打"}
+		m.paused = true
+		m.collect_bill(2)
+		check(m.bills.has(2), "Paused collection ignored")
+		m.paused = false
+		m.direction = 2
+		m.interact()
+		check(m.coins == 13 and m.served == 1 and m.codex.has("bobo") and m.seat_free(2), "Collection pays and clears table once")
+		check(m.hand.drink == "椰子水" and m.ready.drink == "青柠苏打", "Cleaning never deletes unserved supply")
+		m.collect_bill(2)
+		m.interact()
+		check(m.coins == 13 and m.combo == 1, "Repeat collection cannot duplicate payout")
+	var m := isolated("coco")
+	finish_drink(m,2)
+	check(not m.blocked(3) and m.seat_free(3) and not m.seat_free(2), "Coco luggage leaves while own bill remains")
+	m = isolated("spf8")
+	finish_drink(m,2)
+	check(m.bills[2].cups == 2 and m.coins == 0, "SPF two used cups share one unpaid bill")
+	m.interact()
+	check(m.served == 1 and m.coins == 31, "SPF bill pays once for full order")
+	m = isolated("spf8")
+	m.interact()
+	m.hand = {"drink":"椰子水"}
+	m.reconcile_queue()
+	m.interact()
+	m.at(2).patience = 0.001
+	m.update(0.05)
+	check(m.bills.is_empty() and m.seat_free(2) and m.coins == 0 and not m.codex.has("spf8"), "Partial timeout cleans without bill or reward")
+	m = isolated("bobo")
+	finish_drink(m,2)
+	m.update(60)
+	check(m.bills.is_empty() and m.claim_settlement() == 0 and not m.codex.has("bobo"), "Closing discards unpaid bill without auto payment")
+	m = Model.new({"duration":60,"target":10,"guests":["bobo","coco","gecko"],"arrivals":[{"time":1,"guest":"bobo","seat":2},{"time":5,"guest":"coco","seat":1},{"time":6,"guest":"gecko","seat":2}]})
+	m.started = true
+	m.update(1.1)
+	finish_drink(m,2)
+	m.update(3)
+	check(m.visitors.size() == 2 and m.bills.has(2), "Bill does not count against two live guests")
+	check(m.at(1).guest.id == "coco" and not m.blocked(2) and m.at(3).guest.id == "gecko", "Arrival and luggage avoid unpaid table")
+	m.direction = 3
+	m.interact()
+	m.at(3).seat = 7
+	m.update(5.1)
+	check(m.at(3).guest.id == "gecko" and m.bills.has(2), "Gecko skips visitor and unpaid bill when changing seats")
