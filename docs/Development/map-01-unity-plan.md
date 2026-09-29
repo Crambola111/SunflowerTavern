@@ -1,5 +1,7 @@
 # 南风岛 Unity 开发计划（当前执行版）
 
+> 2026-09-29引擎迁移：当前入口为GodotProject/project.godot，Godot 4.5.1标准版/GDScript。既有机制已迁移，前三天开放、Day4仍待开发。本文旧Unity路径和轮次为历史记录；当前配置在GodotProject/data，检查与边界见docs/Development/GODOT_MIGRATION.md。
+
 ## 第11轮B：Jiwoo惊喜来访与双时段订单（2026-09-29）
 
 - [x] Jiwoo按预约时段选择冰美式/夜间无酒精特调；到点满座时优先候座，不被普通6秒等待规则跳过，沿用普通服务与收款解锁。
