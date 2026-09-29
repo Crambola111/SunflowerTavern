@@ -26,7 +26,11 @@ namespace Sunflower
         readonly GameObject[] guestHits=new GameObject[8];
         RawImage sunny;
         Texture sunnyFront;
-        Texture2D sunnyCarry;
+        Texture2D sunnyCarry, sunnyCarryLeft;
+        readonly Texture2D[] sunnyServeLeft=new Texture2D[3];
+        bool serveLeft;
+        readonly RawImage[] orderIcons=new RawImage[8];
+        RawImage heldDrinkIcon;
         readonly Texture2D[] sunnyServe=new Texture2D[3];
         const float ServeDuration=.36f;
         float serveTime;
@@ -80,6 +84,8 @@ namespace Sunflower
             sunnyCarry=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D0_Carry");
             for(int frame=0;frame<sunnyServe.Length;frame++)
                 sunnyServe[frame]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D0_Serve_0"+frame);
+            sunnyCarryLeft=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D6_Carry");
+            for(int frame=0;frame<3;frame++)sunnyServeLeft[frame]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D6_Serve_0"+frame);
             sunnyDirections[2]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D2_Idle");
             sunnyDirections[6]=Resources.Load<Texture2D>("IslandUI/Sunny_Southwind_D6_Idle");
             hornPortrait=Resources.Load<Texture2D>("IslandUI/Horn_Portrait");
@@ -107,6 +113,7 @@ namespace Sunflower
                 labels[i]=b.GetComponentInChildren<Text>();faces[i]=b.GetComponent<Image>();
                 if(i>0){labels[i].fontSize=18;var track=Solid(root,seats[i]+new Vector2(0,-103),new Vector2(145,7),new Color(.25f,.16f,.08f));track.GetComponent<Image>().raycastTarget=false;bars[i]=Solid(track.transform,new Vector2(72.5f,3.5f),new Vector2(145,7),new Color(.35f,.72f,.29f)).GetComponent<Image>();bars[i].raycastTarget=false;}
             }
+            for(int seat=0;seat<8;seat++)orderIcons[seat]=DrinkIcon(root,seat==0?seats[0]+new Vector2(0,58):seats[seat]+new Vector2(83,-4),48);
             Card(root,new Vector2(800,850),new Vector2(1540,88));
             hud=Label(root,new Vector2(760,850),new Vector2(1390,65),"",25);
             MakeButton(root,new Vector2(1520,850),new Vector2(65,50),"Ⅱ",Pause);
@@ -116,7 +123,8 @@ namespace Sunflower
             actionButton=MakeButton(root,new Vector2(1400,65),new Vector2(120,64),"互动",Interact);actionLabel=actionButton.GetComponentInChildren<Text>();
             MakeButton(root,new Vector2(1500,65),new Vector2(70,64),"→",()=>Turn(1));
             Card(root,new Vector2(1400,132),new Vector2(300,46));selectionLabel=Label(root,new Vector2(1400,132),new Vector2(280,34),"",18);
-            Card(root,new Vector2(800,55),new Vector2(780,82));queue=Label(root,new Vector2(800,73),new Vector2(740,32),"",20);
+            Card(root,new Vector2(800,55),new Vector2(780,82));queue=Label(root,new Vector2(837,73),new Vector2(650,32),"",20);
+            heldDrinkIcon=DrinkIcon(root,new Vector2(455,73),38);
             status=Label(root,new Vector2(800,37),new Vector2(740,30),"",18);
             tutorialCard=Card(root,new Vector2(800,119),new Vector2(780,40));
             tutorialLabel=Label(tutorialCard.transform,new Vector2(390,20),new Vector2(755,36),"",18);
@@ -143,7 +151,8 @@ namespace Sunflower
             {
                 servicePulse=.32f;serviceDirection=model.direction;
                 // Existing rules resolve delivery immediately; this clock is visual only.
-                serveTime=lime&&sunnyServe[0]!=null&&sunnyServe[1]!=null&&sunnyServe[2]!=null?ServeDuration:0;
+                serveLeft=model.direction==6&&HasFrames(sunnyServeLeft);
+                serveTime=lime&&HasFrames(serveLeft?sunnyServeLeft:sunnyServe)?ServeDuration:0;
             }
         }
         void Update()
@@ -161,13 +170,17 @@ namespace Sunflower
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
             else queue.text=model.ready!=null?"已做好："+model.ready.drink+" · 面向出酒口取杯":model.queue.Count>0?"制作："+model.queue[0].drink+"  "+model.queue[0].remaining.ToString("0.0")+"s  | 排队 "+model.queue.Count:"点击客位转向，再次点击互动";
             RefreshCharacterMotion(model.paused||model.ended||focusPaused?0:Time.deltaTime);
+            SetDrinkIcon(heldDrinkIcon,model.hand?.drink);
+            SetDrinkIcon(orderIcons[0],model.ready?.drink);
             RefreshActionHint();
             int tutorialTarget=RefreshTutorial();
             for(int i=0;i<8;i++)
             {
                 faces[i].color=tutorialTarget==i?new Color(.55f,.9f,.55f):model.direction==i?new Color(1,.65f,.12f):new Color(1,.94f,.75f);
                 if(i==0){labels[i].text=model.ready==null?"出酒口":"出酒口 · 取杯";continue;}
-                var v=model.At(i);guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&v.state!=VisitState.Drinking);
+                var v=model.At(i);
+                SetDrinkIcon(orderIcons[i],v!=null&&v.state==VisitState.Waiting&&!(v.guest.id=="horn"&&v.bubble<=0)?v.guest.drink:null);
+                guestHits[i].SetActive(v!=null);bars[i].transform.parent.gameObject.SetActive(v!=null&&v.state!=VisitState.Drinking);
                 labels[i].color=new Color(.25f,.12f,.05f);
                 if(v==null){labels[i].text="P"+i+" · "+(model.Blocked(i)?"行李占座":"空位");continue;}
                 SetGuest(guests[i],v.guest);
@@ -236,20 +249,21 @@ namespace Sunflower
                 size=175*1170/height;
                 offsetY=(bottom/1254f-.5f)*size-(1223/1254f-.5f)*175;
             }
-            // Approved D0 actions temporarily serve all facings; never fake other drinks.
+            // Use approved D6 on the left, D0 elsewhere; actions depict lime soda only.
             Texture2D actionArt=null;
             if(serveTime>0)
             {
                 int frame=Mathf.Clamp(Mathf.FloorToInt((ServeDuration-serveTime)/(ServeDuration/3)),0,2);
-                actionArt=sunnyServe[frame];
+                actionArt=(serveLeft?sunnyServeLeft:sunnyServe)[frame];
             }
-            else if(!model.ended&&model.hand!=null&&model.hand.drink=="青柠苏打")actionArt=sunnyCarry;
+            else if(!model.ended&&model.hand!=null&&model.hand.drink=="青柠苏打")actionArt=model.direction==6&&sunnyCarryLeft!=null?sunnyCarryLeft:sunnyCarry;
             if(actionArt!=null)
             {
                 sunny.texture=actionArt;
                 // All four action canvases share one scale and foot baseline to avoid breathing.
-                size=175*1170/1179f;
-                offsetY=(1228/1254f-.5f)*size-(1223/1254f-.5f)*175;
+                bool leftAction=serveTime>0?serveLeft:model.direction==6&&sunnyCarryLeft!=null;
+                size=175*1170/(leftAction?1147f:1179f);
+                offsetY=((leftAction?1223f:1228f)/1254f-.5f)*size-(1223/1254f-.5f)*175;
             }
             sunny.rectTransform.sizeDelta=new Vector2(size,size);
             sunny.rectTransform.anchoredPosition=new Vector2(800,465+offsetY)+reach*(8*pulse);
@@ -308,13 +322,13 @@ namespace Sunflower
             MakeButton(modal.transform,new Vector2(970,310),new Vector2(290,65),model.Assisted?"切换标准模式":"切换辅助模式",()=>RestartDay(!model.Assisted));
         }
         void Pause(){if(model.ended){Settlement();return;}Open("休息一下");MakeButton(modal.transform,new Vector2(800,470),new Vector2(300,70),"继续营业",Close);MakeButton(modal.transform,new Vector2(800,360),new Vector2(300,65),tutorialEnabled?"关闭教学提示":"重新开启教学",()=>{tutorialEnabled=!tutorialEnabled;tutorialBaseline=model.served;tutorialCompleteTime=0;Close();});}
-        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来一杯"+v.guest.drink+"！"),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
+        void Dialogue(Visit v){Open(v.guest.name);var a=Art(modal.transform,new Vector2(520,465),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,v.guest);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(675,485),55),v.NeedsTankAttention?null:v.guest.drink);Label(modal.transform,new Vector2(940,485),new Vector2(470,190),v.guest.bio+"\n\n"+(v.NeedsTankAttention?"咕噜咕噜……（呼吸器还没摘）":"来一杯"+v.guest.drink+"！"),25);MakeButton(modal.transform,new Vector2(940,310),new Vector2(300,65),v.NeedsTankAttention?"先摘呼吸器吧":"马上来！",()=>{Close();model.direction=v.seat;model.Interact();});}
         void Codex(int selected)
         {
             Open("客人图鉴",true);
             for(int i=0;i<9;i++){int n=i;bool known=i<codexGuests.Length&&model.codex.Contains(codexGuests[i].id);MakeButton(modal.transform,new Vector2(420+(i%3)*150,580-(i/3)*125),new Vector2(135,100),known?codexGuests[i].name.Split(' ')[0]:"未遇见",()=>{if(known)Codex(n);});}
             var g=codexGuests[Mathf.Clamp(selected,0,codexGuests.Length-1)];bool unlocked=model.codex.Contains(g.id);
-            if(unlocked){var a=Art(modal.transform,new Vector2(1060,510),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,g);}
+            if(unlocked){var a=Art(modal.transform,new Vector2(1060,510),new Vector2(230,230),"Bobo_Portrait");SetGuest(a,g);SetDrinkIcon(DrinkIcon(modal.transform,new Vector2(810,295),65),g.drink);}
             Label(modal.transform,new Vector2(1060,670),new Vector2(440,60),unlocked?g.name:"未知客人",25);
             Label(modal.transform,new Vector2(1060,295),new Vector2(420,165),unlocked?g.bio+"\n喜欢："+g.drink:"完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23);
         }
@@ -349,6 +363,17 @@ namespace Sunflower
         static GameObject Node(string name,Transform parent,Vector2 p,Vector2 size){var go=new GameObject(name,typeof(RectTransform));go.transform.SetParent(parent,false);var r=go.GetComponent<RectTransform>();r.anchorMin=r.anchorMax=Vector2.zero;r.pivot=new Vector2(.5f,.5f);r.anchoredPosition=p;r.sizeDelta=size;return go;}
         GameObject Solid(Transform parent,Vector2 p,Vector2 size,Color color){var go=Node("Panel",parent,p,size);go.AddComponent<Image>().color=color;return go;}
         GameObject Card(Transform parent,Vector2 p,Vector2 size){var go=Node("Card",parent,p,size);var im=go.AddComponent<Image>();im.sprite=Slice("Dialogue_Panel");im.type=Image.Type.Sliced;im.raycastTarget=false;return go;}
+        static bool HasFrames(Texture2D[] frames)=>frames[0]!=null&&frames[1]!=null&&frames[2]!=null;
+        RawImage DrinkIcon(Transform parent,Vector2 position,float size)
+        {
+            var icon=Node("DrinkIcon",parent,position,new Vector2(size,size)).AddComponent<RawImage>();
+            icon.raycastTarget=false;icon.enabled=false;return icon;
+        }
+        void SetDrinkIcon(RawImage icon,string drink)
+        {
+            string asset=drink=="芒果冰沙"?"Drink_MangoSlush_v1":drink=="椰子水"?"Drink_CoconutWater_v1":drink=="青柠苏打"?"Drink_LimeSoda_v1":null;
+            icon.texture=asset==null?null:Texture(asset);icon.enabled=icon.texture!=null;
+        }
         Sprite Slice(string asset){if(!sprites.ContainsKey(asset)){var rect=asset=="Button_Gold"?new Rect(136,156,1900,419):new Rect(35,146,2103,416);sprites[asset]=Sprite.Create(Texture(asset),rect,new Vector2(.5f,.5f),100,0,SpriteMeshType.FullRect,new Vector4(160,110,160,110));}return sprites[asset];}
         Texture2D Texture(string name){if(!textures.ContainsKey(name)){textures[name]=Resources.Load<Texture2D>("IslandUI/"+name);if(textures[name]==null)Debug.LogError("Missing island art: "+name);}return textures[name];}
         RawImage Art(Transform parent,Vector2 p,Vector2 size,string asset){var a=Node(asset,parent,p,size).AddComponent<RawImage>();a.texture=Texture(asset);a.raycastTarget=false;return a;}
