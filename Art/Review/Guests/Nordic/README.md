@@ -16,6 +16,15 @@
 
 本批普通客人均以已确认座位形象为身份与服装基准，改为完整透明立绘；不新增普通客人额外表情。驼鹿首次生成版本带有错误背景，已弃用并重制为透明版本，未归档错误稿。
 
+## 第四批补充
+
+- `RedSquirrel/RedSquirrel_CabinLandlord_Portrait_v1.png`：红松鼠点单对话/图鉴详情共用立绘（Review）
+- `Raven/Raven_WeatherReporter_Portrait_v1.png`：渡鸦点单对话/图鉴详情共用立绘（Review）
+- `WhiteReindeer/WhiteReindeer_SleighNavigator_Portrait_v1.png`：白驯鹿点单对话/图鉴详情共用立绘（Review）
+- `ArcticFox/ArcticFox_SnowNightCourier_Portrait_v1.png`：北极狐点单对话/图鉴详情共用立绘（Review）
+
+四张均直接以对应的已确认座位状态为身份、服装与职业道具基准；仅改为适合图鉴详情及点单气泡展示的站立透明立绘，不增加普通客人的额外剧情表情或动画。
+
 本批为第二地图普通动物客人的座位状态候选，尚未标记 Approved，也未接入运行时。
 
 | 文件 | 角色 | 用途 | 状态 |
