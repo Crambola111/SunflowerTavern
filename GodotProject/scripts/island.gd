@@ -65,6 +65,7 @@ var service_direction := 0
 var service_pulse := 0.0
 var feedback_time := 0.0
 var sunny_breath_time := 0.0
+var guest_breath_time := 0.0
 var previous_coins := 0
 var previous_stolen := 0
 var previous_missed := 0
@@ -378,6 +379,7 @@ func _process(delta: float) -> void:
 	var dt := 0.0 if model.paused or model.ended or focus_paused else delta
 	ambient.advance(dt)
 	sunny_breath_time += dt
+	guest_breath_time += dt
 	feedback_time = maxf(0, feedback_time-dt)
 	var stolen: int = model.stolen_coins - previous_stolen
 	var earned: int = model.coins - previous_coins + stolen
@@ -442,9 +444,11 @@ func refresh_seats(dt: float, hint: int) -> void:
 			sprites[i].texture = art.chibi(v.guest.id)
 		visibility[i] = move_toward(float(visibility.get(i,0)), 0.0 if v.is_empty() else 1.0, dt/0.22)
 		sprites[i].modulate.a = visibility[i]
+		refresh_guest_breath(i, not v.is_empty())
 		if model.bills.has(i):
 			visibility[i] = 0.0
 			sprites[i].modulate.a = 0.0
+			refresh_guest_breath(i, false)
 			visit_ids.erase(i)
 			icons[i].texture = art.ui_texture("UI_Icon_Coin_Southwind_v1")
 			seats[i].text = "P%d · 待收款\n金币 · 用过的杯子 ×%d" % [i, model.bills[i].cups]
@@ -485,6 +489,20 @@ func refresh_seats(dt: float, hint: int) -> void:
 			ratio = minf(ratio, v.warmth_remaining/v.warmth_limit)
 		bars[i].value = clampf(ratio,0,1)*100
 		bars[i].modulate = Color("ff563a") if ratio < 0.3 else Color("86d062")
+
+func refresh_guest_breath(i: int, active: bool) -> void:
+	var sprite := sprites[i]
+	var base_position := SEATS[i] + Vector2(-30,-35)
+	if not active:
+		sprite.scale = Vector2.ONE
+		sprite.position = base_position
+		return
+	# Guests use the existing chibi textures. A very small scale/offset wave
+	# gives seated visitors a readable idle breath without extra animation frames.
+	var breathing := 0.0 if model.paused or model.ended else sin(guest_breath_time*2.0 + float(i)*0.7)*0.008
+	sprite.pivot_offset = Vector2(65,65)
+	sprite.scale = Vector2(1.0-breathing*0.28, 1.0+breathing)
+	sprite.position = base_position + Vector2(0,-breathing*18.0)
 
 func refresh_motion(dt: float) -> void:
 	if model.ended or model.direction != service_direction:
