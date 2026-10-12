@@ -3077,5 +3077,15 @@
     "path": "Art/Approved/UI/Southwind/StartPanel/UI_Button_IconSquare_Southwind_v1.png", "size": [1254, 1254], "mode": "RGBA",
     "sha256": "5586dda21c8adc19292edb4d7ddaf40e5accd69eec9bfc1f80bdbaa6267b7893", "status": "user_approved_godot_runtime_integrated",
     "usage": "close_and_page_icon_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_IconSquare_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/Navigation/UI_Button_PagePrevious_Southwind_v1.png", "size": [1774, 887], "mode": "RGBA",
+    "sha256": "52313fc1041af1635d6ba2ac721d92f91a53bad0e8219fea6cbaaf0ffac2a882", "status": "user_approved_godot_runtime_integrated",
+    "usage": "reusable_previous_page_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_PagePrevious_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/Navigation/UI_Button_PageNext_Southwind_v1.png", "size": [1774, 887], "mode": "RGBA",
+    "sha256": "3a74993b13cb008dfe1cd8df3e61edaba7d23dee8b4aa2bf43f749c997e55676", "status": "user_approved_godot_runtime_integrated",
+    "usage": "reusable_next_page_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_PageNext_Southwind_v1.png", "approval_date": "2026-10-12"
   }
 ]
