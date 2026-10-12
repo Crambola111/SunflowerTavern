@@ -5,6 +5,17 @@
 - `Santa/Santa_OffDuty_Seated_v1.png`：圣诞老人座位状态（Review）
 - `Santa/Santa_Dialogue_NoWishes_v1.png`：圣诞老人“不接愿望”剧情对话形象（Review）
 
+## 第三批补充
+
+- `Moose/Moose_SnowCaptain_Portrait_v1.png`：驼鹿点单对话/图鉴详情共用立绘（Review）
+- `Seal/Seal_HarborCaptain_Portrait_v1.png`：海豹点单对话/图鉴详情共用立绘（Review）
+- `Puffin/Puffin_AuroraPhotographer_Portrait_v1.png`：海鹦点单对话/图鉴详情共用立绘（Review）
+- `Lynx/Lynx_SkiCoach_Portrait_v1.png`：猞猁点单对话/图鉴详情共用立绘（Review）
+- `Santa/Santa_Dialogue_Pleased_v1.png`：圣诞老人喝到肉桂热可可后的满意表情（Review）
+- `Santa/Santa_Dialogue_Farewell_v1.png`：圣诞老人离店告别表情（Review）
+
+本批普通客人均以已确认座位形象为身份与服装基准，改为完整透明立绘；不新增普通客人额外表情。驼鹿首次生成版本带有错误背景，已弃用并重制为透明版本，未归档错误稿。
+
 本批为第二地图普通动物客人的座位状态候选，尚未标记 Approved，也未接入运行时。
 
 | 文件 | 角色 | 用途 | 状态 |
