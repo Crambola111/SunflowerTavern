@@ -18,6 +18,11 @@ const NORDIC_DECOR_ASSETS := {
 	"chair_cover": "Nordic_WoolChairCover_v1", "fir_planter": "Nordic_FrostedFirPlanter_v1",
 	"centerpiece": "Nordic_AuroraIceCenterpiece_v1", "railing": "Nordic_FjordRailing_v1"
 }
+const NORDIC_DECOR_ASSETS_BATCH2 := {
+	"counter_front": "Nordic_CounterFront_v1", "aurora_pendant": "Nordic_AuroraPendant_v1",
+	"menu_board": "Nordic_MenuBoard_v1", "seat_cushion": "Nordic_WoolSeatCushion_v1",
+	"snow_deck_trim": "Nordic_SnowDeckTrim_v1", "ice_barrel_table": "Nordic_IceBarrelTable_v1"
+}
 var cache := {}
 
 func texture(asset: String) -> Texture2D:
@@ -44,6 +49,9 @@ func decor(slot: String) -> Texture2D:
 
 func nordic_decor(slot: String) -> Texture2D:
 	return texture(NORDIC_DECOR_ASSETS.get(slot, ""))
+
+func nordic_decor_batch2(slot: String) -> Texture2D:
+	return texture(NORDIC_DECOR_ASSETS_BATCH2.get(slot, ""))
 
 func codex_asset(kind: String) -> Texture2D:
 	return texture(CODEX_ASSETS.get(kind, ""))
