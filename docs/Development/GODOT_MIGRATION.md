@@ -13,7 +13,7 @@
 
 | 原实现 | Godot入口 | 迁移结果 |
 |---|---|---|
-| DayConfiguration.cs | data/days.json、guests.json、day_config.gd | 前三天时长/目标/排班及9客配置保持；仅7客正式开放 |
+| DayConfiguration.cs | data/days.json、guests.json、day_config.gd | 四天时长/目标/排班及9客配置已开放；Day4含Snowy/Jiwoo两时段 |
 | TavernModel.cs | tavern_model.gd | 接单、顺序制作、单杯手持、订单归属、送达、现金结账、连击、漏单清理、一次结算 |
 | 特殊客人 | tavern_model.gd | Coco占位、Horn订单短显、Tank摘呼吸器、Gecko换座、Mimi偷钱、SPF8双杯、Snowy限时、Jiwoo时段/候座 |
 | IslandScene.cs | scenes/island.tscn、island.gd | 键鼠输入、HUD、准备/重试/辅助、暂停/失焦、对话、图鉴、商店、教学与反馈 |
@@ -37,7 +37,7 @@
 
 ## 当前已知边界
 
-- Day4排班、第一地图结束和下一站提示原本未完成，本轮没有新增；Snowy/Jiwoo通过独立配置测试，尚未正式开放。
+- Day4排班、第一地图结束和下一站提示已接入；Snowy/Jiwoo进入正式Day4客流。仍缺Godot图形窗口验收。
 - Bobo/Coco/Horn/Mimi座位静态Q版已随并行美术会话归档并接入；其余五位待归档，场内保留名字/状态按钮，不用精细立绘替代Q版。Bobo/Coco/Horn/Tank/Gecko立绘已用于对话和图鉴，其他4客独立稿待归档。
 - 普通客人仅在接单时显示对话弹窗；接单后待上饮品持续显示在客人头顶气泡，不提供回看订单入口。送达/收钱不弹额外对话；所有弹窗冻结计时。惊喜客人分支对话剧本和表情仍属后续工作，本轮只迁移已有订单对话。
 - 三装饰购买和加成已迁移，实体摆件显示仍待第13轮。
