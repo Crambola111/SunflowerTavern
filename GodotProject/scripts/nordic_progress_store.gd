@@ -57,6 +57,12 @@ func purchase_decor(index: int, wallet: int) -> Dictionary:
 		return {"ok": false, "wallet": wallet}
 	return {"ok": true, "wallet": wallet - DECOR_PRICES[index]}
 
+func reset_all() -> bool:
+	if not error.is_empty():
+		return false
+	data = {"version": VERSION, "best": [[0,0],[0,0],[0,0],[0,0]], "cleared": [[false,false],[false,false],[false,false],[false,false]], "decorations": [false, false, false, false, false, false, false, false, false, false, false, false]}
+	return save()
+
 func record(day: int, income: int, target: int, assisted: bool) -> bool:
 	if not unlocked(day) or income < 0 or target <= 0 or not error.is_empty():
 		return false
