@@ -95,7 +95,7 @@ func complete_tutorial() -> void:
 		save()
 
 func purchase(index: int) -> bool:
-	if index < 0 or index >= 3 or owns(index) or data.wallet < PRICES[index] or not error.is_empty():
+	if index < 0 or index >= 6 or owns(index) or data.wallet < PRICES[index] or not error.is_empty():
 		return false
 	data.wallet -= PRICES[index]
 	data.decorations[index] = true
