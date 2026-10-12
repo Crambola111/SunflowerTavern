@@ -2,6 +2,7 @@ extends SceneTree
 const Model = preload("res://scripts/tavern_model.gd")
 const Config = preload("res://scripts/day_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
+const Maps = preload("res://scripts/map_config.gd")
 var checks := 0
 var failures := 0
 
@@ -54,6 +55,7 @@ func _initialize() -> void:
 			m.update(10)
 			check(m.elapsed == end_time,"Ended clock frozen")
 	check(Config.available_guests().size() == 9 and Config.playable(4),"All first-map guests and four days are playable")
+	check(Maps.available_guests(Maps.MAP02).size() == 10 and Maps.playable(Maps.MAP02,4),"Nordic map exposes ten guests and four days")
 	var m := isolated("tank")
 	m.interact()
 	check(m.queue.is_empty() and m.at(2).tank_ready,"Tank first interaction only removes mask")
