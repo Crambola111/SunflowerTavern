@@ -805,7 +805,7 @@ func settlement() -> void:
 			label(modal, Vector2(800, 775), Vector2(700, 36), "第一地图完成！下一站：北欧极光峡湾", 20)
 			button(modal, Vector2(800, 825), Vector2(360, 58), "前往北欧极光峡湾", go_to_nordic)
 		else:
-			label(modal, Vector2(800, 825), Vector2(700, 50), "北欧地图完成！下一站：希腊古城", 20)
+			label(modal, Vector2(800, 825), Vector2(700, 50), "北欧地图完成！下一站：%s（入口待接入）" % Maps.next_map_name(map_id), 20)
 
 func go_to_nordic() -> void:
 	if map_id != Maps.MAP01 or not progress.cleared(4):
