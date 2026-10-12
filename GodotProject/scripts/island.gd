@@ -1,4 +1,4 @@
-extends Control
+椰风岛椰风岛extends Control
 
 const Ambient = preload("res://scripts/island_ambient.gd")
 var ambient: Control
