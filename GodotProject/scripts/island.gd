@@ -679,11 +679,13 @@ func codex(selected: int) -> void:
 	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
 	var available: Array = Maps.available_guests(map_id)
 	var safe_selected := clampi(selected, 0, maxi(0, available.size()-1))
+	modal.set_meta("selected_index", safe_selected)
 	var current_id: String = available[safe_selected] if not available.is_empty() else ""
 	var current_guest: Dictionary = Config.guest(current_id) if not current_id.is_empty() else {}
-	label(modal, Vector2(500,220), Vector2(220,42), "%d / %d" % [safe_selected+1, available.size()], 22)
-	var grid_x := [285.0, 465.0, 645.0]
-	var grid_y := [330.0, 495.0, 660.0]
+	var count_label := label(modal, Vector2(455,215), Vector2(250,40), "已收录  %d / %d" % [model.codex.size(), available.size()], 19)
+	count_label.add_theme_color_override("font_color", Color("7a4b25"))
+	var grid_x := [275.0, 455.0, 635.0]
+	var grid_y := [325.0, 500.0, 675.0]
 	var page_start: int = floori(float(safe_selected) / 9.0) * 9
 	for local_index in mini(9, available.size() - page_start):
 		var i: int = page_start + local_index
@@ -699,34 +701,42 @@ func codex(selected: int) -> void:
 		else:
 			texture(modal, tile_center, Vector2(142,142), art.codex_asset("locked_slot"))
 			texture(modal, tile_center, Vector2(52,62), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
-		var pick := button(modal, tile_center+Vector2(0,70), Vector2(150,24), "", func(): codex(choice))
+		var pick := button(modal, tile_center, Vector2(154,154), "", Callable(self, "codex").bind(choice))
+		pick.name = "CodexCard_%s" % id
+		pick.set_meta("guest_index", choice)
 		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 			pick.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 		pick.add_theme_color_override("font_color", Color.TRANSPARENT)
 		pick.tooltip_text = Config.guest(id).name if known else "完成服务后解锁"
-		pick.disabled = not known and i != safe_selected
+		pick.mouse_entered.connect(func(): pick.modulate = Color(1.08,1.08,1.08))
+		pick.mouse_exited.connect(func(): pick.modulate = Color.WHITE)
+		var card_name := label(modal, tile_center+Vector2(0,76), Vector2(150,30), Config.guest(id).name.split(" ")[0] if known else "尚未相遇", 16)
+		card_name.add_theme_color_override("font_color", Color("6b3d20"))
 	var unlocked: bool = not current_id.is_empty() and model.codex.has(current_id)
 	var name_text: String = current_guest.name if unlocked else "未知客人"
-	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
+	var detail_name := label(modal, Vector2(1150,220), Vector2(520,58), name_text, 32)
+	detail_name.name = "CodexDetailName"
+	detail_name.add_theme_color_override("font_color", Color("5a2f16"))
 	if unlocked:
-		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
-		texture(modal, Vector2(1290,265), Vector2(280,72), themed_ui_texture("UI_CodexTag_Southwind_v1"))
-		var badge_sheet := texture(modal, Vector2(1290,360), Vector2(250,166), art.codex_asset("trait_badges"))
+		texture(modal, Vector2(1150,410), Vector2(330,340), art.portrait(current_id))
+		texture(modal, Vector2(1150,565), Vector2(430,70), themed_ui_texture("UI_CodexTag_Southwind_v1"))
+		var badge_sheet := texture(modal, Vector2(1150,610), Vector2(390,92), art.codex_asset("trait_badges"))
 		badge_sheet.modulate = Color(1,1,1,0.92)
-		label(modal, Vector2(1290,280), Vector2(250,34), "客人标签", 18)
-		label(modal, Vector2(1290,320), Vector2(210,28), "北境来客" if map_id == Maps.MAP02 else "海岛旅客", 17)
-		label(modal, Vector2(1290,360), Vector2(210,28), "极光峡湾" if map_id == Maps.MAP02 else "喜欢拍照", 17)
-		label(modal, Vector2(1290,400), Vector2(210,28), "常点饮品", 17)
-		texture(modal, Vector2(910,655), Vector2(120,150), themed_ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
-		texture(modal, Vector2(910,635), Vector2(64,64), art.drink(current_guest.drink))
+		label(modal, Vector2(1150,565), Vector2(360,34), "%s  ·  %s" % ["北境来客" if map_id == Maps.MAP02 else "海岛旅客", "常点饮品"], 18)
+		texture(modal, Vector2(935,685), Vector2(112,140), themed_ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
+		texture(modal, Vector2(935,665), Vector2(60,60), art.drink(current_guest.drink))
 		var bio: String = current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
-		label(modal, Vector2(1160,665), Vector2(410,150), bio, 20)
+		var bio_label := label(modal, Vector2(1200,690), Vector2(390,150), bio, 19)
+		bio_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		bio_label.add_theme_constant_override("line_spacing", 6)
 	else:
-		texture(modal, Vector2(1070,470), Vector2(250,250), themed_ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
-		texture(modal, Vector2(1070,470), Vector2(72,84), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
-		label(modal, Vector2(1120,665), Vector2(420,100), "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。", 21)
-	button(modal, Vector2(1030,770), Vector2(82,64), "‹", func(): codex(posmod(safe_selected-1, available.size())))
-	button(modal, Vector2(1380,770), Vector2(82,64), "›", func(): codex(posmod(safe_selected+1, available.size())))
+		texture(modal, Vector2(1150,430), Vector2(270,270), themed_ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
+		texture(modal, Vector2(1150,430), Vector2(72,84), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
+		var locked_text := label(modal, Vector2(1150,650), Vector2(500,105), "完成服务并收钱，即可解锁人物小传。\n先在左页选择客人，查看对应收录状态。", 20)
+		locked_text.add_theme_constant_override("line_spacing", 7)
+	page_button(modal, Vector2(955,775), "previous", Callable(self, "codex").bind(posmod(safe_selected-1, available.size())))
+	label(modal, Vector2(1150,775), Vector2(150,34), "%d / %d" % [safe_selected+1, available.size()], 18)
+	page_button(modal, Vector2(1345,775), "next", Callable(self, "codex").bind(posmod(safe_selected+1, available.size())))
 
 func settlement() -> void:
 	var passed: bool = model.passed()
@@ -869,10 +879,10 @@ func decor_shop_page_view() -> void:
 	label(modal, Vector2(1250,760), Vector2(390,34), "购买后会立即替换场景中的对应物件", 17)
 	var page_count := maxi(1, ceili(float(preview_slots.size()) / 3.0))
 	label(modal, Vector2(1250,798), Vector2(180,30), "%d / %d" % [decor_shop_page+1, page_count], 16)
-	button(modal, Vector2(1070,798), Vector2(58,44), "‹", func():
+	page_button(modal, Vector2(1070,798), "previous", func():
 		decor_shop_page = posmod(decor_shop_page-1, page_count)
 		decor_shop_page_view())
-	button(modal, Vector2(1430,798), Vector2(58,44), "›", func():
+	page_button(modal, Vector2(1430,798), "next", func():
 		decor_shop_page = posmod(decor_shop_page+1, page_count)
 		decor_shop_page_view())
 
@@ -979,6 +989,18 @@ func skin_button(control: Button, asset: String) -> void:
 	control.add_theme_color_override("font_color",Color("48270e"))
 	for state in ["hover","pressed","disabled"]:
 		control.add_theme_color_override("font_"+state+"_color",Color("48270e"))
+
+func page_button(parent: Node, center: Vector2, direction: String, callback: Callable) -> Button:
+	var control := button(parent, center, Vector2(148,62), "", callback)
+	control.name = "PagePreviousButton" if direction == "previous" else "PageNextButton"
+	control.tooltip_text = "上一项" if direction == "previous" else "下一项"
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		control.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	var asset := "UI_Button_PagePrevious_Southwind_v1" if direction == "previous" else "UI_Button_PageNext_Southwind_v1"
+	texture(control, Vector2(74,31), Vector2(148,62), art.ui_texture(asset))
+	control.mouse_entered.connect(func(): control.modulate = Color(1.08,1.08,1.08))
+	control.mouse_exited.connect(func(): control.modulate = Color.WHITE)
+	return control
 
 func round_button(center: Vector2, caption: String, callback: Callable) -> Button:
 	var control := button(self, center, Vector2(72,72), "", callback)

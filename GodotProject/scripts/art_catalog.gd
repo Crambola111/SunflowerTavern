@@ -117,6 +117,8 @@ const UI_REGIONS := {
 	"UI_CodexPortraitSlot_Southwind_v1": Rect2(33, 2, 1175, 1252),
 	"UI_CodexSelectionFrame_Southwind_v1": Rect2(78, 37, 1098, 1138),
 	"UI_CodexTag_Southwind_v1": Rect2(0, 19, 2160, 705),
+	"UI_Button_PagePrevious_Southwind_v1": Rect2(122, 36, 1598, 813),
+	"UI_Button_PageNext_Southwind_v1": Rect2(0, 31, 1758, 828),
 	"UI_FavoriteDrinkCard_Southwind_v1": Rect2(0, 25, 1025, 1397),
 	"UI_Icon_DialogueSkip_Southwind_v1": Rect2(136, 33, 1525, 782),
 	"UI_SettlementPanel_Southwind_v1": Rect2(0, 0, 1104, 1373),
