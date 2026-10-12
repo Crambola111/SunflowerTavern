@@ -42,18 +42,18 @@ func play(m: RefCounted) -> void:
 
 func _initialize() -> void:
 	for assisted in [false,true]:
-		for day in range(1,4):
+		for day in range(1,5):
 			var m := Model.new(Config.for_day(day),assisted)
 			m.started = true
 			play(m)
 			check(m.ended and m.passed(),"Day %d ends and passes (%s)" % [day,assisted])
-			check(m.served == [5,7,9][day-1] and m.coins == [79,124,190][day-1],"Day %d parity: served=%d coins=%d" % [day,m.served,m.coins])
-			check(m.codex.size() == [3,5,7][day-1] and m.missed == 0 and m.stolen_coins == 0,"Perfect play codex / misses / theft")
+			check(m.served == [5,7,9,10][day-1] and m.coins == [79,124,190][day-1],"Day %d parity: served=%d coins=%d" % [day,m.served,m.coins])
+			check(m.codex.size() == [3,5,7,9][day-1] and m.missed == 0 and m.stolen_coins == 0,"Perfect play codex / misses / theft")
 			check(m.claim_settlement() == m.coins and m.claim_settlement() == -1,"One payout only")
 			var end_time: float = m.elapsed
 			m.update(10)
 			check(m.elapsed == end_time,"Ended clock frozen")
-	check(Config.available_guests().size() == 7 and not Config.playable(4),"Do not unlock unimplemented Day4")
+	check(Config.available_guests().size() == 9 and Config.playable(4),"All first-map guests and four days are playable")
 	var m := isolated("tank")
 	m.interact()
 	check(m.queue.is_empty() and m.at(2).tank_ready,"Tank first interaction only removes mask")
@@ -210,7 +210,9 @@ func check_progress() -> void:
 	p.complete_day(2,124,90,0.5,true)
 	check(p.can_enter(3) and p.data.best[1]==[60,124],"Separate mode records")
 	p.complete_day(3,190,140,0.75,false)
-	check(not p.can_enter(4),"Day4 remains pending")
+	check(p.can_enter(4),"Day4 unlocks after Day3")
+	p.complete_day(4,160,160,0.5,false)
+	check(p.data.best[3] == [160,160] and p.data.wallet == 583,"Day4 records both modes and credits payout")
 	var reload := Progress.new(path)
 	check(reload.error.is_empty() and reload.data.wallet==423 and reload.data.tip_remainder==0.75 and reload.owns(0) and reload.data.codex.has("bobo") and reload.data.tutorial_done,"Reload persists wallet, fraction, decor, codex, tutorial")
 	var file := FileAccess.open(path,FileAccess.WRITE)
