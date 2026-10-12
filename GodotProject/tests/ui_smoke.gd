@@ -2,6 +2,7 @@ extends SceneTree
 const Scene = preload("res://scenes/island.tscn")
 const Model = preload("res://scripts/tavern_model.gd")
 const Config = preload("res://scripts/day_config.gd")
+const Maps = preload("res://scripts/map_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
 var checks := 0
 var failures := 0
@@ -121,6 +122,16 @@ func run() -> void:
 	ui.model.codex["bobo"]=true
 	ui.codex(0)
 	check(ui.art.portrait("bobo")!=null,"Unlocked codex portrait loads")
+	var available_guests: Array = Maps.available_guests(ui.map_id)
+	var second_guest_id: String = available_guests[1]
+	ui.model.codex[second_guest_id] = true
+	ui.codex(0)
+	var second_card: Button = ui.modal.get_node("CodexCard_%s" % second_guest_id)
+	check(second_card.position.x < 720 and second_card.size.x >= 150, "Codex cards stay inside the left page and expose full-card hit targets")
+	check(ui.modal.get_node("CodexDetailName").position.x + ui.modal.get_node("CodexDetailName").size.x / 2.0 == 1150, "Codex detail title is centered on the right page")
+	check(ui.modal.get_node("PagePreviousButton").get_child_count() > 0 and ui.modal.get_node("PageNextButton").get_child_count() > 0, "Codex uses dedicated reusable previous and next artwork")
+	second_card.pressed.emit()
+	check(ui.modal.get_meta("selected_index") == 1 and ui.modal.get_node("CodexDetailName").text == Config.guest(second_guest_id).name, "Clicking a left codex card updates the matching right-side guest")
 	ui.progress.data.wallet=100
 	ui.shop()
 	check(ui.modal.find_children("*", "TextureRect", true, false).size() >= 20, "Shop mounts approved price plates, selection and bonus art")
