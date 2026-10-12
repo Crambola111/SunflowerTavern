@@ -16,6 +16,19 @@ func _init(save_path := "user://nordic_progress_v1.json") -> void:
 func can_enter(day: int) -> bool:
 	return progress.unlocked(day)
 
+func map_cleared() -> bool:
+	return progress.cleared(4)
+
+func next_map_id() -> String:
+	return Maps.next_map(Maps.MAP02)
+
+func next_map_ready() -> bool:
+	# The route is recorded for the future Greece slice, but the scene remains locked.
+	return map_cleared() and not Maps.playable(next_map_id(), 1)
+
+func use_campfire() -> bool:
+	return model != null and model.use_campfire()
+
 func start(day: int, use_assistance := false) -> RefCounted:
 	assert(can_enter(day), "Nordic day is locked")
 	current_day = day
