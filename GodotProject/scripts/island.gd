@@ -25,6 +25,7 @@ var map_id := Maps.MAP01
 var art := Art.new()
 var current_day := 1
 var assisted := false
+var free_mode := false
 var decor_shop_page := 0
 var modal: Control
 var hud: Label
@@ -83,6 +84,7 @@ func themed_ui_texture(asset: String) -> Texture2D:
 	return art.ui_texture(themed_ui(asset))
 
 func _ready() -> void:
+	free_mode = bool(get_tree().get_meta("sunflower_free_mode", false))
 	var system_font := SystemFont.new()
 	system_font.font_names = PackedStringArray(["Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Zen Hei"])
 	add_theme_font_override("font", system_font)
@@ -563,6 +565,17 @@ func restart(use_assistance: bool) -> void:
 func record_text() -> String:
 	return "第%d天：%s · 最佳收入 标准 %d / 辅助 %d" % [current_day, "已通关" if active_cleared(current_day) else "未通关", active_best(current_day, 0), active_best(current_day, 1)]
 
+func set_game_mode(enabled: bool) -> void:
+	free_mode = enabled
+	get_tree().set_meta("sunflower_free_mode", enabled)
+	welcome()
+
+func select_free_map(target_map: String) -> void:
+	if not free_mode or target_map == map_id:
+		return
+	var scene := "res://scenes/nordic_island.tscn" if target_map == Maps.MAP02 else "res://scenes/island.tscn"
+	get_tree().change_scene_to_file(scene)
+
 func welcome() -> void:
 	open_modal("%s · 第%d天 · 准备营业 · %s模式" % [Maps.map_name(map_id), current_day, "辅助" if assisted else "标准"])
 	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%；待收桌位无倒计时" if assisted else "标准：正常耐心；收钱后自动清台"],25)
@@ -580,6 +593,9 @@ func welcome() -> void:
 		b.disabled = not active_can_enter(day) or day == current_day
 	button(modal,Vector2(620,590),Vector2(290,65),"开始营业",close_modal)
 	button(modal,Vector2(970,590),Vector2(290,65),"切换标准模式" if assisted else "切换辅助模式",func(): restart(not assisted))
+	button(modal,Vector2(460,755),Vector2(340,55),"自由模式：切换为经典" if free_mode else "经典模式：切换为自由",func(): set_game_mode(not free_mode))
+	if free_mode:
+		button(modal,Vector2(900,755),Vector2(380,55),"挑战南风岛" if map_id == Maps.MAP02 else "挑战北欧极光峡湾",func(): select_free_map(Maps.MAP01 if map_id == Maps.MAP02 else Maps.MAP02))
 
 func confirm_discard() -> void:
 	if not can_input() or (model.hand.is_empty() and model.ready.is_empty()):
@@ -679,13 +695,11 @@ func codex(selected: int) -> void:
 	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
 	var available: Array = Maps.available_guests(map_id)
 	var safe_selected := clampi(selected, 0, maxi(0, available.size()-1))
-	modal.set_meta("selected_index", safe_selected)
 	var current_id: String = available[safe_selected] if not available.is_empty() else ""
 	var current_guest: Dictionary = Config.guest(current_id) if not current_id.is_empty() else {}
-	var count_label := label(modal, Vector2(455,215), Vector2(250,40), "已收录  %d / %d" % [model.codex.size(), available.size()], 19)
-	count_label.add_theme_color_override("font_color", Color("7a4b25"))
-	var grid_x := [275.0, 455.0, 635.0]
-	var grid_y := [325.0, 500.0, 675.0]
+	label(modal, Vector2(500,220), Vector2(220,42), "%d / %d" % [safe_selected+1, available.size()], 22)
+	var grid_x := [285.0, 465.0, 645.0]
+	var grid_y := [330.0, 495.0, 660.0]
 	var page_start: int = floori(float(safe_selected) / 9.0) * 9
 	for local_index in mini(9, available.size() - page_start):
 		var i: int = page_start + local_index
@@ -701,42 +715,34 @@ func codex(selected: int) -> void:
 		else:
 			texture(modal, tile_center, Vector2(142,142), art.codex_asset("locked_slot"))
 			texture(modal, tile_center, Vector2(52,62), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
-		var pick := button(modal, tile_center, Vector2(154,154), "", Callable(self, "codex").bind(choice))
-		pick.name = "CodexCard_%s" % id
-		pick.set_meta("guest_index", choice)
+		var pick := button(modal, tile_center+Vector2(0,70), Vector2(150,24), "", func(): codex(choice))
 		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 			pick.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 		pick.add_theme_color_override("font_color", Color.TRANSPARENT)
 		pick.tooltip_text = Config.guest(id).name if known else "完成服务后解锁"
-		pick.mouse_entered.connect(func(): pick.modulate = Color(1.08,1.08,1.08))
-		pick.mouse_exited.connect(func(): pick.modulate = Color.WHITE)
-		var card_name := label(modal, tile_center+Vector2(0,76), Vector2(150,30), Config.guest(id).name.split(" ")[0] if known else "尚未相遇", 16)
-		card_name.add_theme_color_override("font_color", Color("6b3d20"))
+		pick.disabled = not known and i != safe_selected
 	var unlocked: bool = not current_id.is_empty() and model.codex.has(current_id)
 	var name_text: String = current_guest.name if unlocked else "未知客人"
-	var detail_name := label(modal, Vector2(1150,220), Vector2(520,58), name_text, 32)
-	detail_name.name = "CodexDetailName"
-	detail_name.add_theme_color_override("font_color", Color("5a2f16"))
+	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
 	if unlocked:
-		texture(modal, Vector2(1150,410), Vector2(330,340), art.portrait(current_id))
-		texture(modal, Vector2(1150,565), Vector2(430,70), themed_ui_texture("UI_CodexTag_Southwind_v1"))
-		var badge_sheet := texture(modal, Vector2(1150,610), Vector2(390,92), art.codex_asset("trait_badges"))
+		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
+		texture(modal, Vector2(1290,265), Vector2(280,72), themed_ui_texture("UI_CodexTag_Southwind_v1"))
+		var badge_sheet := texture(modal, Vector2(1290,360), Vector2(250,166), art.codex_asset("trait_badges"))
 		badge_sheet.modulate = Color(1,1,1,0.92)
-		label(modal, Vector2(1150,565), Vector2(360,34), "%s  ·  %s" % ["北境来客" if map_id == Maps.MAP02 else "海岛旅客", "常点饮品"], 18)
-		texture(modal, Vector2(935,685), Vector2(112,140), themed_ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
-		texture(modal, Vector2(935,665), Vector2(60,60), art.drink(current_guest.drink))
+		label(modal, Vector2(1290,280), Vector2(250,34), "客人标签", 18)
+		label(modal, Vector2(1290,320), Vector2(210,28), "北境来客" if map_id == Maps.MAP02 else "海岛旅客", 17)
+		label(modal, Vector2(1290,360), Vector2(210,28), "极光峡湾" if map_id == Maps.MAP02 else "喜欢拍照", 17)
+		label(modal, Vector2(1290,400), Vector2(210,28), "常点饮品", 17)
+		texture(modal, Vector2(910,655), Vector2(120,150), themed_ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
+		texture(modal, Vector2(910,635), Vector2(64,64), art.drink(current_guest.drink))
 		var bio: String = current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
-		var bio_label := label(modal, Vector2(1200,690), Vector2(390,150), bio, 19)
-		bio_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		bio_label.add_theme_constant_override("line_spacing", 6)
+		label(modal, Vector2(1160,665), Vector2(410,150), bio, 20)
 	else:
-		texture(modal, Vector2(1150,430), Vector2(270,270), themed_ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
-		texture(modal, Vector2(1150,430), Vector2(72,84), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
-		var locked_text := label(modal, Vector2(1150,650), Vector2(500,105), "完成服务并收钱，即可解锁人物小传。\n先在左页选择客人，查看对应收录状态。", 20)
-		locked_text.add_theme_constant_override("line_spacing", 7)
-	page_button(modal, Vector2(955,775), "previous", Callable(self, "codex").bind(posmod(safe_selected-1, available.size())))
-	label(modal, Vector2(1150,775), Vector2(150,34), "%d / %d" % [safe_selected+1, available.size()], 18)
-	page_button(modal, Vector2(1345,775), "next", Callable(self, "codex").bind(posmod(safe_selected+1, available.size())))
+		texture(modal, Vector2(1070,470), Vector2(250,250), themed_ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
+		texture(modal, Vector2(1070,470), Vector2(72,84), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
+		label(modal, Vector2(1120,665), Vector2(420,100), "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。", 21)
+	button(modal, Vector2(1030,770), Vector2(82,64), "‹", func(): codex(posmod(safe_selected-1, available.size())))
+	button(modal, Vector2(1380,770), Vector2(82,64), "›", func(): codex(posmod(safe_selected+1, available.size())))
 
 func settlement() -> void:
 	var passed: bool = model.passed()
@@ -777,7 +783,7 @@ func settlement() -> void:
 			label(modal, Vector2(800, 825), Vector2(700, 50), "北欧地图完成！下一站：希腊古城", 20)
 
 func go_to_nordic() -> void:
-	if map_id != Maps.MAP01 or not progress.cleared(4):
+	if map_id != Maps.MAP01 or (not free_mode and not progress.cleared(4)):
 		return
 	get_tree().change_scene_to_file("res://scenes/nordic_island.tscn")
 
@@ -879,10 +885,10 @@ func decor_shop_page_view() -> void:
 	label(modal, Vector2(1250,760), Vector2(390,34), "购买后会立即替换场景中的对应物件", 17)
 	var page_count := maxi(1, ceili(float(preview_slots.size()) / 3.0))
 	label(modal, Vector2(1250,798), Vector2(180,30), "%d / %d" % [decor_shop_page+1, page_count], 16)
-	page_button(modal, Vector2(1070,798), "previous", func():
+	button(modal, Vector2(1070,798), Vector2(58,44), "‹", func():
 		decor_shop_page = posmod(decor_shop_page-1, page_count)
 		decor_shop_page_view())
-	page_button(modal, Vector2(1430,798), "next", func():
+	button(modal, Vector2(1430,798), Vector2(58,44), "›", func():
 		decor_shop_page = posmod(decor_shop_page+1, page_count)
 		decor_shop_page_view())
 
@@ -989,18 +995,6 @@ func skin_button(control: Button, asset: String) -> void:
 	control.add_theme_color_override("font_color",Color("48270e"))
 	for state in ["hover","pressed","disabled"]:
 		control.add_theme_color_override("font_"+state+"_color",Color("48270e"))
-
-func page_button(parent: Node, center: Vector2, direction: String, callback: Callable) -> Button:
-	var control := button(parent, center, Vector2(148,62), "", callback)
-	control.name = "PagePreviousButton" if direction == "previous" else "PageNextButton"
-	control.tooltip_text = "上一项" if direction == "previous" else "下一项"
-	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-		control.add_theme_stylebox_override(state, StyleBoxEmpty.new())
-	var asset := "UI_Button_PagePrevious_Southwind_v1" if direction == "previous" else "UI_Button_PageNext_Southwind_v1"
-	texture(control, Vector2(74,31), Vector2(148,62), art.ui_texture(asset))
-	control.mouse_entered.connect(func(): control.modulate = Color(1.08,1.08,1.08))
-	control.mouse_exited.connect(func(): control.modulate = Color.WHITE)
-	return control
 
 func round_button(center: Vector2, caption: String, callback: Callable) -> Button:
 	var control := button(self, center, Vector2(72,72), "", callback)
