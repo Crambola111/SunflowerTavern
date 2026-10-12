@@ -586,7 +586,7 @@ func codex(selected: int) -> void:
 	label(modal, Vector2(500,220), Vector2(220,42), "%d / %d" % [safe_selected+1, available.size()], 22)
 	var grid_x := [285.0, 465.0, 645.0]
 	var grid_y := [330.0, 495.0, 660.0]
-	for i in available.size()
+	for i in mini(9, available.size()):
 		if i >= available.size():
 			continue
 		var choice := i
