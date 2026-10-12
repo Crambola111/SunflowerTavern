@@ -557,7 +557,7 @@ func codex(selected: int) -> void:
 	place(shade, modal, Vector2(800,450), Vector2(1600,900))
 	shade.color = Color(0,0,0,0.50)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texture(modal, Vector2(800,450), Vector2(1440,780), art.texture("UI_CodexBook_Southwind_v2"))
+	texture(modal, Vector2(800,450), Vector2(1440,780), art.codex_asset("book"))
 	button(modal, Vector2(1405,125), Vector2(72,72), "×", close_modal)
 	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
 	var available: Array = Config.available_guests()
@@ -578,7 +578,7 @@ func codex(selected: int) -> void:
 			card(modal, tile_center, Vector2(142,142))
 			texture(modal, tile_center, Vector2(126,126), art.portrait(id))
 		else:
-			texture(modal, tile_center, Vector2(142,142), art.texture("UI_CodexLockedSlot_Southwind_v2"))
+			texture(modal, tile_center, Vector2(142,142), art.codex_asset("locked_slot"))
 		var pick := button(modal, tile_center+Vector2(0,70), Vector2(150,24), "", func(): codex(choice))
 		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 			pick.add_theme_stylebox_override(state, StyleBoxEmpty.new())
@@ -590,7 +590,7 @@ func codex(selected: int) -> void:
 	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
 	if unlocked:
 		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
-		var badge_sheet := texture(modal, Vector2(1290,330), Vector2(250,166), art.texture("UI_CodexTraitBadges_Southwind_v2"))
+		var badge_sheet := texture(modal, Vector2(1290,330), Vector2(250,166), art.codex_asset("trait_badges"))
 		badge_sheet.modulate = Color(1,1,1,0.92)
 		label(modal, Vector2(1290,280), Vector2(250,34), "客人标签", 18)
 		label(modal, Vector2(1290,310), Vector2(210,28), "海岛旅客", 17)
