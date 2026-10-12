@@ -29,6 +29,8 @@
 | `UI_Icon_Close_Nordic_v1.png` | 图鉴、装饰、结算共用关闭图标 | Review |
 | `UI_Icon_Coin_Nordic_v1.png` | 北欧金币图标，改为八角罗盘星压纹 | Review |
 | `UI_DialoguePanel_Nordic_v1.png` | 北欧底部对话面板；沿用第一关文字区与右侧选项区结构 | Review |
+| `UI_DialogueNamePlate_Nordic_v1.png` | 北欧对话姓名牌；动态叠加角色名，替换第一地图回退素材 | Review |
+| `UI_Badge_SurpriseGuest_Nordic_v1.png` | 北欧惊喜客人/圣诞老人事件奖章；红礼物袋与极光星语义 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
 
