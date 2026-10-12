@@ -627,8 +627,8 @@ func settlement() -> void:
 		button(modal, Vector2(970, 825), Vector2(280, 50), "进入第%d天" % (current_day+1), func(): choose_day(current_day+1))
 	if current_day > 1:
 		button(modal, Vector2(620, 825), Vector2(280, 50), "返回第%d天" % (current_day-1), func(): choose_day(current_day-1))
-	if current_day == 3:
-		label(modal, Vector2(975, 825), Vector2(350, 42), "第4天尚未开放", 18)
+	if current_day == 4 and model.passed():
+		label(modal, Vector2(800, 825), Vector2(700, 50), "第一地图完成！下一站：北欧极光峡湾", 20)
 
 func shop() -> void:
 	open_modal("装饰酒馆 · 钱包 %d" % progress.data.wallet)
