@@ -1,4 +1,4 @@
-椰风岛椰风岛extends Control
+extends Control
 
 const Ambient = preload("res://scripts/island_ambient.gd")
 var ambient: Control
@@ -282,7 +282,7 @@ func _process(delta: float) -> void:
 	if not progress.error.is_empty():
 		show_error(progress.error)
 		return
-	hud.text = "南风岛 · 第%d天" % current_day
+	hud.text = "椰风岛 · 第%d天" % current_day
 	income_label.text = "收入 %d / %d" % [model.coins, model.day.target]
 	wallet_label.text = "钱包 %d" % progress.data.wallet
 	timer_label.text = "%s · %d 秒" % ["辅助" if assisted else "标准", maxi(0, ceili(model.day.duration-model.elapsed))]
@@ -451,7 +451,7 @@ func record_text() -> String:
 	return "第%d天：%s · 最佳收入 标准 %d / 辅助 %d" % [current_day, "已通关" if progress.cleared(current_day) else "未通关", progress.data.best[current_day-1][0], progress.data.best[current_day-1][1]]
 
 func welcome() -> void:
-	open_modal("南风岛 · 第%d天 · 准备营业 · %s模式" % [current_day, "辅助" if assisted else "标准"])
+	open_modal("椰风岛 · 第%d天 · 准备营业 · %s模式" % [current_day, "辅助" if assisted else "标准"])
 	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%；待收桌位无倒计时" if assisted else "标准：正常耐心；收钱后自动清台"],25)
 	if current_day == 2:
 		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
