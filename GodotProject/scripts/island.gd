@@ -163,6 +163,9 @@ func bonuses() -> void:
 	model.patience_multiplier = 1.05 if progress.owns(0) else 1.0
 	model.tip_multiplier = 1.05 if progress.owns(1) else 1.0
 	model.brew_speed = 1.05 if progress.owns(2) else 1.0
+	model.patience_bonus = 2.0 if progress.owns(3) else 0.0
+	model.wrong_cup_penalty = 1.0 if progress.owns(4) else 2.0
+	model.combo_reward_cap = 6 if progress.owns(5) else 5
 	refresh_decor_visibility()
 
 func setup_decor_layer() -> void:
@@ -194,8 +197,7 @@ func refresh_decor_visibility() -> void:
 	for i in 7:
 		decor_nodes["lighting_%d" % i].visible = progress.owns(1)
 	decor_nodes["hanging_lamp"].visible = progress.owns(1)
-	# New stable-ID replacement slots are loaded and previewed, but remain
-	# disabled until G8 pricing/save migration is implemented.
+	# New stable-ID replacement slots are active after purchase; old saves migrate to six slots.
 	decor_nodes["deck"].visible = progress.owns(5)
 	decor_nodes["railing"].visible = progress.owns(3)
 	decor_nodes["table"].visible = progress.owns(4)
@@ -595,7 +597,7 @@ func shop() -> void:
 				bonuses()
 			shop())
 		b.disabled = progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
-	label(modal,Vector2(800,790),Vector2(960,42),"已购三类会替换场景中的对应物件；新三类素材已接入预览，价格与存档迁移留在 G8。",17)
+	label(modal,Vector2(800,790),Vector2(960,42),"六类装修购买后会替换场景中的对应物件；旧三槽存档自动迁移为六槽。",17)
 
 func open_modal(title: String, book := false) -> void:
 	close_modal()
