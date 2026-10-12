@@ -2,8 +2,10 @@ class_name TavernModel
 extends RefCounted
 
 const Config = preload("res://scripts/day_config.gd")
+const Nordic = preload("res://scripts/nordic_rules.gd")
 enum State { ORDER, WAITING, DRINKING }
 var day: Dictionary
+var map_id := "southwind"
 var assisted := false
 var visitors: Array[Dictionary] = []
 var bills: Dictionary = {}
@@ -36,6 +38,7 @@ var settlement_claimed := false
 func _init(config: Dictionary = {}, use_assistance := false) -> void:
 	day = Config.for_day(1) if config.is_empty() else config.duplicate(true)
 	assert(Config.validate(day))
+	map_id = day.get("map_id", "southwind")
 	assisted = use_assistance
 	message = "欢迎来到%s。开始营业后，面向客人接单。" % day.get("map_name", "南风岛")
 
@@ -131,6 +134,9 @@ func discard_cup(from_hand: bool) -> void:
 
 func needs_cooling(v: Dictionary) -> bool:
 	return v.guest.id == "snowy" and v.state in [State.ORDER, State.WAITING]
+
+func needs_warmth(v: Dictionary) -> bool:
+	return map_id == Nordic.MAP_ID and Nordic.warmth_required(v.guest.id) and v.state in [State.ORDER, State.WAITING]
 
 func mimi_warning(v: Dictionary) -> bool:
 	return v.guest.id == "mimi" and v.state == State.WAITING and not v.mimi_attempted and v.mimi_away >= 3
@@ -255,7 +261,8 @@ func tick(dt: float) -> void:
 		var v := {"id": i, "seat": seat, "blocked": 0, "guest": Config.guest(arrival.guest, arrival.time >= day.duration * 0.5),
 			"state": State.ORDER, "patience": 25.0 * patience_multiplier + patience_bonus, "timer": 0.0, "bubble": 2.5,
 			"tip": 0, "delivered": 0, "tank_ready": false, "gecko_attempted": false, "gecko_wait": 0.0,
-			"mimi_attempted": false, "mimi_away": 0.0, "mimi_warning_time": 0.0, "heat_limit": 0.0, "heat_remaining": 0.0}
+			"mimi_attempted": false, "mimi_away": 0.0, "mimi_warning_time": 0.0, "heat_limit": 0.0, "heat_remaining": 0.0,
+			"warmth_limit": 0.0, "warmth_remaining": 0.0}
 		if v.guest.id == "snowy":
 			v.heat_limit = 18.0 if assisted else 12.0
 			v.heat_remaining = v.heat_limit
@@ -263,6 +270,9 @@ func tick(dt: float) -> void:
 			var b: int = seat % 7 + 1
 			if seat_free(b):
 				v.blocked = b
+		if map_id == Nordic.MAP_ID and Nordic.warmth_required(v.guest.id):
+			v.warmth_limit = Nordic.warmth_limit(assisted)
+			v.warmth_remaining = v.warmth_limit
 		visitors.append(v)
 		spawned[i] = true
 		message = ("惊喜客人 · " if surprise else "") + v.guest.name + " 入座了！"
@@ -273,6 +283,12 @@ func tick(dt: float) -> void:
 			if v.heat_remaining <= 0:
 				miss(v)
 				message = "Snowy：先撤了，再坐下去就得用杯子装我了。"
+				continue
+		if needs_warmth(v):
+			v.warmth_remaining = maxf(0, v.warmth_remaining - dt)
+			if v.warmth_remaining <= 0:
+				miss(v)
+				message = "%s：太冷了，先去篝火旁缓一缓！" % v.guest.name
 				continue
 		if v.state in [State.ORDER, State.WAITING]:
 			v.patience -= dt * (0.5 if direction == v.seat else 1.0) * (0.75 if assisted else 1.0)
@@ -346,8 +362,14 @@ func service_hint() -> Dictionary:
 		if needs_cooling(v) and v.heat_remaining <= 5 and hand.is_empty():
 			if v.state == State.ORDER:
 				return {"target": v.seat, "text": "Snowy快热化了！去 P%d 接单。" % v.seat}
-			if not ready.is_empty() and accepts(v, ready):
+				if not ready.is_empty() and accepts(v, ready):
 				return {"target": 0, "text": "去出酒口取杯，快给Snowy降温！"}
+	for v in visitors:
+		if needs_warmth(v) and v.warmth_remaining <= 5 and hand.is_empty():
+			if v.state == State.ORDER:
+				return {"target": v.seat, "text": "%s快冻住了！先接单送热饮。" % v.guest.name}
+			if not ready.is_empty() and accepts(v, ready):
+				return {"target": 0, "text": "去出酒口取杯，先给%s续热！" % v.guest.name}
 	if not hand.is_empty():
 		var candidates: Array = visitors.filter(func(v): return accepts(v, hand))
 		candidates.sort_custom(func(a, b): return a.patience < b.patience)
