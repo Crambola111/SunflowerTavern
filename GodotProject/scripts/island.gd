@@ -2,6 +2,8 @@ extends Control
 
 const Ambient = preload("res://scripts/island_ambient.gd")
 var ambient: Control
+var decor_layer: Control
+var decor_nodes := {}
 
 const Model = preload("res://scripts/tavern_model.gd")
 const Config = preload("res://scripts/day_config.gd")
@@ -65,6 +67,7 @@ func _ready() -> void:
 	ambient = Ambient.new()
 	add_child(ambient)
 	ambient.setup(background)
+	setup_decor_layer()
 	var guest_layer := Control.new()
 	guest_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(guest_layer)
@@ -159,6 +162,42 @@ func bonuses() -> void:
 	model.patience_multiplier = 1.05 if progress.owns(0) else 1.0
 	model.tip_multiplier = 1.05 if progress.owns(1) else 1.0
 	model.brew_speed = 1.05 if progress.owns(2) else 1.0
+	refresh_decor_visibility()
+
+func setup_decor_layer() -> void:
+	decor_layer = Control.new()
+	decor_layer.name = "ApprovedDecorLayer"
+	decor_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(decor_layer)
+	# Positions are conservative first-pass anchors in the 1600x900 scene. Each
+	# asset remains a native transparent PNG; no raster edits or baked text.
+	decor_nodes["deck"] = texture(decor_layer, Vector2(800,450), Vector2(1600,900), art.decor("deck"))
+	decor_nodes["counter"] = texture(decor_layer, Vector2(800,790), Vector2(500,282), art.decor("counter"))
+	decor_nodes["railing"] = texture(decor_layer, Vector2(800,170), Vector2(1120,532), art.decor("railing"))
+	decor_nodes["table"] = texture(decor_layer, Vector2(800,470), Vector2(210,192), art.decor("table"))
+	decor_nodes["hanging_lamp"] = texture(decor_layer, Vector2(800,104), Vector2(120,118), art.decor("hanging_lamp"))
+	for i in 7:
+		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-8), Vector2(35,35), art.decor("lighting"))
+		decor_nodes["lighting_%d" % i] = lamp
+		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,30), Vector2(72,64), art.decor("chair"))
+		decor_nodes["chair_%d" % i] = chair
+	refresh_decor_visibility()
+
+func refresh_decor_visibility() -> void:
+	if decor_nodes.is_empty() or progress == null:
+		return
+	# Existing three save slots map to the confirmed replacement family.
+	decor_nodes["counter"].visible = progress.owns(2)
+	for i in 7:
+		decor_nodes["chair_%d" % i].visible = progress.owns(0)
+	for i in 7:
+		decor_nodes["lighting_%d" % i].visible = progress.owns(1)
+	decor_nodes["hanging_lamp"].visible = progress.owns(1)
+	# New stable-ID replacement slots are loaded and previewed, but remain
+	# disabled until G8 pricing/save migration is implemented.
+	decor_nodes["deck"].visible = false
+	decor_nodes["railing"].visible = false
+	decor_nodes["table"].visible = false
 
 func can_input() -> bool:
 	return model != null and not fatal and not model.paused and not model.ended and not focus_paused and modal == null and Engine.get_process_frames() > input_block_frame
@@ -534,15 +573,21 @@ func settlement() -> void:
 
 func shop() -> void:
 	open_modal("装饰酒馆 · 钱包 %d" % progress.data.wallet)
-	for i in 3:
+	var preview_slots := ["chair", "lighting", "counter", "railing", "table", "deck"]
+	var preview_names := ["贝壳藤编软椅", "海岛贝壳灯具", "浅海玻璃吧台", "漂流木贝壳栏杆", "浅海波纹客桌", "海岸贝母地板"]
+	var preview_effects := ["初始耐心 +5%", "小费 +5%", "制作速度 +5%", "候位 +2 秒（G8）", "错杯扣除 -1 秒（G8）", "连击上限 +1（G8）"]
+	for i in 6:
+		var slot: String = preview_slots[i]
+		texture(modal,Vector2(420,335+i*72),Vector2(78,62),art.decor(slot))
+		label(modal,Vector2(720,335+i*72),Vector2(520,62),preview_names[i]+"\n"+preview_effects[i],18)
+		var legacy := i < 3
 		var index := i
-		label(modal,Vector2(650,345+i*110),Vector2(520,85),ITEMS[i]+"\n"+EFFECTS[i],25)
-		var b := button(modal,Vector2(1060,345+i*110),Vector2(250,65),"已拥有" if progress.owns(i) else "%d 金币" % Progress.PRICES[i],func():
-			if progress.purchase(index):
+		var b := button(modal,Vector2(1150,335+i*72),Vector2(220,52),"已拥有" if legacy and progress.owns(i) else ("%d 金币" % Progress.PRICES[i] if legacy else "G8开放"),func():
+			if legacy and progress.purchase(index):
 				bonuses()
 			shop())
-		b.disabled = progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
-	label(modal,Vector2(800,660),Vector2(960,60),"装饰加成立即生效；实体摆件美术待接入。",20)
+		b.disabled = not legacy or progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
+	label(modal,Vector2(800,790),Vector2(960,42),"已购三类会替换场景中的对应物件；新三类素材已接入预览，价格与存档迁移留在 G8。",17)
 
 func open_modal(title: String, book := false) -> void:
 	close_modal()

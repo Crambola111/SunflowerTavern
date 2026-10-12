@@ -5,6 +5,12 @@ extends RefCounted
 const PORTRAITS := {"bobo": "Bobo_Portrait", "coco": "Coco_Portrait", "horn": "Horn_Portrait", "gecko": "Gecko_Portrait", "tank": "Tank_Portrait"}
 const CHIBIS := {"bobo": "Bobo_Seated_v1", "coco": "Coco_Seated_v1", "horn": "Horn_Seated_v1", "mimi": "Mimi_Seated_v1"} # Approved static seated sprites.
 const DRINKS := {"芒果冰沙": "Drink_MangoSlush_v1", "椰子水": "Drink_CoconutWater_v1", "青柠苏打": "Drink_LimeSoda_v1", "冰美式": "Drink_IcedAmericano_v1", "夜间无酒精特调": "Drink_NightMocktail_v1"}
+const FUTURE_DRINKS := {"极光莓果苏打": "Drink_AuroraSoda_v2", "肉桂热可可": "Drink_CinnamonCocoa_v2", "越橘热饮": "Drink_LingonberryTea_v2"}
+const DECOR_ASSETS := {
+	"counter": "Decor_SW_Counter_v2", "chair": "Decor_SW_Chair_v2",
+	"lighting": "Decor_SW_TableLamp_v2", "hanging_lamp": "Decor_SW_HangingLamp_v2",
+	"railing": "Decor_SW_Railing_v2", "table": "Decor_SW_Table_v2", "deck": "Decor_SW_Deck_v2"
+}
 var cache := {}
 
 func texture(asset: String) -> Texture2D:
@@ -22,7 +28,10 @@ func chibi(id: String) -> Texture2D:
 	return texture(CHIBIS.get(id, ""))
 
 func drink(name: String) -> Texture2D:
-	return texture(DRINKS.get(name, ""))
+	return texture(DRINKS.get(name, FUTURE_DRINKS.get(name, "")))
+
+func decor(slot: String) -> Texture2D:
+	return texture(DECOR_ASSETS.get(slot, ""))
 
 func panel(asset: String) -> StyleBoxTexture:
 	var box := StyleBoxTexture.new()
