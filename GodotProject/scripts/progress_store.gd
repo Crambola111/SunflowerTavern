@@ -118,3 +118,10 @@ func complete_day(day: int, income: int, target: int, remainder: float, assisted
 	data.wallet = mini(2147483647, data.wallet + income)
 	data.tip_remainder = remainder
 	return save()
+
+
+func deposit_income(amount: int) -> bool:
+	if amount < 0 or not is_finite(float(amount)) or not error.is_empty():
+		return false
+	data.wallet = mini(2147483647, data.wallet + amount)
+	return save()
