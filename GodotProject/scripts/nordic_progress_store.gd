@@ -1,23 +1,32 @@
 class_name NordicProgressStore
 extends RefCounted
 
-const VERSION := 1
+const VERSION := 2
+const DECOR_PRICES := [40, 55, 65, 70, 80, 95, 60, 75, 85, 90, 100, 115]
 var path: String
-var data := {"version": VERSION, "best": [[0,0],[0,0],[0,0],[0,0]], "cleared": [[false,false],[false,false],[false,false],[false,false]]}
+var data := {"version": VERSION, "best": [[0,0],[0,0],[0,0],[0,0]], "cleared": [[false,false],[false,false],[false,false],[false,false]], "decorations": [false, false, false, false, false, false, false, false, false, false, false, false]}
 var error := ""
 
 func _init(save_path := "user://nordic_progress_v1.json") -> void:
 	path = save_path
 	if FileAccess.file_exists(path):
 		var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary and parsed.get("version", 0) == 1:
+			parsed.version = VERSION
+			parsed.decorations = [false, false, false, false, false, false, false, false, false, false, false, false]
 		if not valid(parsed):
 			error = "北欧地图存档损坏或版本不受支持。"
 			return
 		data = parsed
 
 func valid(value: Variant) -> bool:
-	if not value is Dictionary or value.version != VERSION or not value.has_all(["best", "cleared"]):
+	if not value is Dictionary or value.version != VERSION or not value.has_all(["best", "cleared", "decorations"]):
 		return false
+	if not value.decorations is Array or value.decorations.size() != DECOR_PRICES.size():
+		return false
+	for owned in value.decorations:
+		if not owned is bool:
+			return false
 	if value.best.size() != 4 or value.cleared.size() != 4:
 		return false
 	for i in 4:
@@ -35,6 +44,18 @@ func cleared(day: int) -> bool:
 
 func unlocked(day: int) -> bool:
 	return day >= 1 and day <= 4 and (day == 1 or cleared(day-1))
+
+func owns_decor(index: int) -> bool:
+	return index >= 0 and index < data.decorations.size() and data.decorations[index]
+
+func purchase_decor(index: int, wallet: int) -> Dictionary:
+	if index < 0 or index >= DECOR_PRICES.size() or owns_decor(index) or wallet < DECOR_PRICES[index] or not error.is_empty():
+		return {"ok": false, "wallet": wallet}
+	data.decorations[index] = true
+	if not save():
+		data.decorations[index] = false
+		return {"ok": false, "wallet": wallet}
+	return {"ok": true, "wallet": wallet - DECOR_PRICES[index]}
 
 func record(day: int, income: int, target: int, assisted: bool) -> bool:
 	if not unlocked(day) or income < 0 or target <= 0 or not error.is_empty():
