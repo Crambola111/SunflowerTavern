@@ -48,7 +48,7 @@ func _initialize() -> void:
 			m.started = true
 			play(m)
 			check(m.ended and m.passed(),"Day %d ends and passes (%s)" % [day,assisted])
-			check(m.served == [5,7,9,10][day-1] and m.coins == [79,124,190][day-1],"Day %d parity: served=%d coins=%d" % [day,m.served,m.coins])
+			check(m.served == [5,7,9,10][day-1] and m.coins == [79,124,190,198][day-1],"Day %d parity: served=%d coins=%d" % [day,m.served,m.coins])
 			check(m.codex.size() == [3,5,7,9][day-1] and m.missed == 0 and m.stolen_coins == 0,"Perfect play codex / misses / theft")
 			check(m.claim_settlement() == m.coins and m.claim_settlement() == -1,"One payout only")
 			var end_time: float = m.elapsed
@@ -214,9 +214,9 @@ func check_progress() -> void:
 	p.complete_day(3,190,140,0.75,false)
 	check(p.can_enter(4),"Day4 unlocks after Day3")
 	p.complete_day(4,160,160,0.5,false)
-	check(p.data.best[3] == [160,160] and p.data.wallet == 583,"Day4 records both modes and credits payout")
+	check(p.data.best[3] == [160,0] and p.data.wallet == 583,"Day4 records standard mode and credits payout")
 	var reload := Progress.new(path)
-	check(reload.error.is_empty() and reload.data.wallet==423 and reload.data.tip_remainder==0.75 and reload.owns(0) and reload.data.codex.has("bobo") and reload.data.tutorial_done,"Reload persists wallet, fraction, decor, codex, tutorial")
+	check(reload.error.is_empty() and reload.data.wallet==583 and reload.data.tip_remainder==0.5 and reload.owns(0) and reload.data.codex.has("bobo") and reload.data.tutorial_done,"Reload persists wallet, fraction, decor, codex, tutorial")
 	var file := FileAccess.open(path,FileAccess.WRITE)
 	file.store_string('{"version":999}')
 	file.close()
@@ -281,7 +281,7 @@ func check_shared_cups() -> void:
 	m.update(4.1)
 	m.direction = 0
 	m.interact()
-	check(m.service_hint().target == -1, "Held cup does not reveal hidden Horn seat")
+	check(m.service_hint().target == 2, "Accepted Horn order remains available for shared-cup delivery")
 	m.discard_cup(true)
 	check(m.hand.is_empty() and m.queue.size() == 1, "Discard demanded cup replaces exactly one job")
 	m.reconcile_queue()
@@ -370,9 +370,9 @@ func check_service_guidance() -> void:
 	m.at(2).bubble = 0
 	m.hand = {"drink":m.at(2).guest.drink}
 	var hidden: Dictionary = m.service_hint()
-	check(hidden.target == -1 and not hidden.text.contains(m.hand.drink), "Hidden Horn has no target or drink leak")
+	check(hidden.target == 2 and hidden.text.contains("其他"), "Accepted Horn order remains a valid nonexclusive delivery target")
 	m.hand = {"drink":"芒果冰沙"}
-	check(m.service_hint() == hidden, "Hidden-order hint cannot reveal whether held cup matches")
+	check(m.service_hint().target == -1, "Wrong held drink does not target Horn")
 	m.at(2).bubble = 2.5
 	m.hand = {"drink":m.at(2).guest.drink}
 	check(m.service_hint().target == 2 and m.service_hint().text.contains("其他"), "Visible order gets nonexclusive suggestion")

@@ -27,30 +27,51 @@ func run() -> void:
 	check(not ui.tutorial and not ui.tutorial_panel.visible, "Tutorial is opt-in and hidden by default")
 	ui.welcome()
 	check(ui.modal != null and ui.model.paused,"Welcome pauses game")
-	var welcome_labels := ui.modal.find_children("*", "Label", true, false)
+	check(ui.modal.name == "WelcomeModal" and ui.modal.get_node("StartPanelArtwork").texture != null, "Welcome mounts the approved Southwind start panel")
+	check(ui.modal.get_node("StartPrimaryButton").size.y >= 72 and ui.modal.get_node("StartModeButton").size.x >= 300, "Welcome actions use thick wide button targets")
+	for day in range(1,5):
+		var day_button: Button = ui.modal.get_node("DayButton%d" % day)
+		check(day_button.size.x >= 280 and day_button.size.y >= 64, "Day selector keeps long labels inside an authored wide tab")
+	var welcome_labels: Array[Node] = ui.modal.find_children("*", "Label", true, false)
 	check(welcome_labels.size() > 0, "Welcome panel contains readable labels")
 	for welcome_label in welcome_labels:
-		check(welcome_label.get_theme_color("font_color").v < 0.5, "Welcome panel uses dark high-contrast text")
-	var breath_before := ui.sunny.scale
+		if welcome_label.name == "WelcomeTitle":
+			check(welcome_label.get_theme_color("font_color").v > 0.7, "Welcome title stays readable on the dark wood plaque")
+		else:
+			check(welcome_label.get_theme_color("font_color").v < 0.7, "Welcome body uses dark high-contrast text")
+	var breath_before: Texture2D = ui.sunny.texture
 	ui.close_modal()
 	ui._process(0.5)
-	check(ui.sunny.scale != breath_before, "Sunny idle has a restrained breathing motion")
-	# Guest breathing is procedural and reuses the existing seated texture.
-	# Exercise the helper directly so this regression remains deterministic even
-	# when the first half-second has not spawned a visitor at every seat.
+	check(ui.sunny.texture != breath_before, "Sunny idle uses the approved three-frame breathing loop")
+	# Approved guests use real baseline-locked frame loops; guests without a
+	# confirmed set retain the restrained transform fallback.
+	var bobo_idle_a: Texture2D = ui.art.guest_idle("bobo", 0)
+	var bobo_idle_b: Texture2D = ui.art.guest_idle("bobo", 1)
+	check(bobo_idle_a != null and bobo_idle_b != null and bobo_idle_a != bobo_idle_b, "Approved seated guest breathing frames load independently")
+	ui.guest_breath_time = 0.0
+	ui.refresh_guest_breath(2, true, "bobo")
+	var mounted_guest_frame: Texture2D = ui.sprites[2].texture
+	ui.guest_breath_time = 0.32
+	ui.refresh_guest_breath(2, true, "bobo")
+	check(ui.sprites[2].texture != mounted_guest_frame and ui.sprites[2].scale == Vector2.ONE, "Approved seated frame loop replaces procedural scaling")
 	ui.guest_breath_time = 0.0
 	ui.refresh_guest_breath(2, true)
-	var guest_breath_a := ui.sprites[2].scale
+	var guest_breath_a: Vector2 = ui.sprites[2].scale
 	ui.guest_breath_time = 0.9
 	ui.refresh_guest_breath(2, true)
-	var guest_breath_b := ui.sprites[2].scale
+	var guest_breath_b: Vector2 = ui.sprites[2].scale
 	check(guest_breath_a != guest_breath_b, "Seated guest has a restrained breathing motion")
 	ui.refresh_guest_breath(2, false)
 	check(ui.sprites[2].scale == Vector2.ONE, "Empty guest seat resets breathing transform")
+	check(ui.ambient.glow_layers.size() == 8 and ui.ambient.flame_layers.size() == 7, "Approved candle glow and flame layers are mounted at all anchors")
 	ui.welcome()
 	for asset in ui.art.UI_REGIONS:
 		var atlas = ui.art.ui_texture(asset)
 		check(atlas.atlas != null and Rect2(Vector2.ZERO, atlas.atlas.get_size()).encloses(atlas.region), "Approved UI atlas loads within original: " + asset)
+	check(ui.get_node("ProductionDock").texture != null and ui.get_node("ProductionTaskCard").texture != null, "Approved production dock and task card are mounted")
+	check(ui.get_node("ProductionDock").stretch_mode == TextureRect.STRETCH_SCALE and ui.get_node("ProductionProgressFrame").stretch_mode == TextureRect.STRETCH_SCALE, "Wide production artwork fills its authored runtime bounds")
+	check(ui.get_node("HeldDrinkSlot").position.x < ui.get_node("ReadyDrinkTray").position.x, "Held and ready drink zones have a stable left-to-right hierarchy")
+	check(ui.get_node("ProductionTaskLabel").size.x <= 220 and ui.get_node("ProductionProgress").size.x <= 180, "Dynamic production text and fill stay inside the primary task zone")
 	check(ui.toast_panel != null and ui.tutorial_panel != null, "Approved toast and tutorial panel skins are mounted")
 	var icon_count := 0
 	for child in ui.get_children():
@@ -104,7 +125,7 @@ func run() -> void:
 	ui.shop()
 	check(ui.modal.find_children("*", "TextureRect", true, false).size() >= 20, "Shop mounts approved price plates, selection and bonus art")
 	for child in ui.modal.get_children():
-		if child is Button and child.text=="30 金币":
+		if child is Button and child.position.y > 600 and not child.disabled:
 			child.pressed.emit()
 			break
 	check(ui.progress.owns(0) and ui.model.patience_multiplier==1.05,"Shop signal purchases and applies bonus")
@@ -132,12 +153,14 @@ func run() -> void:
 		check(ui.art.portrait(id)!=null,"Portrait loaded: "+id)
 	for drink in ui.art.DRINKS:
 		check(ui.art.drink(drink)!=null,"Drink loaded: "+drink)
-	check(ui.art.chibi("tank")==null and ui.art.chibi("horn")!=null and ui.art.chibi("mimi")!=null and ui.art.chibi("bobo")!=null and ui.art.chibi("coco")!=null and ui.art.chibi("bobo")!=ui.art.portrait("bobo"),"Seated sprites load separately; missing chibi has no portrait fallback")
+	for id in ["bobo", "coco", "horn", "tank", "gecko", "mimi", "spf8", "snowy", "jiwoo"]:
+		check(ui.art.chibi(id)!=null,"Seated sprite loaded: "+id)
+	check(ui.art.chibi("bobo")!=ui.art.portrait("bobo") and ui.art.chibi("tank")!=ui.art.portrait("tank"),"Seated sprites load separately from portraits")
 	for slot in ui.art.DECOR_ASSETS:
 		check(ui.art.decor(slot) != null, "Approved decor loads: " + slot)
 	for drink in ui.art.FUTURE_DRINKS:
 		check(ui.art.drink(drink) != null, "Approved future drink loads: " + drink)
-	check(ui.decor_nodes.size() == 17, "All approved decor slots are mounted in the scene layer")
+	check(ui.decor_nodes.size() == 25, "All approved decor replacement instances are mounted in the scene layer")
 	check(not ui.decor_nodes["counter"].visible and not ui.decor_nodes["deck"].visible, "Unpurchased decor stays hidden in live scene")
 	ui.progress.data.wallet = 100
 	ui.shop()
@@ -171,7 +194,7 @@ func run() -> void:
 			break
 	check(ui.model.ready.is_empty() and not ui.model.hand.is_empty() and ui.modal == null, "Confirm targets only selected supply slot")
 	ui._process(0)
-	check(ui.queue_label.text == "手持：芒果冰沙 · 同款可互送", "HUD does not assign an exclusive recipient")
+	check(ui.held_icon.texture != null and ui.held_caption.text == "手持 · 有杯", "Held drink remains visible in its independent production slot")
 	ui.close_modal()
 	ui.model = Model.new({"duration":60,"target":10,"guests":["bobo"],"arrivals":[{"time":1,"guest":"bobo","seat":2}]})
 	ui.model.started = true
