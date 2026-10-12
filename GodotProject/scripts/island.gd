@@ -464,9 +464,11 @@ func welcome() -> void:
 		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
 	if current_day == 3:
 		label(modal,Vector2(800,525),Vector2(950,60),"Mimi伸手时互动打断（%d秒），之后再送杯。\nSPF-8要两杯椰子水，分次取送，送齐再收钱。" % (4 if assisted else 2),20)
-	for day in range(1,4):
+	if current_day == 4:
+		label(modal,Vector2(800,525),Vector2(950,60),"终局营业：Jiwoo白天喝冰美式，夜里切换无酒精特调；Snowy需要快速降温。",20)
+	for day in range(1,5):
 		var chosen := day
-		var b := button(modal,Vector2(470+(day-1)*330,675),Vector2(290,55),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if progress.can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
+		var b := button(modal,Vector2(310+(day-1)*330,675),Vector2(270,55),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if progress.can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
 		b.disabled = not progress.can_enter(day) or day == current_day
 	button(modal,Vector2(620,590),Vector2(290,65),"开始营业",close_modal)
 	button(modal,Vector2(970,590),Vector2(290,65),"切换标准模式" if assisted else "切换辅助模式",func(): restart(not assisted))
