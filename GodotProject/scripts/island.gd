@@ -52,6 +52,7 @@ var serve_time := 0.0
 var service_direction := 0
 var service_pulse := 0.0
 var feedback_time := 0.0
+var sunny_breath_time := 0.0
 var previous_coins := 0
 var previous_stolen := 0
 var previous_missed := 0
@@ -287,6 +288,7 @@ func _process(delta: float) -> void:
 	timer_label.text = "%s · %d 秒" % ["辅助" if assisted else "标准", maxi(0, ceili(model.day.duration-model.elapsed))]
 	var dt := 0.0 if model.paused or model.ended or focus_paused else delta
 	ambient.advance(dt)
+	sunny_breath_time += dt
 	feedback_time = maxf(0, feedback_time-dt)
 	var stolen: int = model.stolen_coins - previous_stolen
 	var earned: int = model.coins - previous_coins + stolen
@@ -398,7 +400,14 @@ func refresh_motion(dt: float) -> void:
 		asset = "Sunny_Southwind_D%d_Serve_%02d" % [6 if direction == 6 else 0, clampi(int((1-serve_time/0.36)*3),0,2)]
 	sunny.texture = art.texture(asset)
 	var pulse := sin((1-service_pulse/0.32)*PI) if service_pulse > 0 else 0.0
-	sunny.position = Vector2(712.5,347.5) + (SEATS[service_direction]-Vector2(800,435)).normalized()*8*pulse
+	var base_position := Vector2(712.5,347.5) + (SEATS[service_direction]-Vector2(800,435)).normalized()*8*pulse
+	# A restrained procedural breath keeps the central host alive without adding
+	# another animation sheet. It freezes with pause/low-motion and yields to
+	# the existing service pulse.
+	var breathing := 0.0 if pulse > 0 or serve_time > 0 or model.paused else sin(sunny_breath_time*2.15)*0.012
+	sunny.pivot_offset = Vector2(87.5,87.5)
+	sunny.scale = Vector2(1.0-breathing*0.35, 1.0+breathing)
+	sunny.position = base_position + Vector2(0,-breathing*26.0)
 
 func refresh_action() -> void:
 	var v: Dictionary = model.at(model.direction)
@@ -654,6 +663,12 @@ func label(parent: Node, center: Vector2, dimensions: Vector2, text: String, fon
 	control.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	control.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	control.add_theme_font_size_override("font_size",font_size)
+	# Explicit dark ink is required because the default theme can fall back to
+	# white text on the cream start/settlement panels.
+	control.add_theme_color_override("font_color",Color("48270e"))
+	control.add_theme_color_override("font_shadow_color",Color(1,0.88,0.62,0.35))
+	control.add_theme_constant_override("shadow_offset_x",1)
+	control.add_theme_constant_override("shadow_offset_y",1)
 	control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return control
 
