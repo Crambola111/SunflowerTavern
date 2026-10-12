@@ -28,7 +28,6 @@ var status: Label
 var queue_label: Label
 var tutorial_label: Label
 var tutorial_panel: Panel
-var review_order: Button
 var toast: Label
 var selection: Label
 var action: Button
@@ -42,6 +41,7 @@ var icons: Array[TextureRect] = []
 var arrival_ids := {}
 var visit_ids := {}
 var visibility := {}
+var bubble_labels: Array[Label] = []
 var arrival_time := 0.0
 var tutorial := true
 var tutorial_baseline := 0
@@ -80,9 +80,13 @@ func _ready() -> void:
 		var selected := i
 		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(200,70), "", func(): select_seat(selected)))
 		seats[i].add_theme_font_size_override("font_size", 15)
-		var bubble := texture(self, SEATS[i]+Vector2(0,65), Vector2(190,98), art.ui_texture("UI_OrderBubble_Southwind_v1"))
+		var bubble := texture(self, SEATS[i]+Vector2(0,-78), Vector2(210,98), art.ui_texture("UI_OrderBubble_Southwind_v1"))
+		bubble.z_index = 12
 		bubbles.append(bubble)
-		# Bubble is below the transparent button; the whole table remains clickable.
+		var bubble_label := label(bubble, Vector2(105,48), Vector2(176,62), "", 16)
+		bubble_label.name = "PendingOrder"
+		bubble_labels.append(bubble_label)
+		# Bubble is visual-only above the guest; the transparent table button remains clickable.
 		move_child(bubble, seats[i].get_index())
 		if i > 0:
 			for state in ["normal", "hover", "pressed", "disabled", "focus"]:
@@ -127,7 +131,6 @@ func _ready() -> void:
 	tutorial_panel = card(self, Vector2(800,781), Vector2(780,40))
 	tutorial_label = label(self, Vector2(800,781), Vector2(755,36), "", 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
-	review_order = button(self, Vector2(930,730), Vector2(160,42), "回看订单", review_selected_order)
 	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
 	progress = Progress.new()
 	if not progress.error.is_empty():
@@ -226,7 +229,7 @@ func interact() -> void:
 		return
 	if not v.is_empty() and v.state == Model.State.WAITING and model.hand.is_empty() and not model.mimi_warning(v):
 		model.interact()
-		dialogue(v, true)
+		dialogue(v)
 		return
 	var delivery: bool = not v.is_empty() and v.state == Model.State.WAITING and not model.mimi_warning(v) and not model.hand.is_empty() and model.accepts(v, model.hand)
 	var lime: bool = not model.hand.is_empty() and model.hand.drink == "青柠苏打"
@@ -335,7 +338,8 @@ func refresh_seats(dt: float, hint: int) -> void:
 	for i in 8:
 		seats[i].modulate = Color("b6ffb6") if hint == i else (Color("ffc24a") if model.direction == i else Color.WHITE)
 		bars[i].visible = false
-		bubbles[i].visible = i > 0 and (not model.at(i).is_empty() or model.bills.has(i) or model.blocked(i))
+		bubbles[i].visible = false
+		bubble_labels[i].text = ""
 		bubbles[i].modulate = seats[i].modulate
 		if i == 0:
 			seats[i].text = "出酒口 · 取杯" if not model.ready.is_empty() else "出酒口"
@@ -360,15 +364,18 @@ func refresh_seats(dt: float, hint: int) -> void:
 			if visibility[i] == 0:
 				visit_ids.erase(i)
 			continue
+		if v.state == Model.State.WAITING:
+			bubbles[i].visible = true
+			bubble_labels[i].text = model.order_text(v)
+		elif v.state == Model.State.ORDER and model.tank_attention(v):
+			bubbles[i].visible = true
+			bubble_labels[i].text = "先摘呼吸器"
 		var text := ""
 		match v.state:
 			Model.State.ORDER: text = "提醒摘呼吸器" if model.tank_attention(v) else "点单"
 			Model.State.WAITING:
 				text = model.order_text(v)
-				if v.guest.id == "horn" and v.bubble <= 0:
-					text = "再问一次"
-				else:
-					icons[i].texture = art.drink(v.guest.drink)
+				icons[i].texture = art.drink(v.guest.drink)
 				if model.mimi_warning(v):
 					text = "伸手中！互动打断 %ds" % ceili((4 if assisted else 2)-v.mimi_warning_time)
 				elif v.guest.id == "gecko" and not v.gecko_attempted and v.gecko_wait >= 3:
@@ -430,8 +437,6 @@ func refresh_action() -> void:
 	else:
 		action.text = "饮用中"
 		actionable = false
-	review_order.visible = not v.is_empty() and v.state == Model.State.WAITING
-	review_order.disabled = not can_input() or (not v.is_empty() and model.mimi_warning(v))
 	action.disabled = not can_input() or not actionable
 	action_caption.text = action.text
 	action.tooltip_text = action.text + " · Space"
@@ -500,16 +505,7 @@ func pause_game() -> void:
 		tutorial_time = 0
 		close_modal())
 
-func review_selected_order() -> void:
-	if not can_input():
-		return
-	var v: Dictionary = model.at(model.direction)
-	if v.is_empty() or v.state != Model.State.WAITING or model.mimi_warning(v):
-		return
-	v.bubble = 2.5
-	dialogue(v, true)
-
-func dialogue(v: Dictionary, review := false) -> void:
+func dialogue(v: Dictionary) -> void:
 	# Native bottom dialogue overlay; a modal pauses service without hiding the scene.
 	close_modal()
 	model.paused = true
@@ -533,19 +529,14 @@ func dialogue(v: Dictionary, review := false) -> void:
 	var name_label := label(modal, Vector2(275,646), Vector2(255,48), v.guest.name.split(" ")[0], 26)
 	name_label.add_theme_color_override("font_color", Color("fff0bd"))
 	var order := "咕噜咕噜……（呼吸器还没摘）" if model.tank_attention(v) else "来%d杯%s！" % [v.guest.cups,v.guest.drink]
-	if review:
-		order = "还需要%d杯%s。" % [v.guest.cups-v.delivered,v.guest.drink]
 	if model.needs_cooling(v):
 		order += "\n请在剩余 %d 秒内送到！" % ceili(v.heat_remaining)
 	var content := label(modal, Vector2(620,754), Vector2(890,135), order, 28)
 	content.name = "OrderText"
 	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	texture(modal,Vector2(111,751),Vector2(66,80),art.drink(v.guest.drink) if not model.tank_attention(v) else null)
-	label(modal,Vector2(620,840),Vector2(900,30),"回看期间已暂停 · 手持饮品保留" if review else "交谈期间已暂停 · 确认后才接单",18)
+	label(modal,Vector2(620,840),Vector2(900,30),"确认后接单；待上饮品会一直显示在客人头顶",18)
 	button(modal,Vector2(1430,140),Vector2(210,55),"返回营业",close_modal)
-	if review:
-		button(modal,Vector2(1300,740),Vector2(350,66),"记住了",close_modal)
-		return
 	button(modal,Vector2(1300,727),Vector2(350,66),"先摘呼吸器吧" if model.tank_attention(v) else "马上来！",func():
 		close_modal()
 		model.direction = v.seat
