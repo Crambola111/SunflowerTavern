@@ -791,7 +791,11 @@ func decor_purchase(index: int) -> bool:
 	return progress.save()
 
 func decor_asset(slot: String) -> Texture2D:
-	return art.nordic_decor(slot) if map_id == Maps.MAP02 and not slot in ["counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"] else art.nordic_decor_batch2(slot) if map_id == Maps.MAP02 else art.decor(slot)
+	if map_id != Maps.MAP02:
+		return art.decor(slot)
+	if slot in ["counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"]:
+		return art.nordic_decor_batch2(slot)
+	return art.nordic_decor(slot)
 
 func decor_shop_page_view() -> void:
 	close_modal()
@@ -823,7 +827,7 @@ func decor_shop_page_view() -> void:
 		var cx: float = card_x[i]
 		texture(modal, Vector2(cx, card_y), Vector2(180,470), art.ui_texture("UI_ShopItemCard_Southwind_v1"))
 		texture(modal, Vector2(cx, card_y), Vector2(170,450), art.decor_ui("card"))
-		if progress.owns(index) or index == decor_shop_page*3:
+		if decor_owned(index) or index == decor_shop_page*3:
 			texture(modal, Vector2(cx, card_y), Vector2(190,480), art.ui_texture("UI_ShopSelectionFrame_Southwind_v1"))
 		texture(modal, Vector2(cx, 315), Vector2(145,145), decor_asset(slot))
 		label(modal, Vector2(cx, 205), Vector2(175,38), preview_names[index], 18)
