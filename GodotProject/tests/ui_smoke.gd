@@ -34,6 +34,18 @@ func run() -> void:
 	ui.close_modal()
 	ui._process(0.5)
 	check(ui.sunny.scale != breath_before, "Sunny idle has a restrained breathing motion")
+	# Guest breathing is procedural and reuses the existing seated texture.
+	# Exercise the helper directly so this regression remains deterministic even
+	# when the first half-second has not spawned a visitor at every seat.
+	ui.guest_breath_time = 0.0
+	ui.refresh_guest_breath(2, true)
+	var guest_breath_a := ui.sprites[2].scale
+	ui.guest_breath_time = 0.9
+	ui.refresh_guest_breath(2, true)
+	var guest_breath_b := ui.sprites[2].scale
+	check(guest_breath_a != guest_breath_b, "Seated guest has a restrained breathing motion")
+	ui.refresh_guest_breath(2, false)
+	check(ui.sprites[2].scale == Vector2.ONE, "Empty guest seat resets breathing transform")
 	ui.welcome()
 	for asset in ui.art.UI_REGIONS:
 		var atlas = ui.art.ui_texture(asset)
