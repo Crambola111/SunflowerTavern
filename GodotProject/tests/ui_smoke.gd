@@ -28,6 +28,12 @@ func run() -> void:
 	for asset in ui.art.UI_REGIONS:
 		var atlas = ui.art.ui_texture(asset)
 		check(atlas.atlas != null and Rect2(Vector2.ZERO, atlas.atlas.get_size()).encloses(atlas.region), "Approved UI atlas loads within original: " + asset)
+	var icon_count := 0
+	for child in ui.get_children():
+		if child is Button and child.has_node("ButtonIcon"):
+			icon_count += 1
+			check(child.get_node("ButtonIcon").mouse_filter == Control.MOUSE_FILTER_IGNORE and not child.tooltip_text.is_empty(), "Round icon preserves click and tooltip")
+	check(icon_count == 5, "Five native controls use approved independent icons")
 	check(ui.bubbles.size() == 8 and ui.bubbles[2].mouse_filter == Control.MOUSE_FILTER_IGNORE, "Order artwork preserves table input")
 	ui.close_modal()
 	await process_frame
@@ -37,6 +43,18 @@ func run() -> void:
 	ui.model.direction=2
 	ui.interact()
 	check(ui.modal != null and ui.model.paused,"Order opens paused dialogue")
+	check(ui.modal.name == "OrderDialogue" and ui.modal.get_node("DialoguePanel").position.y >= 600, "Dialogue uses bottom panel layout")
+	check(ui.modal.get_node("GuestPortrait").texture != null and ui.modal.get_node("SunnyDialogueFallback").texture != null, "Both dialogue sides have explicit configured art")
+	check(ui.modal.get_node("OrderText").text.contains("芒果冰沙"), "Dialogue keeps live order text")
+	var pending_jobs: int = ui.model.queue.size()
+	for child in ui.modal.get_children():
+		if child is Button and child.text == "稍后再来":
+			child.pressed.emit()
+			break
+	check(ui.modal == null and ui.model.queue.size() == pending_jobs, "Deferring dialogue cannot accept order")
+	await process_frame
+	await process_frame
+	ui.interact()
 	# Find the real signal callback and accept through it.
 	for child in ui.modal.get_children():
 		if child is Button and child.text == "马上来！":
@@ -78,6 +96,17 @@ func run() -> void:
 	for drink in ui.art.DRINKS:
 		check(ui.art.drink(drink)!=null,"Drink loaded: "+drink)
 	check(ui.art.chibi("tank")==null and ui.art.chibi("horn")!=null and ui.art.chibi("mimi")!=null and ui.art.chibi("bobo")!=null and ui.art.chibi("coco")!=null and ui.art.chibi("bobo")!=ui.art.portrait("bobo"),"Seated sprites load separately; missing chibi has no portrait fallback")
+	for slot in ui.art.DECOR_ASSETS:
+		check(ui.art.decor(slot) != null, "Approved decor loads: " + slot)
+	for drink in ui.art.FUTURE_DRINKS:
+		check(ui.art.drink(drink) != null, "Approved future drink loads: " + drink)
+	check(ui.decor_nodes.size() == 17, "All approved decor slots are mounted in the scene layer")
+	check(not ui.decor_nodes["counter"].visible and not ui.decor_nodes["deck"].visible, "Unpurchased decor stays hidden in live scene")
+	ui.progress.data.wallet = 100
+	ui.shop()
+	check(ui.modal.get_node_or_null("Panel") == null, "Decor shop uses native modal")
+	check(ui.modal.get_child_count() > 15, "Decor shop previews all six produced replacement assets")
+	ui.close_modal()
 	# Exercise UI for special visits outside the still-unimplemented Day4 schedule.
 	for id in ["snowy","jiwoo","spf8","mimi"]:
 		ui.close_modal()
