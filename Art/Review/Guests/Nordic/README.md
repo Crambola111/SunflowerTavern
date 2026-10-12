@@ -12,5 +12,7 @@
 | `Raven/Raven_WeatherReporter_Seated_v1.png` | 渡鸦·天气播报员 | 客位Q版静态图 | Review |
 | `WhiteReindeer/WhiteReindeer_SleighNavigator_Seated_v1.png` | 白驯鹿·雪橇领航员 | 客位Q版静态图 | Review |
 | `ArcticFox/ArcticFox_SnowNightCourier_Seated_v1.png` | 北极狐·雪夜邮差 | 客位Q版静态图 | Review |
+| `Ingrid/Ingrid_KnittingGrandmother_Seated_v1.png` | 英格丽·织衣奶奶 | 客位静态图 | Review |
+| `Ingrid/Ingrid_KnittingGrandmother_Portrait_v1.png` | 英格丽·织衣奶奶 | 点单对话/图鉴共用立绘 | Review |
 
 约束：不新增行走、入场或饮用动画；普通客人点单只复用一张对话立绘，座位状态使用静态图加轻微程序呼吸。
