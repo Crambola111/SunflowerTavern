@@ -30,6 +30,7 @@ var queue_label: Label
 var tutorial_label: Label
 var tutorial_panel: Panel
 var toast: Label
+var toast_panel: Panel
 var selection: Label
 var action: Button
 var discard: Button
@@ -125,12 +126,15 @@ func _ready() -> void:
 	action_caption = label(self, Vector2(1400,878), Vector2(180,30), "", 18)
 	card(self, Vector2(1400,748), Vector2(300,46))
 	selection = label(self, Vector2(1400,748), Vector2(280,34), "", 18)
-	card(self, Vector2(800,845), Vector2(780,82))
+	art_panel(self, Vector2(800,845), Vector2(780,82), "UI_QueuePanel_Southwind_v1", 34, 24)
+	art_panel(self, Vector2(800,807), Vector2(250,36), "UI_BrewingBadge_Southwind_v1", 24, 14)
 	queue_label = label(self, Vector2(837,827), Vector2(650,32), "", 19)
+	texture(self, Vector2(455,827), Vector2(52,52), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
 	held_icon = texture(self, Vector2(455,827), Vector2(38,38), null)
 	status = label(self, Vector2(800,863), Vector2(740,30), "", 17)
-	tutorial_panel = card(self, Vector2(800,781), Vector2(780,40))
+	tutorial_panel = art_panel(self, Vector2(800,781), Vector2(780,40), "UI_ToastPanel_Southwind_v1", 28, 18)
 	tutorial_label = label(self, Vector2(800,781), Vector2(755,36), "", 18)
+	toast_panel = art_panel(self, Vector2(280,140), Vector2(500,74), "UI_ToastPanel_Southwind_v1", 28, 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
 	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
 	progress = Progress.new()
@@ -279,6 +283,7 @@ func _process(delta: float) -> void:
 				toast.text = ("惊喜客人 · " if v.guest.id == "jiwoo" else "客人入场 · ") + v.guest.name
 				arrival_time = 3
 	toast.visible = arrival_time > 0
+	toast_panel.visible = toast.visible
 	for id in model.codex:
 		progress.unlock(id)
 	var income: int = model.claim_settlement()
@@ -357,6 +362,7 @@ func refresh_seats(dt: float, hint: int) -> void:
 			visibility[i] = 0.0
 			sprites[i].modulate.a = 0.0
 			visit_ids.erase(i)
+			icons[i].texture = art.ui_texture("UI_Icon_Coin_Southwind_v1")
 			seats[i].text = "P%d · 待收款\n金币 · 用过的杯子 ×%d" % [i, model.bills[i].cups]
 			continue
 		if v.is_empty():
@@ -528,7 +534,7 @@ func dialogue(v: Dictionary) -> void:
 	host.name = "SunnyDialogueFallback"
 	var panel := card(modal, Vector2(800,765), Vector2(1530,230))
 	panel.name = "DialoguePanel"
-	texture(modal, Vector2(245,647), Vector2(355,69), art.ui_texture("UI_MapNamePlate_Southwind_v1"))
+	texture(modal, Vector2(245,647), Vector2(355,69), art.ui_texture("UI_DialogueNamePlate_Southwind_v1"))
 	var name_label := label(modal, Vector2(275,646), Vector2(255,48), v.guest.name.split(" ")[0], 26)
 	name_label.add_theme_color_override("font_color", Color("fff0bd"))
 	var order := "咕噜咕噜……（呼吸器还没摘）" if model.tank_attention(v) else "来%d杯%s！" % [v.guest.cups,v.guest.drink]
@@ -539,12 +545,16 @@ func dialogue(v: Dictionary) -> void:
 	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	texture(modal,Vector2(111,751),Vector2(66,80),art.drink(v.guest.drink) if not model.tank_attention(v) else null)
 	label(modal,Vector2(620,840),Vector2(900,30),"确认后接单；待上饮品会一直显示在客人头顶",18)
-	button(modal,Vector2(1430,140),Vector2(210,55),"返回营业",close_modal)
-	button(modal,Vector2(1300,727),Vector2(350,66),"先摘呼吸器吧" if model.tank_attention(v) else "马上来！",func():
+	var skip := button(modal,Vector2(1460,140),Vector2(92,52),"",close_modal)
+	skin_button(skip, "UI_Button_Ivory_Southwind_v1")
+	texture(skip, Vector2(46,26), Vector2(62,36), art.ui_texture("UI_Icon_DialogueSkip_Southwind_v1"))
+	var accept := button(modal,Vector2(1300,727),Vector2(350,66),"先摘呼吸器吧" if model.tank_attention(v) else "马上来！",func():
 		close_modal()
 		model.direction = v.seat
 		model.interact())
-	button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
+	skin_button(accept, "UI_Button_Teal_Southwind_v1")
+	var later := button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
+	skin_button(later, "UI_Button_Ivory_Southwind_v1")
 
 func codex(selected: int) -> void:
 	close_modal()
@@ -559,7 +569,10 @@ func codex(selected: int) -> void:
 	shade.color = Color(0,0,0,0.50)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texture(modal, Vector2(800,450), Vector2(1440,780), art.codex_asset("book"))
-	button(modal, Vector2(1405,125), Vector2(72,72), "×", close_modal)
+	var codex_close := button(modal, Vector2(1405,125), Vector2(72,72), "", close_modal)
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		codex_close.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	texture(codex_close, Vector2(36,36), Vector2(44,44), art.ui_texture("UI_Icon_Close_Southwind_v1"))
 	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
 	var available: Array = Config.available_guests()
 	var safe_selected := clampi(selected, 0, maxi(0, available.size()-1))
@@ -575,32 +588,39 @@ func codex(selected: int) -> void:
 		var id: String = available[i]
 		var known: bool = model.codex.has(id)
 		var tile_center := Vector2(grid_x[i % 3], grid_y[i / 3])
+		texture(modal, tile_center, Vector2(142,142), art.ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
+		if i == safe_selected:
+			texture(modal, tile_center, Vector2(154,154), art.ui_texture("UI_CodexSelectionFrame_Southwind_v1"))
 		if known:
-			card(modal, tile_center, Vector2(142,142))
 			texture(modal, tile_center, Vector2(126,126), art.portrait(id))
 		else:
 			texture(modal, tile_center, Vector2(142,142), art.codex_asset("locked_slot"))
+			texture(modal, tile_center, Vector2(52,62), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
 		var pick := button(modal, tile_center+Vector2(0,70), Vector2(150,24), "", func(): codex(choice))
 		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 			pick.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 		pick.add_theme_color_override("font_color", Color.TRANSPARENT)
-		pick.tooltip_text = current_guest.name if i == safe_selected and known else ("已解锁" if known else "完成服务后解锁")
+		pick.tooltip_text = Config.guest(id).name if known else "完成服务后解锁"
 		pick.disabled = not known and i != safe_selected
 	var unlocked: bool = not current_id.is_empty() and model.codex.has(current_id)
 	var name_text := current_guest.name if unlocked else "未知客人"
 	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
 	if unlocked:
 		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
-		var badge_sheet := texture(modal, Vector2(1290,330), Vector2(250,166), art.codex_asset("trait_badges"))
+		texture(modal, Vector2(1290,265), Vector2(280,72), art.ui_texture("UI_CodexTag_Southwind_v1"))
+		var badge_sheet := texture(modal, Vector2(1290,360), Vector2(250,166), art.codex_asset("trait_badges"))
 		badge_sheet.modulate = Color(1,1,1,0.92)
 		label(modal, Vector2(1290,280), Vector2(250,34), "客人标签", 18)
-		label(modal, Vector2(1290,310), Vector2(210,28), "海岛旅客", 17)
-		label(modal, Vector2(1290,350), Vector2(210,28), "喜欢拍照", 17)
-		label(modal, Vector2(1290,390), Vector2(210,28), "常点饮品", 17)
+		label(modal, Vector2(1290,320), Vector2(210,28), "海岛旅客", 17)
+		label(modal, Vector2(1290,360), Vector2(210,28), "喜欢拍照", 17)
+		label(modal, Vector2(1290,400), Vector2(210,28), "常点饮品", 17)
+		texture(modal, Vector2(910,655), Vector2(120,150), art.ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
+		texture(modal, Vector2(910,635), Vector2(64,64), art.drink(current_guest.drink))
 		var bio := current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
-		label(modal, Vector2(1115,665), Vector2(480,150), bio, 20)
+		label(modal, Vector2(1160,665), Vector2(410,150), bio, 20)
 	else:
-		texture(modal, Vector2(1070,470), Vector2(250,250), art.texture("UI_CodexLockedSlot_Southwind_v2"))
+		texture(modal, Vector2(1070,470), Vector2(250,250), art.ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
+		texture(modal, Vector2(1070,470), Vector2(72,84), art.ui_texture("UI_Icon_Lock_Southwind_v1"))
 		label(modal, Vector2(1120,665), Vector2(420,100), "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。", 21)
 	button(modal, Vector2(1030,770), Vector2(82,64), "‹", func(): codex(posmod(safe_selected-1, available.size())))
 	button(modal, Vector2(1380,770), Vector2(82,64), "›", func(): codex(posmod(safe_selected+1, available.size())))
@@ -608,22 +628,30 @@ func codex(selected: int) -> void:
 func settlement() -> void:
 	var passed := model.passed()
 	open_modal("")
-	var frame := card(modal, Vector2(800, 470), Vector2(1250, 680))
+	var frame := art_panel(modal, Vector2(800,470), Vector2(1250,680), "UI_SettlementPanel_Southwind_v1", 42, 38)
 	frame.name = "VictorySettlementPanel"
-	texture(modal, Vector2(800, 212), Vector2(1050, 110), art.texture("UI_VictoryFloralHeader_Southwind_v1"))
-	label(modal, Vector2(800, 247), Vector2(760, 66), "目标达成" if passed else "今日打烊", 42)
+	modal.move_child(frame,1)
+	texture(modal, Vector2(800,212), Vector2(1050,110), art.texture("UI_VictoryFloralHeader_Southwind_v1"))
+	texture(modal, Vector2(800,212), Vector2(620,128), art.ui_texture("UI_SettlementTitle_Southwind_v1"))
+	label(modal, Vector2(800,247), Vector2(760,66), "目标达成" if passed else "今日打烊", 42)
 	var character_asset := "Sunny_Southwind_Victory_v1" if passed else "Sunny_Chibi"
-	texture(modal, Vector2(410, 495), Vector2(350, 500), art.texture(character_asset))
+	texture(modal, Vector2(410,495), Vector2(350,500), art.texture(character_asset))
+	texture(modal, Vector2(535,360), Vector2(138,138), art.ui_texture("UI_Badge_GoalSuccess_Southwind_v1" if passed else "UI_Badge_GoalRetry_Southwind_v1"))
 	if passed:
-		texture(modal, Vector2(1095, 382), Vector2(185, 140), art.texture("UI_VictoryCoinBurst_Southwind_v1"))
-	label(modal, Vector2(800, 330), Vector2(420, 38), "%s模式 · 椰风岛 · 第%d天" % ["辅助" if assisted else "标准", current_day], 20)
+		texture(modal, Vector2(1095,382), Vector2(185,140), art.texture("UI_VictoryCoinBurst_Southwind_v1"))
+	label(modal, Vector2(800,330), Vector2(420,38), "%s模式 · 椰风岛 · 第%d天" % ["辅助" if assisted else "标准", current_day], 20)
+	for row_y in [430,495,560]:
+		texture(modal, Vector2(930,row_y), Vector2(520,58), art.ui_texture("UI_StatRow_Southwind_v1"))
 	var summary := "营业收入    %d / %d\n服务客人    %d\n已收录图鉴  %d\n最佳连击    %d" % [model.coins, model.day.target, model.served, model.codex.size(), model.best_combo]
-	label(modal, Vector2(930, 490), Vector2(470, 220), summary, 24)
-	label(modal, Vector2(930, 625), Vector2(470, 44), "金币已入账 · 钱包 %d" % progress.data.wallet, 20)
-	label(modal, Vector2(930, 675), Vector2(470, 38), "目标达成，可进入下一天" if passed else "还差 %d 金币；重试保留钱包、装饰和图鉴" % maxi(0, model.day.target-model.coins), 17)
-	button(modal, Vector2(470, 760), Vector2(250, 58), "装饰酒馆", shop)
-	button(modal, Vector2(800, 760), Vector2(280, 58), "同模式重玩当天", func(): restart(assisted))
-	button(modal, Vector2(1130, 760), Vector2(250, 58), "标准模式重试" if assisted else "辅助模式重试", func(): restart(not assisted))
+	label(modal, Vector2(930,490), Vector2(470,220), summary, 24)
+	label(modal, Vector2(930,625), Vector2(470,44), "金币已入账 · 钱包 %d" % progress.data.wallet, 20)
+	label(modal, Vector2(930,675), Vector2(470,38), "目标达成，可进入下一天" if passed else "还差 %d 金币；重试保留钱包、装饰和图鉴" % maxi(0, model.day.target-model.coins), 17)
+	var decorate_button := button(modal, Vector2(470,760), Vector2(250,58), "装饰酒馆", shop)
+	skin_button(decorate_button, "UI_Button_Ivory_Southwind_v1")
+	var replay_button := button(modal, Vector2(800,760), Vector2(280,58), "同模式重玩当天", func(): restart(assisted))
+	skin_button(replay_button, "UI_Button_Teal_Southwind_v1")
+	var mode_button := button(modal, Vector2(1130,760), Vector2(250,58), "标准模式重试" if assisted else "辅助模式重试", func(): restart(not assisted))
+	skin_button(mode_button, "UI_Button_Ivory_Southwind_v1")
 	if progress.can_enter(current_day+1):
 		button(modal, Vector2(970, 825), Vector2(280, 50), "进入第%d天" % (current_day+1), func(): choose_day(current_day+1))
 	if current_day > 1:
@@ -647,7 +675,8 @@ func decor_shop_page_view() -> void:
 	place(shade, modal, Vector2(800,450), Vector2(1600,900))
 	shade.color = Color(0,0,0,0.10)
 	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texture(modal, Vector2(1250,450), Vector2(650,900), art.decor_ui("panel"))
+	texture(modal, Vector2(1250,450), Vector2(650,900), art.ui_texture("UI_ShopSidebar_Southwind_v1"))
+	texture(modal, Vector2(1250,450), Vector2(620,870), art.decor_ui("panel"))
 	button(modal, Vector2(1490,83), Vector2(64,64), "×", close_modal)
 	label(modal, Vector2(1250,83), Vector2(390,58), "装饰酒馆", 34)
 	label(modal, Vector2(1250,166), Vector2(370,48), "金币  %d" % progress.data.wallet, 26)
@@ -662,12 +691,17 @@ func decor_shop_page_view() -> void:
 			continue
 		var slot: String = preview_slots[index]
 		var cx := card_x[i]
-		texture(modal, Vector2(cx, card_y), Vector2(180,470), art.decor_ui("card"))
+		texture(modal, Vector2(cx, card_y), Vector2(180,470), art.ui_texture("UI_ShopItemCard_Southwind_v1"))
+		texture(modal, Vector2(cx, card_y), Vector2(170,450), art.decor_ui("card"))
+		if progress.owns(index) or index == decor_shop_page*3:
+			texture(modal, Vector2(cx, card_y), Vector2(190,480), art.ui_texture("UI_ShopSelectionFrame_Southwind_v1"))
 		texture(modal, Vector2(cx, 315), Vector2(145,145), art.decor(slot))
 		label(modal, Vector2(cx, 205), Vector2(175,38), preview_names[index], 18)
+		texture(modal, Vector2(cx+55, 515), Vector2(34,34), art.ui_texture("UI_Icon_Bonus_Southwind_v1"))
 		label(modal, Vector2(cx, 515), Vector2(175,58), preview_effects[index], 17)
 		var owned := progress.owns(index)
 		var buy_text := "已拥有" if owned else "%d 金币" % Progress.PRICES[index]
+		texture(modal, Vector2(cx, 645), Vector2(186,62), art.ui_texture("UI_PricePlate_Southwind_v1"))
 		texture(modal, Vector2(cx, 645), Vector2(176,58), art.decor_ui("purchase_button"))
 		var buy := button(modal, Vector2(cx,645), Vector2(176,58), "", func():
 			if progress.purchase(index):
@@ -703,7 +737,10 @@ func open_modal(title: String, book := false) -> void:
 	else:
 		card(modal,Vector2(800,450),Vector2(1100,600))
 	label(modal,Vector2(800,160 if book else 240),Vector2(950,70),title,30)
-	button(modal,Vector2(1310,160 if book else 240),Vector2(65,55),"×",close_modal)
+	var close_button := button(modal,Vector2(1310,160 if book else 240),Vector2(65,55),"",close_modal)
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		close_button.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+	texture(close_button,Vector2(32.5,27.5),Vector2(40,40),art.ui_texture("UI_Icon_Close_Southwind_v1"))
 
 func close_modal() -> void:
 	if modal != null:
@@ -744,6 +781,13 @@ func card(parent: Node, center: Vector2, dimensions: Vector2) -> Panel:
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return panel
 
+func art_panel(parent: Node, center: Vector2, dimensions: Vector2, asset: String, horizontal_margin := 36.0, vertical_margin := 24.0) -> Panel:
+	var panel := Panel.new()
+	place(panel,parent,center,dimensions)
+	panel.add_theme_stylebox_override("panel",art.ui_style(asset,horizontal_margin,vertical_margin))
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return panel
+
 func label(parent: Node, center: Vector2, dimensions: Vector2, text: String, font_size: int) -> Label:
 	var control := Label.new()
 	place(control,parent,center,dimensions)
@@ -773,6 +817,13 @@ func button(parent: Node, center: Vector2, dimensions: Vector2, text: String, ca
 	control.add_theme_color_override("font_color",Color("48270e"))
 	control.pressed.connect(callback)
 	return control
+
+func skin_button(control: Button, asset: String) -> void:
+	for state in ["normal","hover","pressed","disabled"]:
+		control.add_theme_stylebox_override(state,art.ui_style(asset,40,20))
+	control.add_theme_color_override("font_color",Color("48270e"))
+	for state in ["hover","pressed","disabled"]:
+		control.add_theme_color_override("font_"+state+"_color",Color("48270e"))
 
 func round_button(center: Vector2, caption: String, callback: Callable) -> Button:
 	var control := button(self, center, Vector2(72,72), "", callback)

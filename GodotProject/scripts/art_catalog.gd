@@ -20,6 +20,8 @@ func texture(asset: String) -> Texture2D:
 		return null
 	if not cache.has(asset):
 		var path := "res://assets/" + asset + ".png"
+		if not ResourceLoader.exists(path):
+			path = "res://assets/ui/southwind/" + asset + ".png"
 		cache[asset] = load(path) if ResourceLoader.exists(path) else null
 	return cache[asset]
 
@@ -72,7 +74,32 @@ const UI_REGIONS := {
 	"UI_MapNamePlate_Southwind_v1": Rect2(33, 143, 2090, 408),
 	"UI_IncomeGoalPlate_Southwind_v1": Rect2(25, 158, 2125, 355),
 	"UI_OrderBubble_Southwind_v1": Rect2(85, 105, 1465, 758),
-	"UI_InteractButton_Southwind_v1": Rect2(57, 59, 1133, 1138)
+	"UI_InteractButton_Southwind_v1": Rect2(57, 59, 1133, 1138),
+	"UI_Icon_Close_Southwind_v1": Rect2(71, 53, 1073, 1129),
+	"UI_Icon_Lock_Southwind_v1": Rect2(146, 51, 839, 1099),
+	"UI_Icon_Coin_Southwind_v1": Rect2(87, 91, 1073, 1091),
+	"UI_QueuePanel_Southwind_v1": Rect2(86, 78, 1816, 675),
+	"UI_DrinkSlot_Southwind_v1": Rect2(138, 53, 1032, 1038),
+	"UI_DialogueNamePlate_Southwind_v1": Rect2(107, 9, 1883, 730),
+	"UI_BrewingBadge_Southwind_v1": Rect2(75, 23, 1834, 699),
+	"UI_ToastPanel_Southwind_v1": Rect2(0, 9, 2009, 740),
+	"UI_Button_Teal_Southwind_v1": Rect2(67, 25, 2085, 699),
+	"UI_Button_Ivory_Southwind_v1": Rect2(100, 9, 1976, 677),
+	"UI_CodexPortraitSlot_Southwind_v1": Rect2(33, 2, 1175, 1252),
+	"UI_CodexSelectionFrame_Southwind_v1": Rect2(78, 37, 1098, 1138),
+	"UI_CodexTag_Southwind_v1": Rect2(0, 19, 2160, 705),
+	"UI_FavoriteDrinkCard_Southwind_v1": Rect2(0, 25, 1025, 1397),
+	"UI_Icon_DialogueSkip_Southwind_v1": Rect2(136, 33, 1525, 782),
+	"UI_SettlementPanel_Southwind_v1": Rect2(0, 0, 1104, 1373),
+	"UI_SettlementTitle_Southwind_v1": Rect2(0, 0, 2172, 724),
+	"UI_StatRow_Southwind_v1": Rect2(0, 9, 2158, 699),
+	"UI_Badge_GoalSuccess_Southwind_v1": Rect2(0, 54, 1226, 1111),
+	"UI_Badge_GoalRetry_Southwind_v1": Rect2(0, 47, 1228, 1207),
+	"UI_ShopSidebar_Southwind_v1": Rect2(17, 15, 937, 1588),
+	"UI_ShopItemCard_Southwind_v1": Rect2(0, 21, 1117, 1381),
+	"UI_ShopSelectionFrame_Southwind_v1": Rect2(19, 27, 1091, 1375),
+	"UI_PricePlate_Southwind_v1": Rect2(0, 23, 1910, 628),
+	"UI_Icon_Bonus_Southwind_v1": Rect2(33, 51, 1297, 1070)
 }
 
 func ui_texture(asset: String) -> AtlasTexture:
@@ -80,3 +107,14 @@ func ui_texture(asset: String) -> AtlasTexture:
 	atlas.atlas = texture(asset)
 	atlas.region = UI_REGIONS[asset]
 	return atlas
+
+func ui_style(asset: String, horizontal_margin := 36.0, vertical_margin := 24.0) -> StyleBoxTexture:
+	var box := StyleBoxTexture.new()
+	box.texture = ui_texture(asset)
+	box.texture_margin_left = horizontal_margin
+	box.texture_margin_right = horizontal_margin
+	box.texture_margin_top = vertical_margin
+	box.texture_margin_bottom = vertical_margin
+	box.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	box.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+	return box
