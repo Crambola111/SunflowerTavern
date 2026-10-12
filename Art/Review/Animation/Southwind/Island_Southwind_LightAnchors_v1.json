@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "map": "southwind",
+  "coordinate_space": "source_px",
+  "source_canvas": { "width": 1672, "height": 941 },
+  "logical_canvas": { "width": 1600, "height": 900 },
+  "anchors": [
+    { "id": "table_n",  "type": "table_candle", "x": 848,  "y": 189, "phase": 0.00, "scale": 1.00 },
+    { "id": "table_nw", "type": "table_candle", "x": 548,  "y": 267, "phase": 0.17, "scale": 1.00 },
+    { "id": "table_ne", "type": "table_candle", "x": 1150, "y": 270, "phase": 0.41, "scale": 1.00 },
+    { "id": "table_w",  "type": "table_candle", "x": 331,  "y": 451, "phase": 0.63, "scale": 1.00 },
+    { "id": "table_e",  "type": "table_candle", "x": 1355, "y": 452, "phase": 0.84, "scale": 1.00 },
+    { "id": "table_sw", "type": "table_candle", "x": 469,  "y": 633, "phase": 0.29, "scale": 1.00 },
+    { "id": "table_se", "type": "table_candle", "x": 1219, "y": 635, "phase": 0.72, "scale": 1.00 },
+    { "id": "bar_lamp", "type": "hanging_glow", "x": 630,  "y": 704, "phase": 0.53, "scale": 1.55 }
+  ]
+}
