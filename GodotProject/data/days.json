@@ -146,4 +146,23 @@
       }
     ]
   }
+  ,
+  {
+    "day": 4,
+    "duration": 120,
+    "target": 160,
+    "guests": ["bobo", "coco", "horn", "tank", "gecko", "mimi", "spf8", "snowy", "jiwoo"],
+    "arrivals": [
+      {"time": 8, "guest": "bobo", "seat": 2},
+      {"time": 18, "guest": "tank", "seat": 5},
+      {"time": 28, "guest": "jiwoo", "seat": 3},
+      {"time": 40, "guest": "mimi", "seat": 6},
+      {"time": 52, "guest": "gecko", "seat": 7},
+      {"time": 64, "guest": "spf8", "seat": 1},
+      {"time": 76, "guest": "snowy", "seat": 4},
+      {"time": 86, "guest": "coco", "seat": 3},
+      {"time": 96, "guest": "horn", "seat": 5},
+      {"time": 106, "guest": "jiwoo", "seat": 2}
+    ]
+  }
 ]
