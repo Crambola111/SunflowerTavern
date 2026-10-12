@@ -13,6 +13,11 @@ const DECOR_ASSETS := {
 	"lighting": "Decor_SW_TableLamp_v2", "hanging_lamp": "Decor_SW_HangingLamp_v2",
 	"railing": "Decor_SW_Railing_v2", "table": "Decor_SW_Table_v2", "deck": "Decor_SW_Deck_v2"
 }
+const NORDIC_DECOR_ASSETS := {
+	"lantern": "Nordic_SnowRuneLantern_v1", "tabletop": "Nordic_KnotworkTabletop_v1",
+	"chair_cover": "Nordic_WoolChairCover_v1", "fir_planter": "Nordic_FrostedFirPlanter_v1",
+	"centerpiece": "Nordic_AuroraIceCenterpiece_v1", "railing": "Nordic_FjordRailing_v1"
+}
 var cache := {}
 
 func texture(asset: String) -> Texture2D:
@@ -36,6 +41,9 @@ func drink(name: String) -> Texture2D:
 
 func decor(slot: String) -> Texture2D:
 	return texture(DECOR_ASSETS.get(slot, ""))
+
+func nordic_decor(slot: String) -> Texture2D:
+	return texture(NORDIC_DECOR_ASSETS.get(slot, ""))
 
 func codex_asset(kind: String) -> Texture2D:
 	return texture(CODEX_ASSETS.get(kind, ""))
