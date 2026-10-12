@@ -1124,7 +1124,7 @@
     ],
     "mode": "RGBA",
     "sha256": "2aa9fc15ead0ac2f3efe61df6616078cb94d474d959807125824452b5b741194",
-    "status": "runtime_integrated_art_confirmation_pending",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
     "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
     "source": "Art/Approved/UI/Southwind/UI_RoundButtonBase_Southwind_v1.png"
@@ -1150,7 +1150,7 @@
     ],
     "mode": "RGBA",
     "sha256": "1a55e230ed5d7aedb31f1fea962d9aad1e65e500549dd526aae781893bef3c16",
-    "status": "runtime_integrated_art_confirmation_pending",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
     "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
     "source": "Art/Approved/UI/Southwind/UI_TimerPlate_Southwind_v1.png"
@@ -1212,9 +1212,8 @@
       255
     ],
     "sha256": "27ad94f959d6d27ac1cb868b30d8aae803819eaff62a782b9c17948dc6ca36bc",
-    "status": "review_copy_superseded_by_approved",
-    "usage": "ui_icon_overlay",
-    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Codex_Southwind_v1.png"
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_icon_overlay"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png",
@@ -1228,9 +1227,8 @@
       255
     ],
     "sha256": "45afe41b8e659e110fb8013009a994c7472d2d667a8a0b7a46897cf1effa0aa5",
-    "status": "review_copy_superseded_by_approved",
-    "usage": "ui_icon_overlay",
-    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png"
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_icon_overlay"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png",
@@ -1244,9 +1242,8 @@
       255
     ],
     "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
-    "status": "review_copy_superseded_by_approved",
-    "usage": "ui_icon_overlay",
-    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png"
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_icon_overlay"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png",
@@ -1260,9 +1257,8 @@
       255
     ],
     "sha256": "7588bdf940a7c73c04fe7ad2de976298531e2d647280b9a8bddded1657727c25",
-    "status": "review_copy_superseded_by_approved",
-    "usage": "ui_icon_overlay",
-    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png"
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_icon_overlay"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Pause_Southwind_v1.png",
@@ -1276,9 +1272,8 @@
       255
     ],
     "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
-    "status": "review_copy_superseded_by_approved",
-    "usage": "ui_icon_overlay",
-    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png"
+    "status": "uploaded_for_review_not_runtime_integrated",
+    "usage": "ui_icon_overlay"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_IncomeGoalPlate_Southwind_v1.png",
@@ -1292,9 +1287,10 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
-    "approved_at": "2026-09-29T22:08:14+08:00"
+    "approved_at": "2026-09-29T22:08:14+08:00",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_MapNamePlate_Southwind_v1.png",
@@ -1308,9 +1304,10 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
-    "approved_at": "2026-09-29T22:08:14+08:00"
+    "approved_at": "2026-09-29T22:08:14+08:00",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_RoundButtonBase_Southwind_v1.png",
@@ -1324,9 +1321,10 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
-    "approved_at": "2026-09-29T22:08:14+08:00"
+    "approved_at": "2026-09-29T22:08:14+08:00",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_TimerPlate_Southwind_v1.png",
@@ -1340,9 +1338,10 @@
       0,
       255
     ],
-    "status": "user_approved_pending_godot_integration",
+    "status": "user_approved_runtime_integrated",
     "usage": "ui_overlay",
-    "approved_at": "2026-09-29T22:08:14+08:00"
+    "approved_at": "2026-09-29T22:08:14+08:00",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
     "id": "Decor_SW_Counter_v2",
@@ -1579,20 +1578,54 @@
     "usage": "确认原稿：仅美术追溯，运行使用去吊灯版本"
   },
   {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_Icon_Pause_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png"
+  },
+  {
     "path": "Art/Approved/UI/Southwind/UI_Icon_Codex_Southwind_v1.png",
     "size": [
       1254,
       1254
     ],
     "mode": "RGBA",
-    "alpha": [
-      0,
-      255
-    ],
     "sha256": "27ad94f959d6d27ac1cb868b30d8aae803819eaff62a782b9c17948dc6ca36bc",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_icon_overlay",
-    "approved_at": "2026-09-29T22:16:57+08:00"
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_Icon_Codex_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "27ad94f959d6d27ac1cb868b30d8aae803819eaff62a782b9c17948dc6ca36bc",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_Icon_Codex_Southwind_v1.png"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png",
@@ -1601,30 +1634,23 @@
       1254
     ],
     "mode": "RGBA",
-    "alpha": [
-      0,
-      255
-    ],
     "sha256": "45afe41b8e659e110fb8013009a994c7472d2d667a8a0b7a46897cf1effa0aa5",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_icon_overlay",
-    "approved_at": "2026-09-29T22:16:57+08:00"
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
-    "path": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png",
+    "path": "GodotProject/assets/UI_Icon_Decorate_Southwind_v1.png",
     "size": [
       1254,
       1254
     ],
     "mode": "RGBA",
-    "alpha": [
-      0,
-      255
-    ],
-    "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_icon_overlay",
-    "approved_at": "2026-09-29T22:16:57+08:00"
+    "sha256": "45afe41b8e659e110fb8013009a994c7472d2d667a8a0b7a46897cf1effa0aa5",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_Icon_Decorate_Southwind_v1.png"
   },
   {
     "path": "Art/Approved/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png",
@@ -1633,30 +1659,114 @@
       1254
     ],
     "mode": "RGBA",
-    "alpha": [
-      0,
-      255
-    ],
     "sha256": "7588bdf940a7c73c04fe7ad2de976298531e2d647280b9a8bddded1657727c25",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_icon_overlay",
-    "approved_at": "2026-09-29T22:16:57+08:00"
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
   },
   {
-    "path": "Art/Approved/UI/Southwind/UI_Icon_Pause_Southwind_v1.png",
+    "path": "GodotProject/assets/UI_Icon_TurnRight_Southwind_v1.png",
     "size": [
       1254,
       1254
     ],
     "mode": "RGBA",
-    "alpha": [
-      0,
-      255
+    "sha256": "7588bdf940a7c73c04fe7ad2de976298531e2d647280b9a8bddded1657727c25",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_Icon_TurnRight_Southwind_v1.png"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
     ],
-    "sha256": "4879f8c61d7b65c03cce4c1c73faed2ed54f2e7a3a696f7cd126b8589f3f9cd7",
-    "status": "user_approved_pending_godot_integration",
-    "usage": "ui_icon_overlay",
-    "approved_at": "2026-09-29T22:16:57+08:00"
+    "mode": "RGBA",
+    "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending"
+  },
+  {
+    "path": "GodotProject/assets/UI_Icon_TurnLeft_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "3ec3c331656624670ed84676313ec6e61a0d02f89b8434651747e8d1c7253281",
+    "status": "user_approved_runtime_integrated",
+    "usage": "ui_overlay",
+    "integration": "Godot native UI / AtlasTexture; visual acceptance pending",
+    "source": "Art/Approved/UI/Southwind/UI_Icon_TurnLeft_Southwind_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/Drink_AuroraSoda_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "449e4c5eeff34aaab65b42dd8b352ced40dabf600566ba5fac046e089eebd955",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Drinks/Nordic/Drink_AuroraSoda_v2.png"
+  },
+  {
+    "path": "GodotProject/assets/Drink_CinnamonCocoa_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "6a7423b38b5297d3e443c5d5c4266b690f27cf46103fd1f95da9bd8c5561a6d4",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Drinks/Nordic/Drink_CinnamonCocoa_v2.png"
+  },
+  {
+    "path": "GodotProject/assets/Drink_LingonberryTea_v2.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "984176423b97bd64e7d226062db7034ea6d632124c886d3b36de8e065f572bf4",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Drinks/Nordic/Drink_LingonberryTea_v2.png"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Default_Carry_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "d79fe79f717d5945b756bb818854e584edcc7bd6c3f8a2a0f62b9ab34b419795",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Sunny/Default/Sunny_Default_Carry_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Default_Idle_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "1622791e557c1d63f3c7a075d18b28474e87e40400af5768584b07ced1516d40",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Sunny/Default/Sunny_Default_Idle_v1.png"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Default_Serve_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "ef560af24afffbbbfd462e1ab8569f7c6d1559bbb5b8e3d416d422f74dfba105",
+    "status": "godot_runtime_asset_loaded",
+    "source_path": "Art/Approved/Sunny/Default/Sunny_Default_Serve_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Close_Southwind_v1.png",
