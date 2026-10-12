@@ -586,7 +586,7 @@ func shop() -> void:
 	open_modal("装饰酒馆 · 钱包 %d" % progress.data.wallet)
 	var preview_slots := ["chair", "lighting", "counter", "railing", "table", "deck"]
 	var preview_names := ["贝壳藤编软椅", "海岛贝壳灯具", "浅海玻璃吧台", "漂流木贝壳栏杆", "浅海波纹客桌", "海岸贝母地板"]
-	var preview_effects := ["初始耐心 +5%", "小费 +5%", "制作速度 +5%", "候位 +2 秒（G8）", "错杯扣除 -1 秒（G8）", "连击上限 +1（G8）"]
+	var preview_effects := ["初始耐心 +5%", "小费 +5%", "制作速度 +5%", "耐心 +2 秒", "错杯惩罚 -1 秒", "连击收益上限 +1"]
 	for i in 6:
 		var slot: String = preview_slots[i]
 		texture(modal,Vector2(420,335+i*72),Vector2(78,62),art.decor(slot))
