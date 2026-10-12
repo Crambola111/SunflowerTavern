@@ -2647,5 +2647,435 @@
     "status": "godot_runtime_integrated_pending_visual_qa",
     "usage": "ui_runtime",
     "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/CandleFlame_Southwind_v1.png",
+    "size": [
+      256,
+      256
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "738c879a255ff9ed5067eec3659c2b2cbc7e297d7c4b214184aeed9f437fef22",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/CandleFlame_Southwind_v1.png",
+    "size": [
+      256,
+      256
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "738c879a255ff9ed5067eec3659c2b2cbc7e297d7c4b214184aeed9f437fef22",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "animation_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/CandleGlow_Southwind_v1.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      132
+    ],
+    "sha256": "344e6f57e03dea3f544df9dacff96ee589d094210d31d44caac786c52471152e",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/CandleGlow_Southwind_v1.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      132
+    ],
+    "sha256": "344e6f57e03dea3f544df9dacff96ee589d094210d31d44caac786c52471152e",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "animation_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Sunny_Southwind_CenterIdle_00.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "95626d14eefcb913dc908dc61d5024f29bd97ca3e482e8687f81ce16d92311c5",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_CenterIdle_00.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "95626d14eefcb913dc908dc61d5024f29bd97ca3e482e8687f81ce16d92311c5",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "animation_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Sunny_Southwind_CenterIdle_01.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "6408c320a0023eee020630f9f0a08fe0907a3aaf874549ec0da9dc08283dbf21",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_CenterIdle_01.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "6408c320a0023eee020630f9f0a08fe0907a3aaf874549ec0da9dc08283dbf21",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "animation_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Sunny_Southwind_CenterIdle_02.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "240e280938bcd4c9f21cc84e02378240167e48b020bed189f20711abed2d02c0",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Sunny_Southwind_CenterIdle_02.png",
+    "size": [
+      512,
+      512
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "240e280938bcd4c9f21cc84e02378240167e48b020bed189f20711abed2d02c0",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "animation_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Guests/Tank/Tank_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "1362dab1e71cb00f48af7e61f3bf9b988d22725c1b692f4384eee47602ee6679",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Tank_Seated_v1.png",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Tank_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Tank/Tank_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "1362dab1e71cb00f48af7e61f3bf9b988d22725c1b692f4384eee47602ee6679",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "seated_all_states",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Guests/Gecko/Gecko_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "a47a961c6f8349bc66fdbf7efc9b32bd1ab0734a5cb36e3257e2440e0ff6547b",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Gecko_Seated_v1.png",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Gecko_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Gecko/Gecko_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "a47a961c6f8349bc66fdbf7efc9b32bd1ab0734a5cb36e3257e2440e0ff6547b",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "seated_all_states",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Guests/SPF8/SPF8_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "d11cab8fe3c97684e3a331879413d6e282201843df23a10e40710393bba29a1d",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/SPF8_Seated_v1.png",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/SPF8_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/SPF8/SPF8_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "d11cab8fe3c97684e3a331879413d6e282201843df23a10e40710393bba29a1d",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "seated_all_states",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Guests/Snowy/Snowy_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "40f7f83664d70f2201986762fdce87cfe6e3750355aad258de8137d9b8bbccff",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Snowy_Seated_v1.png",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Snowy_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Snowy/Snowy_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "40f7f83664d70f2201986762fdce87cfe6e3750355aad258de8137d9b8bbccff",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "seated_all_states",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Guests/Jiwoo/Jiwoo_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "1f319d4829f94f01112a5c7da8c3a9799980d6085ccf4ac568ecc1b43c9cfa51",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "seated_all_gameplay_states",
+    "godot_runtime_path": "GodotProject/assets/Jiwoo_Seated_v1.png",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/Jiwoo_Seated_v1.png",
+    "source_path": "Art/Approved/Guests/Jiwoo/Jiwoo_Seated_v1.png",
+    "size": [1254, 1254],
+    "mode": "RGBA",
+    "sha256": "1f319d4829f94f01112a5c7da8c3a9799980d6085ccf4ac568ecc1b43c9cfa51",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "seated_all_states",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionDock_Southwind_v1.png",
+    "size": [2070, 729], "mode": "RGBA", "alpha": [0, 255],
+    "sha256": "83b941c351c32cf07d33aa39eb8e7083aaeccb1ad0160bd1e1ffdeaef6b60bc0",
+    "status": "user_approved_godot_runtime_integrated", "usage": "production_dock_base",
+    "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_ProductionDock_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ProductionDock_Southwind_v1.png",
+    "source_path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionDock_Southwind_v1.png",
+    "size": [2070, 729], "mode": "RGBA", "sha256": "83b941c351c32cf07d33aa39eb8e7083aaeccb1ad0160bd1e1ffdeaef6b60bc0",
+    "status": "godot_runtime_integrated_pending_visual_qa", "usage": "production_dock_base", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionTaskCard_Southwind_v1.png",
+    "size": [2037, 733], "mode": "RGBA", "alpha": [0, 255],
+    "sha256": "df60c1707f8e2a97c6aadc0f4f2ef8287b3b885c00cde82ae2ecd22a857f34ff",
+    "status": "user_approved_godot_runtime_integrated", "usage": "production_task_card",
+    "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_ProductionTaskCard_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ProductionTaskCard_Southwind_v1.png",
+    "source_path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionTaskCard_Southwind_v1.png",
+    "size": [2037, 733], "mode": "RGBA", "sha256": "df60c1707f8e2a97c6aadc0f4f2ef8287b3b885c00cde82ae2ecd22a857f34ff",
+    "status": "godot_runtime_integrated_pending_visual_qa", "usage": "production_task_card", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionProgressFrame_Southwind_v1.png",
+    "size": [2105, 579], "mode": "RGBA", "alpha": [0, 255],
+    "sha256": "2e8d2ee2b240e1c86c21df8d060f54ecb22d55bc995d891ea104ab72cb046505",
+    "status": "user_approved_godot_runtime_integrated", "usage": "production_progress_frame",
+    "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_ProductionProgressFrame_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ProductionProgressFrame_Southwind_v1.png",
+    "source_path": "Art/Approved/UI/Southwind/ProductionDock/UI_ProductionProgressFrame_Southwind_v1.png",
+    "size": [2105, 579], "mode": "RGBA", "sha256": "2e8d2ee2b240e1c86c21df8d060f54ecb22d55bc995d891ea104ab72cb046505",
+    "status": "godot_runtime_integrated_pending_visual_qa", "usage": "production_progress_frame", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/ProductionDock/UI_HeldDrinkSlot_Southwind_v1.png",
+    "size": [1224, 1188], "mode": "RGBA", "alpha": [0, 255],
+    "sha256": "7620475a05cef7e93082465af8f7ec91a757773ce7b8665161f69e2392c3ce93",
+    "status": "user_approved_godot_runtime_integrated", "usage": "held_drink_slot",
+    "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_HeldDrinkSlot_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_HeldDrinkSlot_Southwind_v1.png",
+    "source_path": "Art/Approved/UI/Southwind/ProductionDock/UI_HeldDrinkSlot_Southwind_v1.png",
+    "size": [1224, 1188], "mode": "RGBA", "sha256": "7620475a05cef7e93082465af8f7ec91a757773ce7b8665161f69e2392c3ce93",
+    "status": "godot_runtime_integrated_pending_visual_qa", "usage": "held_drink_slot", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/ProductionDock/UI_ReadyDrinkTray_Southwind_v1.png",
+    "size": [1518, 1001], "mode": "RGBA", "alpha": [0, 254],
+    "sha256": "9ba10857077f77d1e258e905d261f0465b896a18861504f13c58ea009d3a580f",
+    "status": "user_approved_godot_runtime_integrated", "usage": "ready_drink_tray",
+    "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_ReadyDrinkTray_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ReadyDrinkTray_Southwind_v1.png",
+    "source_path": "Art/Approved/UI/Southwind/ProductionDock/UI_ReadyDrinkTray_Southwind_v1.png",
+    "size": [1518, 1001], "mode": "RGBA", "sha256": "9ba10857077f77d1e258e905d261f0465b896a18861504f13c58ea009d3a580f",
+    "status": "godot_runtime_integrated_pending_visual_qa", "usage": "ready_drink_tray", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Bobo/Bobo_SeatedIdle_00_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "b28d2eac4a89ddac84138f782a9806050d4adb6b9cbd8d122a5d2ba1e2a45b6d", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_00", "godot_runtime_path": "GodotProject/assets/Bobo_SeatedIdle_00_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Bobo/Bobo_SeatedIdle_01_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "495b2267b4d55742eb542f9404524f344f458976c18e04e6d99954d37e702cc0", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_01", "godot_runtime_path": "GodotProject/assets/Bobo_SeatedIdle_01_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Bobo/Bobo_SeatedIdle_02_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "a254cb2c1bab8be2aaa1619010808ed8ae6b41a6a023db8a072849e3f246944a", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_02", "godot_runtime_path": "GodotProject/assets/Bobo_SeatedIdle_02_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Coco/Coco_SeatedIdle_00_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "d574834bd2c9bae7fe2b25d573559a75eae44458946add76c758b4cd312ff06c", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_00", "godot_runtime_path": "GodotProject/assets/Coco_SeatedIdle_00_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Coco/Coco_SeatedIdle_01_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "1b6eac2113099adc5435b3a51a0238ae7c7853a49a31782a41f205aa63ab7216", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_01", "godot_runtime_path": "GodotProject/assets/Coco_SeatedIdle_01_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Coco/Coco_SeatedIdle_02_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "cc572df89966e66dfc1fe18518c7dfacec9fdbd4c33471e6d3343777f0691bd1", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_02", "godot_runtime_path": "GodotProject/assets/Coco_SeatedIdle_02_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Horn/Horn_SeatedIdle_00_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "968232effa59e0b3f481ac698f00f8e0b30b34765a2de21c1b2745826499a18e", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_00", "godot_runtime_path": "GodotProject/assets/Horn_SeatedIdle_00_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Horn/Horn_SeatedIdle_01_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "94e5f60d5e20f6ce8257812b2e4571ee94164a2324db8d7f5f826b92f445b55a", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_01", "godot_runtime_path": "GodotProject/assets/Horn_SeatedIdle_01_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Horn/Horn_SeatedIdle_02_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "0b0950718bb4f9834f6e141724db1f1110c006af6bec652b34ec459245dbbb22", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_02", "godot_runtime_path": "GodotProject/assets/Horn_SeatedIdle_02_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Mimi/Mimi_SeatedIdle_00_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "f122532a442fe1cf95e968db5a960e9ce5afcd35694be5f809a71019ebc82c56", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_00", "godot_runtime_path": "GodotProject/assets/Mimi_SeatedIdle_00_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Mimi/Mimi_SeatedIdle_01_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "1bd835d155edd0f177af7194d21277d63e5d646ef66aa3f9777db158962975b9", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_01", "godot_runtime_path": "GodotProject/assets/Mimi_SeatedIdle_01_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Mimi/Mimi_SeatedIdle_02_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "04646941c6ea9a7bd61b62e437b9fccca07cc845ad790f34bd517e2e79bac865", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_02", "godot_runtime_path": "GodotProject/assets/Mimi_SeatedIdle_02_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Tank/Tank_SeatedIdle_00_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "1362dab1e71cb00f48af7e61f3bf9b988d22725c1b692f4384eee47602ee6679", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_00", "godot_runtime_path": "GodotProject/assets/Tank_SeatedIdle_00_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Tank/Tank_SeatedIdle_01_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "ff0f8813cf8c06c26de5b105c54c315074001c853a7f5a4342489980bd6aa3e8", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_01", "godot_runtime_path": "GodotProject/assets/Tank_SeatedIdle_01_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/Animation/Southwind/Guests/Tank/Tank_SeatedIdle_02_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "7c9b799022bdf64063235ce4cd0cb51fec1d72b8195002384aa9cc580e85d05f", "status": "user_approved_godot_runtime_integrated",
+    "usage": "guest_seated_idle_frame_02", "godot_runtime_path": "GodotProject/assets/Tank_SeatedIdle_02_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_StartPanel_Southwind_v1.png", "size": [1659, 948], "mode": "RGBA",
+    "sha256": "342c1426d3a58c3006447fcc069e62dd5fd68a95f8110023e2c2fe645f7e5d5e", "status": "user_approved_godot_runtime_integrated",
+    "usage": "welcome_start_panel", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_StartPanel_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_StartHeader_Southwind_v1.png", "size": [2022, 778], "mode": "RGBA",
+    "sha256": "8997ae03dee68c6e9f0569018ca468a410b996a46294dd6c00506f8cb1d442de", "status": "user_approved_godot_runtime_integrated",
+    "usage": "reusable_wide_panel_header", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_StartHeader_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_Button_PrimaryWide_Southwind_v1.png", "size": [2172, 724], "mode": "RGBA",
+    "sha256": "7b12b9774ced6915332348b574594c2f322b151605cc8cfebb12bbd8411014ef", "status": "user_approved_godot_runtime_integrated",
+    "usage": "primary_text_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_PrimaryWide_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_Button_SecondaryWide_Southwind_v1.png", "size": [2172, 724], "mode": "RGBA",
+    "sha256": "d09eba797f1822b392945f1340800b7893eee2a55373f2f2c4d8c106fd246916", "status": "user_approved_godot_runtime_integrated",
+    "usage": "secondary_text_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_SecondaryWide_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_Button_DayTabWide_Southwind_v1.png", "size": [2171, 724], "mode": "RGBA",
+    "sha256": "da8bb2f9f8a43ab19cb20b5a329c72f8c1619ee963d5ced82b4694b73119c087", "status": "user_approved_godot_runtime_integrated",
+    "usage": "welcome_day_tab", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_DayTabWide_Southwind_v1.png", "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/StartPanel/UI_Button_IconSquare_Southwind_v1.png", "size": [1254, 1254], "mode": "RGBA",
+    "sha256": "5586dda21c8adc19292edb4d7ddaf40e5accd69eec9bfc1f80bdbaa6267b7893", "status": "user_approved_godot_runtime_integrated",
+    "usage": "close_and_page_icon_button", "godot_runtime_path": "GodotProject/assets/ui/southwind/UI_Button_IconSquare_Southwind_v1.png", "approval_date": "2026-10-12"
   }
 ]
