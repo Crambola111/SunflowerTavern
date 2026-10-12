@@ -23,8 +23,10 @@ void fragment() {
 	mask *= water_color(texture(TEXTURE, UV-vec2(0.003,0.0)).rgb);
 	mask *= water_color(texture(TEXTURE, UV+vec2(0.0,0.004)).rgb);
 	mask *= water_color(texture(TEXTURE, UV-vec2(0.0,0.004)).rgb);
-	vec2 offset = vec2(sin(px.y*0.065+ambient_time*0.7),sin(px.x*0.035+ambient_time*0.53))*vec2(0.0008,0.00045);
+	// Two slow, offset wave bands make the sea readable without moving the pier or foreground.
+	vec2 offset = vec2(sin(px.y*0.065+ambient_time*0.7)+0.45*sin(px.y*0.021-ambient_time*0.34),
+		sin(px.x*0.035+ambient_time*0.53)+0.35*sin(px.x*0.012+ambient_time*0.24))*vec2(0.00155,0.00085);
 	vec4 moved = texture(TEXTURE, UV+offset*mask*motion_amount);
-	float glint = sin(px.x*0.04+px.y*0.14-ambient_time*0.8)*0.018;
+	float glint = (sin(px.x*0.04+px.y*0.14-ambient_time*0.8)+0.45*sin(px.x*0.017-px.y*0.05-ambient_time*0.42))*0.026;
 	COLOR = vec4(mix(base.rgb,moved.rgb,mask*motion_amount)+vec3(glint*mask*motion_amount),base.a);
 }
