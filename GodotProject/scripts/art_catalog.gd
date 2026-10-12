@@ -23,6 +23,7 @@ const NORDIC_DECOR_ASSETS_BATCH2 := {
 	"menu_board": "Nordic_MenuBoard_v1", "seat_cushion": "Nordic_WoolSeatCushion_v1",
 	"snow_deck_trim": "Nordic_SnowDeckTrim_v1", "ice_barrel_table": "Nordic_IceBarrelTable_v1"
 }
+const MAP_BACKGROUNDS := {"southwind": "Island_Background", "nordic": "Nordic_Background"}
 var cache := {}
 
 func texture(asset: String) -> Texture2D:
@@ -34,6 +35,11 @@ func texture(asset: String) -> Texture2D:
 			path = "res://assets/ui/southwind/" + asset + ".png"
 		cache[asset] = load(path) if ResourceLoader.exists(path) else null
 	return cache[asset]
+
+func background(map_id: String) -> Texture2D:
+	var preferred: String = MAP_BACKGROUNDS.get(map_id, MAP_BACKGROUNDS["southwind"])
+	var preferred_path := "res://assets/" + preferred + ".png"
+	return texture(preferred) if ResourceLoader.exists(preferred_path) else texture("Island_Background")
 
 func portrait(id: String) -> Texture2D:
 	return texture(PORTRAITS.get(id, ""))
