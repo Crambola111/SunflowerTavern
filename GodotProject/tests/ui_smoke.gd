@@ -37,6 +37,7 @@ func run() -> void:
 	for asset in ui.art.UI_REGIONS:
 		var atlas = ui.art.ui_texture(asset)
 		check(atlas.atlas != null and Rect2(Vector2.ZERO, atlas.atlas.get_size()).encloses(atlas.region), "Approved UI atlas loads within original: " + asset)
+	check(ui.toast_panel != null and ui.tutorial_panel != null, "Approved toast and tutorial panel skins are mounted")
 	var icon_count := 0
 	for child in ui.get_children():
 		if child is Button and child.has_node("ButtonIcon"):
@@ -76,11 +77,13 @@ func run() -> void:
 	check(ui.model.elapsed==before,"Pause menu freezes clock")
 	ui.codex(0)
 	check(ui.modal != null,"Locked codex opens")
+	check(ui.modal.find_children("*", "TextureRect", true, false).size() >= 18, "Codex mounts approved slots, selection and lock artwork")
 	ui.model.codex["bobo"]=true
 	ui.codex(0)
 	check(ui.art.portrait("bobo")!=null,"Unlocked codex portrait loads")
 	ui.progress.data.wallet=100
 	ui.shop()
+	check(ui.modal.find_children("*", "TextureRect", true, false).size() >= 20, "Shop mounts approved price plates, selection and bonus art")
 	for child in ui.modal.get_children():
 		if child is Button and child.text=="30 金币":
 			child.pressed.emit()
@@ -102,6 +105,7 @@ func run() -> void:
 	ui._process(0)
 	var wallet: int=ui.progress.data.wallet
 	ui.settlement()
+	check(ui.modal.find_children("*", "TextureRect", true, false).size() >= 6, "Settlement mounts approved panel, title, rows and result badge")
 	ui.close_modal()
 	ui._process(0)
 	check(ui.progress.data.wallet==wallet,"Reopening settlement cannot double pay")
