@@ -28,4 +28,4 @@ static func available_guests(map_id: String) -> Array:
 	return NORDIC_GUESTS if map_id == MAP02 else Base.available_guests()
 
 static func map_name(map_id: String) -> String:
-	return "北欧极光峡湾" if map_id == MAP02 else "南风岛"
+	return "北欧极光峡湾" if map_id == MAP02 else "椰风岛"
