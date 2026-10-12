@@ -130,7 +130,12 @@ const UI_REGIONS := {
 	"UI_ShopItemCard_Southwind_v1": Rect2(0, 21, 1117, 1381),
 	"UI_ShopSelectionFrame_Southwind_v1": Rect2(19, 27, 1091, 1375),
 	"UI_PricePlate_Southwind_v1": Rect2(0, 23, 1910, 628),
-	"UI_Icon_Bonus_Southwind_v1": Rect2(33, 51, 1297, 1070)
+	"UI_Icon_Bonus_Southwind_v1": Rect2(33, 51, 1297, 1070),
+	"UI_StartPanel_Southwind_v1": Rect2(11, 26, 1637, 891),
+	"UI_StartHeader_Southwind_v1": Rect2(7, 165, 2008, 485),
+	"UI_Button_PrimaryWide_Southwind_v1": Rect2(21, 140, 2129, 427),
+	"UI_Button_SecondaryWide_Southwind_v1": Rect2(0, 135, 2172, 433),
+	"UI_Button_DayTabWide_Southwind_v1": Rect2(5, 77, 2161, 542)
 }
 
 func ui_texture(asset: String) -> AtlasTexture:

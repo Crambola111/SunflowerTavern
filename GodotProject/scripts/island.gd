@@ -18,6 +18,9 @@ const EFFECTS := ["客人耐心 +5%", "小费 +5%（累计取整）", "制作速
 const NORDIC_DECOR_SLOTS := ["lantern", "tabletop", "chair_cover", "fir_planter", "centerpiece", "railing", "counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"]
 const NORDIC_DECOR_NAMES := ["符文雪灯", "蓝金结纹桌面", "雪花羊毛椅套", "雪覆冷杉花盆", "极光冰晶桌饰", "峡湾绳索栏杆", "北境柜台饰板", "极光吊灯", "北欧菜单牌", "雪花羊毛坐垫", "雪覆甲板边条", "冰桶边桌"]
 const NORDIC_DECOR_EFFECTS := ["小费 +5%", "错杯惩罚 -1 秒", "客人耐心 +5%", "候位 +2 秒", "连击上限 +1", "保暖耐心 +2 秒", "制作速度 +5%", "小费 +3%", "点单耐心 +3%", "客人耐心 +3%", "连击上限 +1", "错杯惩罚 -0.5 秒"]
+const UI_BUTTON_PRIMARY := "UI_Button_PrimaryWide_Southwind_v1"
+const UI_BUTTON_SECONDARY := "UI_Button_SecondaryWide_Southwind_v1"
+const UI_BUTTON_DAY_TAB := "UI_Button_DayTabWide_Southwind_v1"
 var model: RefCounted
 var progress: RefCounted
 var map_progress: RefCounted
@@ -577,25 +580,74 @@ func select_free_map(target_map: String) -> void:
 	get_tree().change_scene_to_file(scene)
 
 func welcome() -> void:
-	open_modal("%s · 第%d天 · 准备营业 · %s模式" % [Maps.map_name(map_id), current_day, "辅助" if assisted else "标准"])
-	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%；待收桌位无倒计时" if assisted else "标准：正常耐心；收钱后自动清台"],25)
+	open_start_modal()
+	var title := label(modal, Vector2(800,150), Vector2(720,60), "%s · 第%d天 · %s" % [Maps.map_name(map_id), current_day, "辅助模式" if assisted else "标准模式"], 31)
+	title.name = "WelcomeTitle"
+	title.add_theme_color_override("font_color", Color("fff0bd"))
+	var record := label(modal, Vector2(800,232), Vector2(900,38), record_text(), 20)
+	record.name = "WelcomeRecord"
+	var goal := label(modal, Vector2(800,292), Vector2(760,50), "%d 秒内赚到 %d 金币" % [model.day.duration, model.day.target], 30)
+	goal.name = "WelcomeGoal"
+	goal.add_theme_color_override("font_color", Color("8b4b13"))
+	label(modal, Vector2(800,348), Vector2(900,40), "接单  →  出酒口取杯  →  送达  →  收钱清台", 21)
+	var hint_text := "今天先熟悉接单、制作、送达和收钱。"
 	if map_id == Maps.MAP01 and current_day == 2:
-		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
+		hint_text = "Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。"
 	if map_id == Maps.MAP01 and current_day == 3:
-		label(modal,Vector2(800,525),Vector2(950,60),"Mimi伸手时互动打断（%d秒），之后再送杯。\nSPF-8要两杯椰子水，分次取送，送齐再收钱。" % (4 if assisted else 2),20)
+		hint_text = "Mimi伸手时互动打断（%d秒），之后再送杯；SPF-8要两杯椰子水。" % (4 if assisted else 2)
 	if map_id == Maps.MAP01 and current_day == 4:
-		label(modal,Vector2(800,525),Vector2(950,60),"终局营业：Jiwoo白天喝冰美式，夜里切换无酒精特调；Snowy需要快速降温。",20)
+		hint_text = "终局营业：Jiwoo白天喝冰美式，夜里切换无酒精特调；Snowy需要快速降温。"
 	if map_id == Maps.MAP02:
-		label(modal,Vector2(800,525),Vector2(950,60),"北境热饮要及时送达，别让客人冻着。\n第4天会有一位不想加班的惊喜客人。",20)
+		hint_text = "北境热饮要及时送达，别让客人冻着；第4天会有一位不想加班的惊喜客人。"
+	var hint := label(modal, Vector2(800,402), Vector2(960,52), hint_text, 19)
+	hint.name = "WelcomeHint"
+	var start_button := button(modal, Vector2(620,495), Vector2(320,76), "开始营业", close_modal)
+	start_button.name = "StartPrimaryButton"
+	skin_button(start_button, UI_BUTTON_PRIMARY, 58, 25)
+	var assist_button := button(modal, Vector2(980,495), Vector2(320,76), "切换标准模式" if assisted else "切换辅助模式", func(): restart(not assisted))
+	assist_button.name = "StartModeButton"
+	skin_button(assist_button, UI_BUTTON_SECONDARY, 58, 25)
+	var classic_button := button(modal, Vector2(620,585), Vector2(320,60), "经典模式 · 顺序解锁", func(): set_game_mode(false))
+	classic_button.name = "ClassicModeButton"
+	skin_button(classic_button, UI_BUTTON_SECONDARY, 52, 22)
+	classic_button.disabled = not free_mode
+	var free_button := button(modal, Vector2(980,585), Vector2(320,60), "自由模式 · 任意地图", func(): set_game_mode(true))
+	free_button.name = "FreeModeButton"
+	skin_button(free_button, UI_BUTTON_SECONDARY, 52, 22)
+	free_button.disabled = free_mode
+	if free_mode:
+		var target_map := Maps.MAP01 if map_id == Maps.MAP02 else Maps.MAP02
+		var map_button := button(modal, Vector2(800,652), Vector2(420,54), "切换至%s" % Maps.map_name(target_map), func(): select_free_map(target_map))
+		map_button.name = "FreeMapButton"
+		skin_button(map_button, UI_BUTTON_PRIMARY, 58, 20)
 	for day in range(1,5):
 		var chosen := day
-		var b := button(modal,Vector2(310+(day-1)*330,675),Vector2(270,55),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if active_can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
+		var b := button(modal,Vector2(300+(day-1)*335,750),Vector2(280,68),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if active_can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
+		b.name = "DayButton%d" % day
+		b.add_theme_font_size_override("font_size", 18)
+		skin_button(b, UI_BUTTON_DAY_TAB, 55, 24)
 		b.disabled = not active_can_enter(day) or day == current_day
-	button(modal,Vector2(620,590),Vector2(290,65),"开始营业",close_modal)
-	button(modal,Vector2(970,590),Vector2(290,65),"切换标准模式" if assisted else "切换辅助模式",func(): restart(not assisted))
-	button(modal,Vector2(460,755),Vector2(340,55),"自由模式：切换为经典" if free_mode else "经典模式：切换为自由",func(): set_game_mode(not free_mode))
-	if free_mode:
-		button(modal,Vector2(900,755),Vector2(380,55),"挑战南风岛" if map_id == Maps.MAP02 else "挑战北欧极光峡湾",func(): select_free_map(Maps.MAP01 if map_id == Maps.MAP02 else Maps.MAP02))
+
+func open_start_modal() -> void:
+	close_modal()
+	model.paused = true
+	modal = Control.new()
+	modal.name = "WelcomeModal"
+	modal.size = Vector2(1600,900)
+	modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(modal)
+	var shade := ColorRect.new()
+	place(shade,modal,Vector2(800,450),Vector2(1600,900))
+	shade.color = Color(0,0,0,0.58)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var panel_art := texture(modal,Vector2(800,450),Vector2(1320,754),art.ui_texture("UI_StartPanel_Southwind_v1"))
+	panel_art.name = "StartPanelArtwork"
+	panel_art.stretch_mode = TextureRect.STRETCH_SCALE
+	var close_button := button(modal,Vector2(1400,205),Vector2(64,64),"",close_modal)
+	close_button.name = "StartCloseButton"
+	for state in ["normal","hover","pressed","disabled","focus"]:
+		close_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	texture(close_button,Vector2(32,32),Vector2(34,34),themed_ui_texture("UI_Icon_Close_Southwind_v1"))
 
 func confirm_discard() -> void:
 	if not can_input() or (model.hand.is_empty() and model.ready.is_empty()):
@@ -999,9 +1051,9 @@ func button(parent: Node, center: Vector2, dimensions: Vector2, text: String, ca
 	control.pressed.connect(callback)
 	return control
 
-func skin_button(control: Button, asset: String) -> void:
+func skin_button(control: Button, asset: String, horizontal_margin := 40.0, vertical_margin := 20.0) -> void:
 	for state in ["normal","hover","pressed","disabled"]:
-		control.add_theme_stylebox_override(state,art.ui_style(asset,40,20))
+		control.add_theme_stylebox_override(state,art.ui_style(asset,horizontal_margin,vertical_margin))
 	control.add_theme_color_override("font_color",Color("48270e"))
 	for state in ["hover","pressed","disabled"]:
 		control.add_theme_color_override("font_"+state+"_color",Color("48270e"))
