@@ -5,3 +5,10 @@
 - 原稿归档 `Art/Approved/UI/Southwind/`，运行副本归档 `GodotProject/assets/ui/southwind/`。
 - 已接入营业队列、入场提示、待收款、对话、图鉴、结算和装修商店；文字、金额、数值继续由Godot动态渲染。
 - 已完成RGBA/Alpha、尺寸、文件路径和代码引用静态核查。当前环境无Godot，headless回归和游戏窗口视觉验收待执行。
+
+# 2026-10-12 底部制作区重组确认并接入
+
+- 五件正式原稿归档至 `Art/Approved/UI/Southwind/ProductionDock/`，运行副本进入 `GodotProject/assets/ui/southwind/`。
+- 左侧当前制作卡持续显示饮品、剩余秒数、队列杯数和进度；中部手持槽与右侧出酒托盘独立显示，避免状态文字互相覆盖。
+- 清理杯子按钮仅在手持或出酒口存在杯子时出现；等待订单和制作完成状态均有独立文案。
+- Godot 4.5.1 导入、主场景启动、149 项逻辑回归和 152 项 UI 冒烟检查通过；真实窗口最终像素观感待本地试玩确认。
