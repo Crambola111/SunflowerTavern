@@ -1,5 +1,13 @@
 # 当前进度
 
+## 2026-10-12 · Godot 主场景配置修复
+
+- [x] 修复 `GodotProject/project.godot` 被压缩成单行导致配置段无法解析的问题。
+- [x] 恢复 `[application]` 下的 `run/main_scene="res://scenes/island.tscn"`，从项目管理器导入后可直接按 F5 运行。
+- [x] 已确认主场景文件 `GodotProject/scenes/island.tscn` 存在，且脚本入口为 `res://scripts/island.gd`。
+- [ ] 需用户本地重新导入项目并完成一次 F5 窗口验收。
+
+
 ## 2026-10-12 · MAP02-NORDIC-02 北欧独立进度层
 
 - [x] `MapConfig` 向运行配置注入 `map_id`/`map_name`，模型欢迎语不再写死南风岛。
