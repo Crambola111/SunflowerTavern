@@ -10,6 +10,7 @@ const Config = preload("res://scripts/day_config.gd")
 const Maps = preload("res://scripts/map_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
 const NordicProgress = preload("res://scripts/nordic_progress_store.gd")
+const NordicEvent = preload("res://scripts/nordic_event.gd")
 const Art = preload("res://scripts/art_catalog.gd")
 const SEATS: Array[Vector2] = [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
 const ITEMS := ["向日葵花瓶", "藤编小灯", "顺手托盘"]
@@ -679,7 +680,9 @@ func active_best(day: int, mode: int) -> int:
 
 func record_active_day(income: int) -> void:
 	if map_id == Maps.MAP02:
-		map_progress.record(current_day, income, model.day.target, model.assisted)
+		var recorded := map_progress.record(current_day, income, model.day.target, model.assisted)
+		if recorded:
+			progress.deposit_income(income + NordicEvent.reward(model.codex, model.passed()))
 	else:
 		progress.complete_day(current_day, income, model.day.target, model.tip_remainder, model.assisted)
 
