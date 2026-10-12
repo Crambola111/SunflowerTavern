@@ -1,5 +1,10 @@
 # 北欧客人 · 本批审稿素材
 
+## 第二批补充
+
+- `Santa/Santa_OffDuty_Seated_v1.png`：圣诞老人座位状态（Review）
+- `Santa/Santa_Dialogue_NoWishes_v1.png`：圣诞老人“不接愿望”剧情对话形象（Review）
+
 本批为第二地图普通动物客人的座位状态候选，尚未标记 Approved，也未接入运行时。
 
 | 文件 | 角色 | 用途 | 状态 |
