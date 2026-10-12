@@ -90,8 +90,13 @@ func run() -> void:
 	ui.model.ended=true
 	ui.choose_day(2)
 	check(ui.current_day==2 and ui.model.paused and ui.model.elapsed==0,"Choose unlocked Day2 resets and opens welcome")
+	ui.progress.complete_day(2,124,90,0,false)
+	ui.progress.complete_day(3,190,140,0,false)
+	check(Config.playable(4) and ui.progress.can_enter(4),"First-map Day4 is unlocked after Day3")
+	ui.choose_day(4)
+	check(ui.current_day==4 and ui.model.paused and ui.model.day.target==160,"Choose unlocked Day4 loads final-day target")
 	ui.restart(true)
-	check(ui.model.assisted and ui.current_day==2,"Assist restart preserves day")
+	check(ui.model.assisted and ui.current_day==4,"Assist restart preserves final day")
 	ui.close_modal()
 	ui.model.update(120)
 	ui._process(0)
@@ -116,7 +121,7 @@ func run() -> void:
 	check(ui.modal.get_node_or_null("Panel") == null, "Decor shop uses native modal")
 	check(ui.modal.get_child_count() > 15, "Decor shop previews all six produced replacement assets")
 	ui.close_modal()
-	# Exercise UI for special visits outside the still-unimplemented Day4 schedule.
+	# Exercise UI for special visits used by the final-day schedule.
 	for id in ["snowy","jiwoo","spf8","mimi"]:
 		ui.close_modal()
 		ui.model=Model.new({"duration":60,"target":10,"guests":[id],"arrivals":[{"time":1,"guest":id,"seat":2}]})
