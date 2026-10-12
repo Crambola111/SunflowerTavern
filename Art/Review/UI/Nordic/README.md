@@ -12,5 +12,11 @@
 | `UI_IncomeGoalPlate_Nordic_v1.png` | 金币与目标双字段HUD，数值留空 | Review |
 | `UI_CodexBook_Nordic_v1.png` | 北欧客人图鉴双页书，内容区留空 | Review |
 | `UI_ShopSidebar_Nordic_v1.png` | 北欧装修商店侧栏，卡片与按钮区留空 | Review |
+| `UI_SettlementPanel_Nordic_v1.png` | 结算主面板；沿用第一关中央统计卡结构，内容区留空 | Review |
+| `UI_ShopItemCard_Nordic_v1.png` | 装饰商品卡；沿用第一关预览/数值/价格分区 | Review |
+| `UI_CodexPortraitSlot_Nordic_v1.png` | 图鉴头像槽；沿用第一关九宫格头像卡结构 | Review |
+| `UI_FavoriteDrinkCard_Nordic_v1.png` | 图鉴最爱饮品卡；沿用第一关图标/名称分区 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
+
+结构约束：第二地图仅做北欧主题换肤。客人图鉴继续使用“双页书册＋左侧九宫格＋右侧详情”；结算继续使用“中央统计卡＋角色庆祝立绘＋三枚底部按钮”；装饰酒馆继续使用“左侧场景预览＋右侧三列商品卡＋购买并摆放”。不得另起页面结构。
