@@ -23,6 +23,7 @@ func run() -> void:
 	root.add_child(ui)
 	ui.progress = Progress.new(path)
 	ui.reset_day()
+	check(not ui.tutorial and not ui.tutorial_panel.visible, "Tutorial is opt-in and hidden by default")
 	ui.welcome()
 	check(ui.modal != null and ui.model.paused,"Welcome pauses game")
 	var welcome_labels := ui.modal.find_children("*", "Label", true, false)
@@ -71,6 +72,8 @@ func run() -> void:
 			child.pressed.emit()
 			break
 	check(ui.model.queue.size()==1 and ui.modal==null,"Dialogue acceptance queues order")
+	ui._process(0.1)
+	check(ui.brew_progress.visible and ui.brew_progress.value < 100, "Brewing exposes a live progress bar")
 	ui.pause_game()
 	var before: float=ui.model.elapsed
 	ui._process(2)
