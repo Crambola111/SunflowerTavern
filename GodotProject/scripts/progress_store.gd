@@ -120,6 +120,14 @@ func complete_day(day: int, income: int, target: int, remainder: float, assisted
 	return save()
 
 
+func reset_all() -> bool:
+	if not error.is_empty():
+		return false
+	data = {"version": VERSION, "wallet": 0, "tip_remainder": 0.0, "tutorial_done": false,
+		"decorations": [false, false, false, false, false, false], "codex": [], "best": [[0,0],[0,0],[0,0],[0,0]],
+		"cleared": [[false,false],[false,false],[false,false],[false,false]]}
+	return save()
+
 func deposit_income(amount: int) -> bool:
 	if amount < 0 or not is_finite(float(amount)) or not error.is_empty():
 		return false
