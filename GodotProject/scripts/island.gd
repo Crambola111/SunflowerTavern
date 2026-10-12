@@ -621,6 +621,9 @@ func pause_game() -> void:
 		close_modal())
 
 func dialogue(v: Dictionary) -> void:
+	if map_id == Maps.MAP02 and v.guest.id == NordicEvent.SANTA_ID:
+		santa_dialogue(v, 0)
+		return
 	# Native bottom dialogue overlay; a modal pauses service without hiding the scene.
 	close_modal()
 	model.paused = true
@@ -661,6 +664,41 @@ func dialogue(v: Dictionary) -> void:
 	skin_button(accept, "UI_Button_Teal_Southwind_v1")
 	var later := button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
 	skin_button(later, "UI_Button_Ivory_Southwind_v1")
+
+func santa_dialogue(v: Dictionary, step: int) -> void:
+	# Santa is the Nordic surprise guest: keep the event to three short beats,
+	# then accept the normal drink order without duplicating the service action.
+	close_modal()
+	model.paused = true
+	modal = Control.new()
+	modal.name = "SantaEventDialogue"
+	modal.size = Vector2(1600,900)
+	modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(modal)
+	var shade := ColorRect.new()
+	place(shade, modal, Vector2(800,450), Vector2(1600,900))
+	shade.color = Color(0,0,0,0.38)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var guest_portrait := texture(modal, Vector2(325,449), Vector2(500,480), art.portrait(v.guest.id))
+	guest_portrait.name = "GuestPortrait"
+	var host := texture(modal, Vector2(1290,464), Vector2(410,450), art.texture("Sunny_Chibi"))
+	host.name = "SunnyDialogueFallback"
+	var panel := card(modal, Vector2(800,765), Vector2(1530,230))
+	panel.name = "DialoguePanel"
+	texture(modal, Vector2(245,647), Vector2(355,69), art.ui_texture("UI_MapNamePlate_Southwind_v1"))
+	var name_label := label(modal, Vector2(275,646), Vector2(255,48), "Santa", 26)
+	name_label.add_theme_color_override("font_color", Color("fff0bd"))
+	var content := label(modal, Vector2(620,754), Vector2(890,135), NordicEvent.dialogue(step), 28)
+	content.name = "EventText"
+	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	if step < 2:
+		button(modal,Vector2(1300,727),Vector2(350,66),"继续",func(): santa_dialogue(v, step + 1))
+	else:
+		button(modal,Vector2(1300,727),Vector2(350,66),"来一杯肉桂热可可",func():
+			close_modal()
+			model.direction = v.seat
+			model.interact())
+	button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
 
 func codex(selected: int) -> void:
 	close_modal()
