@@ -6,6 +6,7 @@ const PORTRAITS := {"bobo": "Bobo_Portrait", "coco": "Coco_Portrait", "horn": "H
 const CHIBIS := {"bobo": "Bobo_Seated_v1", "coco": "Coco_Seated_v1", "horn": "Horn_Seated_v1", "mimi": "Mimi_Seated_v1"} # Approved static seated sprites.
 const DRINKS := {"芒果冰沙": "Drink_MangoSlush_v1", "椰子水": "Drink_CoconutWater_v1", "青柠苏打": "Drink_LimeSoda_v1", "冰美式": "Drink_IcedAmericano_v1", "夜间无酒精特调": "Drink_NightMocktail_v1"}
 const FUTURE_DRINKS := {"极光莓果苏打": "Drink_AuroraSoda_v2", "肉桂热可可": "Drink_CinnamonCocoa_v2", "越橘热饮": "Drink_LingonberryTea_v2"}
+const CODEX_ASSETS := {"book": "UI_CodexBook_Southwind_v2", "locked_slot": "UI_CodexLockedSlot_Southwind_v2", "trait_badges": "UI_CodexTraitBadges_Southwind_v2"}
 const DECOR_ASSETS := {
 	"counter": "Decor_SW_Counter_v2", "chair": "Decor_SW_Chair_v2",
 	"lighting": "Decor_SW_TableLamp_v2", "hanging_lamp": "Decor_SW_HangingLamp_v2",
@@ -32,6 +33,9 @@ func drink(name: String) -> Texture2D:
 
 func decor(slot: String) -> Texture2D:
 	return texture(DECOR_ASSETS.get(slot, ""))
+
+func codex_asset(kind: String) -> Texture2D:
+	return texture(CODEX_ASSETS.get(kind, ""))
 
 func panel(asset: String) -> StyleBoxTexture:
 	var box := StyleBoxTexture.new()
