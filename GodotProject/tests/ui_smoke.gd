@@ -172,28 +172,18 @@ func run() -> void:
 	ui.model.update(1.1)
 	ui.model.direction = 2
 	ui.model.interact()
-	ui.model.at(2).bubble = 0
 	ui.model.hand = {"drink":"芒果冰沙"}
 	ui._process(0)
-	check(ui.review_order.visible and not ui.review_order.disabled, "Held cup exposes explicit order review")
-	var review_patience: float = ui.model.at(2).patience
-	var review_jobs: int = ui.model.queue.size()
-	ui.review_order.pressed.emit()
-	check(ui.modal != null and ui.model.paused and ui.model.hand.drink == "芒果冰沙", "Review pauses and preserves held cup")
-	ui._process(3)
-	check(ui.model.at(2).patience == review_patience and ui.model.queue.size() == review_jobs, "Review neither penalizes nor duplicates orders")
-	ui.close_modal()
-	await process_frame
-	await process_frame
-	ui._process(0)
-	check(ui.model.at(2).bubble > 0 and ui.icons[2].texture != null, "Explicit review restores Horn short-lived bubble")
+	check(not ui.has_method("review_selected_order"), "Order review control is removed")
+	check(ui.bubbles[2].visible and ui.bubble_labels[2].text == "青柠苏打", "Pending drink stays in the guest speech bubble")
+	check(ui.icons[2].texture != null, "Pending drink keeps its table icon")
 	ui.tutorial = false
 	ui._process(0)
 	check(not ui.tutorial_label.visible and not ui.tutorial_panel.visible, "Hidden tutorial also removes empty panel")
 	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	var focus_time: float = ui.model.elapsed
 	ui._process(2)
-	check(ui.model.elapsed == focus_time and ui.model.paused, "Focus loss freezes gameplay with review controls present")
+	check(ui.model.elapsed == focus_time and ui.model.paused, "Focus loss freezes gameplay")
 	ui._notification(Control.NOTIFICATION_APPLICATION_FOCUS_IN)
 	ui.close_modal()
 	ui.restart(false)
