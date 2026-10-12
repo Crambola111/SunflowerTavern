@@ -31,6 +31,11 @@
 | `UI_DialoguePanel_Nordic_v1.png` | 北欧底部对话面板；沿用第一关文字区与右侧选项区结构 | Review |
 | `UI_DialogueNamePlate_Nordic_v1.png` | 北欧对话姓名牌；动态叠加角色名，替换第一地图回退素材 | Review |
 | `UI_Badge_SurpriseGuest_Nordic_v1.png` | 北欧惊喜客人/圣诞老人事件奖章；红礼物袋与极光星语义 | Review |
+| `UI_BrewingBadge_Nordic_v1.png` | 北欧“制作中”状态牌；中心文字运行时叠加 | Review |
+| `UI_DrinkSlot_Nordic_v1.png` | 北欧手持杯/成品杯共用槽框；中心保持透明 | Review |
+| `UI_ToastPanel_Nordic_v1.png` | 北欧教学与短提示条；单行文字运行时叠加 | Review |
+| `UI_InteractButton_Nordic_v1.png` | 北欧主互动按钮；保持手掌交互语义 | Review |
+| `UI_Icon_DialogueSkip_Nordic_v1.png` | 北欧对话跳过图标；双三角与终止条 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
 
