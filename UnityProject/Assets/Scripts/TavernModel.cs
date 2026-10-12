@@ -268,7 +268,7 @@ namespace Sunflower
             if(!ended||settlementClaimed)return false;
             settlementClaimed=true;income=coins;return true;
         }
-        public string message="欢迎来到南风岛。开始营业后，面向客人接单。";
+        public string message="欢迎来到椰风岛。开始营业后，面向客人接单。";
         public bool Passed => ended && coins>=Day.TargetCoins;
         public Visit At(int seat) => visitors.Find(v=>v.seat==seat);
         public bool Blocked(int seat) => visitors.Any(v=>v.blocked==seat && seat!=0);
