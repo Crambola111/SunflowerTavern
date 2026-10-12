@@ -15,6 +15,9 @@ const Art = preload("res://scripts/art_catalog.gd")
 const SEATS: Array[Vector2] = [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
 const ITEMS := ["向日葵花瓶", "藤编小灯", "顺手托盘"]
 const EFFECTS := ["客人耐心 +5%", "小费 +5%（累计取整）", "制作速度 +5%"]
+const NORDIC_DECOR_SLOTS := ["lantern", "tabletop", "chair_cover", "fir_planter", "centerpiece", "railing", "counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"]
+const NORDIC_DECOR_NAMES := ["符文雪灯", "蓝金结纹桌面", "雪花羊毛椅套", "雪覆冷杉花盆", "极光冰晶桌饰", "峡湾绳索栏杆", "北境柜台饰板", "极光吊灯", "北欧菜单牌", "雪花羊毛坐垫", "雪覆甲板边条", "冰桶边桌"]
+const NORDIC_DECOR_EFFECTS := ["小费 +5%", "错杯惩罚 -1 秒", "客人耐心 +5%", "候位 +2 秒", "连击上限 +1", "保暖耐心 +2 秒", "制作速度 +5%", "小费 +3%", "点单耐心 +3%", "客人耐心 +3%", "连击上限 +1", "错杯惩罚 -0.5 秒"]
 var model: RefCounted
 var progress: RefCounted
 var map_progress: RefCounted
@@ -73,22 +76,22 @@ func _ready() -> void:
 	system_font.font_names = PackedStringArray(["Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Zen Hei"])
 	add_theme_font_override("font", system_font)
 	add_theme_color_override("font_color", Color("48270e"))
-	var background := texture(self, Vector2(800,450), Vector2(1600,900), art.texture("Island_Background"))
+	var background_asset := "Nordic_Fjord_Tavern_Background_v1" if map_id == Maps.MAP02 else "Island_Background"
+	var background := texture(self, Vector2(800,450), Vector2(1600,900), art.texture(background_asset))
 	ambient = Ambient.new()
 	add_child(ambient)
 	ambient.setup(background)
-	# The baked table/front layer is the base; approved replacements render above it.
-	texture(self, Vector2(800,450), Vector2(1600,900), art.texture("TableFront_Combined"))
 	setup_decor_layer()
 	var guest_layer := Control.new()
 	guest_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(guest_layer)
 	for i in 8:
 		sprites.append(texture(guest_layer, SEATS[i]+Vector2(-30,-35), Vector2(130,130), null))
+	texture(self, Vector2(800,450), Vector2(1600,900), art.texture("TableFront_Combined"))
 	sunny = texture(self, Vector2(800,435), Vector2(175,175), art.texture("Sunny_Southwind_Idle_v1"))
 	for i in 8:
 		var selected := i
-		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(250,150), "", func(): select_seat(selected)))
+		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(200,70), "", func(): select_seat(selected)))
 		seats[i].add_theme_font_size_override("font_size", 15)
 		var bubble := texture(self, SEATS[i]+Vector2(0,-78), Vector2(210,98), art.ui_texture("UI_OrderBubble_Southwind_v1"))
 		bubble.z_index = 12
@@ -98,12 +101,13 @@ func _ready() -> void:
 		bubble_labels.append(bubble_label)
 		# Bubble is visual-only above the guest; the transparent table button remains clickable.
 		move_child(bubble, seats[i].get_index())
-		# Invisible full-table hit target; labels/bubbles remain the visual feedback.
-		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-			seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
-		seats[i].add_theme_color_override("font_color", Color("48270e"))
-		seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
-		seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
+		if i > 0:
+			for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+				seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
+			seats[i].size = Vector2(156,70)
+			seats[i].position.x += 6
+			seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
+			seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
 		var bar := ProgressBar.new()
 		place(bar, self, SEATS[i]+Vector2(0,106), Vector2(150,7))
 		bar.show_percentage = false
@@ -190,6 +194,28 @@ func reset_day() -> void:
 	close_modal()
 
 func bonuses() -> void:
+	if map_id == Maps.MAP02:
+		model.patience_multiplier = 1.0
+		model.tip_multiplier = 1.0
+		model.brew_speed = 1.0
+		model.patience_bonus = 0.0
+		model.wrong_cup_penalty = 2.0
+		model.combo_reward_cap = 5
+		for i in NORDIC_DECOR_SLOTS.size():
+			if not decor_owned(i):
+				continue
+			match i:
+				0: model.tip_multiplier += 0.05
+				1: model.wrong_cup_penalty = maxf(0.5, model.wrong_cup_penalty - 1.0)
+				2: model.patience_multiplier += 0.05
+				3, 5: model.patience_bonus += 2.0
+				4, 10: model.combo_reward_cap += 1
+				6: model.brew_speed += 0.05
+				7: model.tip_multiplier += 0.03
+				8, 9: model.patience_multiplier += 0.03
+				11: model.wrong_cup_penalty = maxf(0.5, model.wrong_cup_penalty - 0.5)
+		refresh_decor_visibility()
+		return
 	model.patience_multiplier = 1.05 if progress.owns(0) else 1.0
 	model.tip_multiplier = 1.05 if progress.owns(1) else 1.0
 	model.brew_speed = 1.05 if progress.owns(2) else 1.0
@@ -203,35 +229,62 @@ func setup_decor_layer() -> void:
 	decor_layer.name = "ApprovedDecorLayer"
 	decor_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(decor_layer)
-	# Approved transparent replacements render above the baked table layer and
-	# below guest sprites/UI. Full-canvas art keeps the original perspective.
+	if map_id == Maps.MAP02:
+		# Same Southwind anchors; only the replaceable Nordic materials change.
+		decor_nodes["lantern"] = texture(decor_layer, Vector2(165,170), Vector2(150,150), art.nordic_decor("lantern"))
+		decor_nodes["tabletop"] = texture(decor_layer, Vector2(800,470), Vector2(210,192), art.nordic_decor("tabletop"))
+		decor_nodes["fir_planter"] = texture(decor_layer, Vector2(1450,700), Vector2(145,145), art.nordic_decor("fir_planter"))
+		decor_nodes["centerpiece"] = texture(decor_layer, Vector2(800,425), Vector2(150,150), art.nordic_decor("centerpiece"))
+		decor_nodes["railing_nordic"] = texture(decor_layer, Vector2(800,170), Vector2(1120,532), art.nordic_decor("railing"))
+		decor_nodes["counter_front"] = texture(decor_layer, Vector2(800,790), Vector2(500,250), art.nordic_decor_batch2("counter_front"))
+		decor_nodes["aurora_pendant"] = texture(decor_layer, Vector2(800,104), Vector2(120,120), art.nordic_decor_batch2("aurora_pendant"))
+		decor_nodes["menu_board"] = texture(decor_layer, Vector2(250,160), Vector2(150,150), art.nordic_decor_batch2("menu_board"))
+		decor_nodes["snow_deck_trim"] = texture(decor_layer, Vector2(800,735), Vector2(850,180), art.nordic_decor_batch2("snow_deck_trim"))
+		decor_nodes["ice_barrel_table"] = texture(decor_layer, Vector2(1450,650), Vector2(110,110), art.nordic_decor_batch2("ice_barrel_table"))
+		for i in 7:
+			decor_nodes["chair_cover_%d" % i] = texture(decor_layer, SEATS[i+1]+Vector2(0,30), Vector2(72,64), art.nordic_decor("chair_cover"))
+			decor_nodes["seat_cushion_%d" % i] = texture(decor_layer, SEATS[i+1]+Vector2(0,40), Vector2(72,58), art.nordic_decor_batch2("seat_cushion"))
+		refresh_decor_visibility()
+		return
+	# Positions are conservative first-pass anchors in the 1600x900 scene. Each
+	# asset remains a native transparent PNG; no raster edits or baked text.
 	decor_nodes["deck"] = texture(decor_layer, Vector2(800,450), Vector2(1600,900), art.decor("deck"))
-	decor_nodes["counter"] = texture(decor_layer, Vector2(800,790), Vector2(600,338), art.decor("counter"))
-	decor_nodes["railing"] = texture(decor_layer, Vector2(800,185), Vector2(1280,607), art.decor("railing"))
-	decor_nodes["hanging_lamp"] = texture(decor_layer, Vector2(800,112), Vector2(110,108), art.decor("hanging_lamp"))
+	decor_nodes["counter"] = texture(decor_layer, Vector2(800,790), Vector2(500,282), art.decor("counter"))
+	decor_nodes["railing"] = texture(decor_layer, Vector2(800,170), Vector2(1120,532), art.decor("railing"))
+	decor_nodes["table"] = texture(decor_layer, Vector2(800,470), Vector2(210,192), art.decor("table"))
+	decor_nodes["hanging_lamp"] = texture(decor_layer, Vector2(800,104), Vector2(120,118), art.decor("hanging_lamp"))
 	for i in 7:
-		var table := texture(decor_layer, SEATS[i+1], Vector2(150,137), art.decor("table"))
-		decor_nodes["table_%d" % i] = table
-		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-42), Vector2(24,22), art.decor("lighting"))
+		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-8), Vector2(35,35), art.decor("lighting"))
 		decor_nodes["lighting_%d" % i] = lamp
-		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,46), Vector2(100,89), art.decor("chair"))
+		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,30), Vector2(72,64), art.decor("chair"))
 		decor_nodes["chair_%d" % i] = chair
 	refresh_decor_visibility()
 
 func refresh_decor_visibility() -> void:
 	if decor_nodes.is_empty() or progress == null:
 		return
-	# Six persistent slots map to the approved replacement family.
+	if map_id == Maps.MAP02:
+		for i in NORDIC_DECOR_SLOTS.size():
+			var key: String = NORDIC_DECOR_SLOTS[i]
+			if key == "chair_cover" or key == "seat_cushion":
+				for seat_i in 7:
+					decor_nodes["%s_%d" % [key, seat_i]].visible = decor_owned(i)
+			elif key == "railing":
+				decor_nodes["railing_nordic"].visible = decor_owned(i)
+			else:
+				decor_nodes[key].visible = decor_owned(i)
+		return
+	# Existing three save slots map to the confirmed replacement family.
 	decor_nodes["counter"].visible = progress.owns(2)
 	for i in 7:
 		decor_nodes["chair_%d" % i].visible = progress.owns(0)
 	for i in 7:
 		decor_nodes["lighting_%d" % i].visible = progress.owns(1)
-	for i in 7:
-		decor_nodes["table_%d" % i].visible = progress.owns(4)
 	decor_nodes["hanging_lamp"].visible = progress.owns(1)
+	# New stable-ID replacement slots are active after purchase; old saves migrate to six slots.
 	decor_nodes["deck"].visible = progress.owns(5)
 	decor_nodes["railing"].visible = progress.owns(3)
+	decor_nodes["table"].visible = progress.owns(4)
 
 func can_input() -> bool:
 	return model != null and not fatal and not model.paused and not model.ended and not focus_paused and modal == null and Engine.get_process_frames() > input_block_frame
@@ -722,6 +775,24 @@ func shop() -> void:
 	decor_shop_page = 0
 	decor_shop_page_view()
 
+func decor_owned(index: int) -> bool:
+	return map_progress.owns_decor(index) if map_id == Maps.MAP02 else progress.owns(index)
+
+func decor_price(index: int) -> int:
+	return NordicProgress.DECOR_PRICES[index] if map_id == Maps.MAP02 else Progress.PRICES[index]
+
+func decor_purchase(index: int) -> bool:
+	if map_id != Maps.MAP02:
+		return progress.purchase(index)
+	var result: Dictionary = map_progress.purchase_decor(index, progress.data.wallet)
+	if not result.ok:
+		return false
+	progress.data.wallet = int(result.wallet)
+	return progress.save()
+
+func decor_asset(slot: String) -> Texture2D:
+	return art.nordic_decor(slot) if map_id == Maps.MAP02 and not slot in ["counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"] else art.nordic_decor_batch2(slot) if map_id == Maps.MAP02 else art.decor(slot)
+
 func decor_shop_page_view() -> void:
 	close_modal()
 	model.paused = true
@@ -739,9 +810,9 @@ func decor_shop_page_view() -> void:
 	button(modal, Vector2(1490,83), Vector2(64,64), "×", close_modal)
 	label(modal, Vector2(1250,83), Vector2(390,58), "装饰酒馆", 34)
 	label(modal, Vector2(1250,166), Vector2(370,48), "金币  %d" % progress.data.wallet, 26)
-	var preview_slots := ["chair", "lighting", "counter", "railing", "table", "deck"]
-	var preview_names := ["贝壳藤编软椅", "海岛贝壳灯具", "浅海玻璃吧台", "漂流木贝壳栏杆", "浅海波纹客桌", "海岸贝母地板"]
-	var preview_effects := ["客人耐心 +5%", "小费 +5%", "制作速度 +5%", "耐心 +2 秒", "错杯惩罚 -1 秒", "连击收益上限 +1"]
+	var preview_slots: Array = NORDIC_DECOR_SLOTS if map_id == Maps.MAP02 else ["chair", "lighting", "counter", "railing", "table", "deck"]
+	var preview_names: Array = NORDIC_DECOR_NAMES if map_id == Maps.MAP02 else ["贝壳藤编软椅", "海岛贝壳灯具", "浅海玻璃吧台", "漂流木贝壳栏杆", "浅海波纹客桌", "海岸贝母地板"]
+	var preview_effects: Array = NORDIC_DECOR_EFFECTS if map_id == Maps.MAP02 else ["客人耐心 +5%", "小费 +5%", "制作速度 +5%", "耐心 +2 秒", "错杯惩罚 -1 秒", "连击收益上限 +1"]
 	var card_x := [1050.0, 1250.0, 1450.0]
 	var card_y := 385.0
 	for i in 3:
@@ -754,30 +825,31 @@ func decor_shop_page_view() -> void:
 		texture(modal, Vector2(cx, card_y), Vector2(170,450), art.decor_ui("card"))
 		if progress.owns(index) or index == decor_shop_page*3:
 			texture(modal, Vector2(cx, card_y), Vector2(190,480), art.ui_texture("UI_ShopSelectionFrame_Southwind_v1"))
-		texture(modal, Vector2(cx, 315), Vector2(145,145), art.decor(slot))
+		texture(modal, Vector2(cx, 315), Vector2(145,145), decor_asset(slot))
 		label(modal, Vector2(cx, 205), Vector2(175,38), preview_names[index], 18)
 		texture(modal, Vector2(cx+55, 515), Vector2(34,34), art.ui_texture("UI_Icon_Bonus_Southwind_v1"))
 		label(modal, Vector2(cx, 515), Vector2(175,58), preview_effects[index], 17)
-		var owned: bool = progress.owns(index)
-		var buy_text := "已拥有" if owned else "%d 金币" % Progress.PRICES[index]
+		var owned: bool = decor_owned(index)
+		var buy_text := "已拥有" if owned else "%d 金币" % decor_price(index)
 		texture(modal, Vector2(cx, 645), Vector2(186,62), art.ui_texture("UI_PricePlate_Southwind_v1"))
 		texture(modal, Vector2(cx, 645), Vector2(176,58), art.decor_ui("purchase_button"))
 		var buy := button(modal, Vector2(cx,645), Vector2(176,58), "", func():
-			if progress.purchase(index):
+			if decor_purchase(index):
 				bonuses()
 			decor_shop_page_view())
 		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
 			buy.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 		buy.add_theme_color_override("font_color", Color.TRANSPARENT)
 		label(modal, Vector2(cx,645), Vector2(160,42), buy_text, 19)
-		buy.disabled = owned or progress.data.wallet < Progress.PRICES[index]
+		buy.disabled = owned or progress.data.wallet < decor_price(index)
 	label(modal, Vector2(1250,760), Vector2(390,34), "购买后会立即替换场景中的对应物件", 17)
-	label(modal, Vector2(1250,798), Vector2(180,30), "%d / 2" % (decor_shop_page+1), 16)
+	var page_count := maxi(1, ceili(float(preview_slots.size()) / 3.0))
+	label(modal, Vector2(1250,798), Vector2(180,30), "%d / %d" % [decor_shop_page+1, page_count], 16)
 	button(modal, Vector2(1070,798), Vector2(58,44), "‹", func():
-		decor_shop_page = posmod(decor_shop_page-1, 2)
+		decor_shop_page = posmod(decor_shop_page-1, page_count)
 		decor_shop_page_view())
 	button(modal, Vector2(1430,798), Vector2(58,44), "›", func():
-		decor_shop_page = posmod(decor_shop_page+1, 2)
+		decor_shop_page = posmod(decor_shop_page+1, page_count)
 		decor_shop_page_view())
 
 func open_modal(title: String, book := false) -> void:
