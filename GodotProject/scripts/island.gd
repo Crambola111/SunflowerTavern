@@ -7,13 +7,17 @@ var decor_nodes := {}
 
 const Model = preload("res://scripts/tavern_model.gd")
 const Config = preload("res://scripts/day_config.gd")
+const Maps = preload("res://scripts/map_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
+const NordicProgress = preload("res://scripts/nordic_progress_store.gd")
 const Art = preload("res://scripts/art_catalog.gd")
 const SEATS := [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
 const ITEMS := ["向日葵花瓶", "藤编小灯", "顺手托盘"]
 const EFFECTS := ["客人耐心 +5%", "小费 +5%（累计取整）", "制作速度 +5%"]
 var model: RefCounted
 var progress: RefCounted
+var map_progress: RefCounted
+var map_id := Maps.MAP01
 var art := Art.new()
 var current_day := 1
 var assisted := false
@@ -138,14 +142,15 @@ func _ready() -> void:
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
 	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
 	progress = Progress.new()
-	if not progress.error.is_empty():
-		show_error(progress.error)
+	map_progress = NordicProgress.new() if map_id == Maps.MAP02 else progress
+	if not progress.error.is_empty() or not map_progress.error.is_empty():
+		show_error(map_progress.error if not map_progress.error.is_empty() else progress.error)
 		return
 	reset_day()
 	welcome()
 
 func reset_day() -> void:
-	model = Model.new(Config.for_day(current_day), assisted)
+	model = Model.new(Maps.for_day(map_id, current_day), assisted)
 	model.started = true
 	model.tip_remainder = progress.data.tip_remainder
 	for id in progress.data.codex:
@@ -288,12 +293,12 @@ func _process(delta: float) -> void:
 		progress.unlock(id)
 	var income: int = model.claim_settlement()
 	if income >= 0:
-		progress.complete_day(current_day, income, model.day.target, model.tip_remainder, model.assisted)
+		record_active_day(income)
 		settlement()
-	if not progress.error.is_empty():
-		show_error(progress.error)
+	if not progress.error.is_empty() or not map_progress.error.is_empty():
+		show_error(map_progress.error if not map_progress.error.is_empty() else progress.error)
 		return
-	hud.text = "椰风岛 · 第%d天" % current_day
+	hud.text = "%s · 第%d天" % [Maps.map_name(map_id), current_day]
 	income_label.text = "收入 %d / %d" % [model.coins, model.day.target]
 	wallet_label.text = "钱包 %d" % progress.data.wallet
 	timer_label.text = "%s · %d 秒" % ["辅助" if assisted else "标准", maxi(0, ceili(model.day.duration-model.elapsed))]
@@ -450,7 +455,7 @@ func refresh_action() -> void:
 	action.modulate = Color(1,1,1,0.5) if action.disabled else Color.WHITE
 
 func choose_day(day: int) -> void:
-	if not progress.can_enter(day) or (not model.ended and model.elapsed > 0):
+	if not active_can_enter(day) or (not model.ended and model.elapsed > 0):
 		return
 	current_day = day
 	reset_day()
@@ -462,10 +467,10 @@ func restart(use_assistance: bool) -> void:
 	welcome()
 
 func record_text() -> String:
-	return "第%d天：%s · 最佳收入 标准 %d / 辅助 %d" % [current_day, "已通关" if progress.cleared(current_day) else "未通关", progress.data.best[current_day-1][0], progress.data.best[current_day-1][1]]
+	return "第%d天：%s · 最佳收入 标准 %d / 辅助 %d" % [current_day, "已通关" if active_cleared(current_day) else "未通关", active_best(current_day, 0), active_best(current_day, 1)]
 
 func welcome() -> void:
-	open_modal("椰风岛 · 第%d天 · 准备营业 · %s模式" % [current_day, "辅助" if assisted else "标准"])
+	open_modal("%s · 第%d天 · 准备营业 · %s模式" % [Maps.map_name(map_id), current_day, "辅助" if assisted else "标准"])
 	label(modal, Vector2(800,405), Vector2(930,230), record_text()+"\n%d 秒内赚到 %d 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n%s" % [model.day.duration, model.day.target, "辅助：耐心消耗降低25%；待收桌位无倒计时" if assisted else "标准：正常耐心；收钱后自动清台"],25)
 	if current_day == 2:
 		label(modal,Vector2(800,525),Vector2(950,50),"Tank先摘呼吸器再点单；Gecko等久了会换座，同款饮品可互送。",20)
@@ -475,8 +480,8 @@ func welcome() -> void:
 		label(modal,Vector2(800,525),Vector2(950,60),"终局营业：Jiwoo白天喝冰美式，夜里切换无酒精特调；Snowy需要快速降温。",20)
 	for day in range(1,5):
 		var chosen := day
-		var b := button(modal,Vector2(310+(day-1)*330,675),Vector2(270,55),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if progress.can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
-		b.disabled = not progress.can_enter(day) or day == current_day
+		var b := button(modal,Vector2(310+(day-1)*330,675),Vector2(270,55),"当前：第%d天" % day if day == current_day else ("选择第%d天" % day if active_can_enter(day) else "第%d天 · 通关前一天解锁" % day),func(): choose_day(chosen))
+		b.disabled = not active_can_enter(day) or day == current_day
 	button(modal,Vector2(620,590),Vector2(290,65),"开始营业",close_modal)
 	button(modal,Vector2(970,590),Vector2(290,65),"切换标准模式" if assisted else "切换辅助模式",func(): restart(not assisted))
 
@@ -574,14 +579,14 @@ func codex(selected: int) -> void:
 		codex_close.add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	texture(codex_close, Vector2(36,36), Vector2(44,44), art.ui_texture("UI_Icon_Close_Southwind_v1"))
 	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
-	var available: Array = Config.available_guests()
+	var available: Array = Maps.available_guests(map_id)
 	var safe_selected := clampi(selected, 0, maxi(0, available.size()-1))
 	var current_id: String = available[safe_selected] if not available.is_empty() else ""
 	var current_guest: Dictionary = Config.guest(current_id) if not current_id.is_empty() else {}
 	label(modal, Vector2(500,220), Vector2(220,42), "%d / %d" % [safe_selected+1, available.size()], 22)
 	var grid_x := [285.0, 465.0, 645.0]
 	var grid_y := [330.0, 495.0, 660.0]
-	for i in 9:
+	for i in available.size()
 		if i >= available.size():
 			continue
 		var choice := i
@@ -652,12 +657,27 @@ func settlement() -> void:
 	skin_button(replay_button, "UI_Button_Teal_Southwind_v1")
 	var mode_button := button(modal, Vector2(1130,760), Vector2(250,58), "标准模式重试" if assisted else "辅助模式重试", func(): restart(not assisted))
 	skin_button(mode_button, "UI_Button_Ivory_Southwind_v1")
-	if progress.can_enter(current_day+1):
+	if active_can_enter(current_day+1):
 		button(modal, Vector2(970, 825), Vector2(280, 50), "进入第%d天" % (current_day+1), func(): choose_day(current_day+1))
 	if current_day > 1:
 		button(modal, Vector2(620, 825), Vector2(280, 50), "返回第%d天" % (current_day-1), func(): choose_day(current_day-1))
 	if current_day == 4 and model.passed():
-		label(modal, Vector2(800, 825), Vector2(700, 50), "第一地图完成！下一站：北欧极光峡湾", 20)
+		label(modal, Vector2(800, 825), Vector2(700, 50), "第一地图完成！下一站：北欧极光峡湾" if map_id == Maps.MAP01 else "北欧地图完成！下一站：希腊古城", 20)
+
+func active_can_enter(day: int) -> bool:
+	return map_progress.unlocked(day) if map_id == Maps.MAP02 else progress.can_enter(day)
+
+func active_cleared(day: int) -> bool:
+	return map_progress.cleared(day) if map_id == Maps.MAP02 else progress.cleared(day)
+
+func active_best(day: int, mode: int) -> int:
+	return int(map_progress.data.best[day-1][mode]) if map_id == Maps.MAP02 else int(progress.data.best[day-1][mode])
+
+func record_active_day(income: int) -> void:
+	if map_id == Maps.MAP02:
+		map_progress.record(current_day, income, model.day.target, model.assisted)
+	else:
+		progress.complete_day(current_day, income, model.day.target, model.tip_remainder, model.assisted)
 
 func shop() -> void:
 	decor_shop_page = 0
