@@ -89,4 +89,15 @@
     "bio": "电脑带到了海岛，作业也跟到了海岛。白天点冰美式，晚上认真切换养生模式——唯一没切换的是还没写完的作业。",
     "cups": 1
   }
+  ,
+  "moose":{"id":"moose","name":"Moose · 铲雪队长","drink":"越橘热饮","price":16,"brew":4.0,"portrait":-1,"bio":"道路清完了，肩上还堆着雪。路通了，我还没通。","cups":1},
+  "seal":{"id":"seal","name":"Seal · 码头老船长","drink":"烤苹果肉桂饮","price":18,"brew":4.5,"portrait":-1,"bio":"年轻时横渡峡湾，今天连暖座都不愿离开。风浪太大，续一杯。","cups":1},
+  "puffin":{"id":"puffin","name":"Puffin · 极光摄影师","drink":"极光莓果苏打","price":17,"brew":3.5,"portrait":-1,"bio":"跑遍峡湾追极光，照片里永远有自己的嘴。这叫前景。","cups":1},
+  "lynx":{"id":"lynx","name":"Lynx · 滑雪教练","drink":"雪顶枫糖拿铁","price":20,"brew":5.0,"portrait":-1,"bio":"声称从不摔倒。刚才在示范错误动作。","cups":1},
+  "squirrel":{"id":"squirrel","name":"Squirrel · 木屋房东","drink":"云莓热果饮","price":18,"brew":4.0,"portrait":-1,"bio":"木屋很多，忘了坚果埋在哪栋。押金退你，松果留下。","cups":1},
+  "raven":{"id":"raven","name":"Raven · 天气播报员","drink":"豆蔻燕麦热乳","price":19,"brew":4.5,"portrait":-1,"bio":"预报永远慢半拍。现在可以确认，刚才会下雪。","cups":1},
+  "reindeer":{"id":"reindeer","name":"Reindeer · 雪橇领航员","drink":"极光莓果苏打","price":21,"brew":3.5,"portrait":-1,"bio":"主人喝可可时它在等。他在休假，我在等。","cups":1},
+  "arctic_fox":{"id":"arctic_fox","name":"Arctic Fox · 雪夜邮差","drink":"云莓热果饮","price":20,"brew":4.0,"portrait":-1,"bio":"明信片总比寄件人先到。你说想家那封，我先送了。","cups":1},
+  "ingrid":{"id":"ingrid","name":"Ingrid · 织衣奶奶","drink":"肉桂热可可","price":23,"brew":5.0,"portrait":-1,"bio":"认为所有客人都穿少了，包括海豹。有毛也不能这样冻着。","cups":1},
+  "santa":{"id":"santa","name":"Santa · 休假圣诞老人","drink":"肉桂热可可","price":30,"brew":5.0,"portrait":-1,"bio":"今天不接愿望，只接一杯热可可。礼物袋里甚至装着折叠报纸。","cups":1}
 }
