@@ -659,7 +659,7 @@ func full_reset() -> void:
 	if progress == null:
 		return
 	var nordic_reset := NordicProgress.new()
-	var ok := progress.reset_all() and nordic_reset.reset_all()
+	var ok: bool = progress.reset_all() and nordic_reset.reset_all()
 	if not ok:
 		show_error("重置失败：" + (progress.error if not progress.error.is_empty() else nordic_reset.error))
 		return
