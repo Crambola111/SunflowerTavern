@@ -37,6 +37,7 @@ func _init(config: Dictionary = {}, use_assistance := false) -> void:
 	day = Config.for_day(1) if config.is_empty() else config.duplicate(true)
 	assert(Config.validate(day))
 	assisted = use_assistance
+	message = "欢迎来到%s。开始营业后，面向客人接单。" % day.get("map_name", "南风岛")
 
 func passed() -> bool:
 	return ended and coins >= day.target
