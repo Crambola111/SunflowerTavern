@@ -165,7 +165,7 @@ namespace Sunflower
             arrivalCard.SetActive(arrivalTime>0);
             foreach(var id in model.codex)progress.Unlock(id);
             if(model.TryClaimSettlement(out int income)){progress.CompleteDay(currentDay,income,model.Day.TargetCoins,model.tipRemainder,model.Assisted);Settlement();}
-            hud.text="南风岛 · 第"+currentDay+"天 · "+(model.Assisted?"辅助":"标准")+"       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
+            hud.text="椰风岛 · 第"+currentDay+"天 · "+(model.Assisted?"辅助":"标准")+"       今日 "+model.coins+" / "+model.Day.TargetCoins+"       钱包 "+wallet+"       "+Mathf.CeilToInt(model.Day.Duration-model.elapsed)+" 秒";
             RefreshServiceFeedback();
             if(model.hand!=null){var owner=model.visitors.Find(v=>v.id==model.hand.owner);queue.text="手持："+model.hand.drink+" → P"+(owner==null?"?":owner.seat.ToString());}
             else queue.text=model.ready!=null?"已做好："+model.ready.drink+" · 面向出酒口取杯":model.queue.Count>0?"制作："+model.queue[0].drink+"  "+model.queue[0].remaining.ToString("0.0")+"s  | 排队 "+model.queue.Count:"点击客位转向，再次点击互动";
@@ -312,7 +312,7 @@ namespace Sunflower
             " · 最佳收入 标准 "+progress.BestIncome(currentDay,false)+" / 辅助 "+progress.BestIncome(currentDay,true);
         void Welcome()
         {
-            Open("南风岛 · 第"+currentDay+"天 · 准备营业 · "+(model.Assisted?"辅助模式":"标准模式"));
+            Open("椰风岛 · 第"+currentDay+"天 · 准备营业 · "+(model.Assisted?"辅助模式":"标准模式"));
             Label(modal.transform,new Vector2(800,490),new Vector2(900,230),DayProgressText()+"\n"+model.Day.Duration+" 秒内赚到 "+model.Day.TargetCoins+" 金币\n接单 → 出酒口取杯 → 送达 → 收钱\n"+(model.Assisted?"辅助：耐心消耗降低25%，收款等待延长50%":"标准：原始耐心与收款时间"),25);
             if(currentDay==2)Label(modal.transform,new Vector2(800,375),new Vector2(940,45),"Tank先摘呼吸器再点单；Gecko等久了会换座，留意杯子的目标座位。",20);
             if(currentDay==3)Label(modal.transform,new Vector2(800,375),new Vector2(940,60),
@@ -356,7 +356,7 @@ namespace Sunflower
             if(currentDay>1)
                 MakeButton(modal.transform,new Vector2(620,225),new Vector2(290,55),"返回第"+(currentDay-1)+"天",()=>ChooseDay(currentDay-1));
             if(currentDay==3)
-                Label(modal.transform,new Vector2(800,175),new Vector2(900,35),"第4天尚未开放，南风岛尚未通关。",18);
+                Label(modal.transform,new Vector2(800,175),new Vector2(900,35),"第4天尚未开放，椰风岛尚未通关。",18);
         }
         void Shop()
         {
