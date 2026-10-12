@@ -9,12 +9,21 @@ const PORTRAITS := {
 }
 const CHIBIS := {
 	"bobo": "Bobo_Seated_v1", "coco": "Coco_Seated_v1", "horn": "Horn_Seated_v1", "mimi": "Mimi_Seated_v1",
+	"tank": "Tank_Seated_v1", "gecko": "Gecko_Seated_v1", "spf8": "SPF8_Seated_v1",
+	"snowy": "Snowy_Seated_v1", "jiwoo": "Jiwoo_Seated_v1",
 	"moose": "Moose_SnowCaptain_Seated_v1", "seal": "Seal_HarborCaptain_Seated_v1",
 	"puffin": "Puffin_AuroraPhotographer_Seated_v1", "lynx": "Lynx_SkiCoach_Seated_v1",
 	"squirrel": "RedSquirrel_CabinLandlord_Seated_v1", "raven": "Raven_WeatherReporter_Seated_v1",
 	"reindeer": "WhiteReindeer_SleighNavigator_Seated_v1", "arctic_fox": "ArcticFox_SnowNightCourier_Seated_v1",
 	"ingrid": "Ingrid_KnittingGrandmother_Seated_v1"
-} # Approved static seated sprites; portraits remain independently mapped above.
+} # Approved static seated sprites for both implemented maps.
+const GUEST_IDLE_SEQUENCES := {
+	"bobo": ["Bobo_SeatedIdle_00_v1", "Bobo_SeatedIdle_01_v1", "Bobo_SeatedIdle_02_v1", "Bobo_SeatedIdle_01_v1"],
+	"coco": ["Coco_SeatedIdle_00_v1", "Coco_SeatedIdle_01_v1", "Coco_SeatedIdle_02_v1", "Coco_SeatedIdle_01_v1"],
+	"horn": ["Horn_SeatedIdle_00_v1", "Horn_SeatedIdle_01_v1", "Horn_SeatedIdle_02_v1", "Horn_SeatedIdle_01_v1"],
+	"mimi": ["Mimi_SeatedIdle_00_v1", "Mimi_SeatedIdle_01_v1", "Mimi_SeatedIdle_02_v1", "Mimi_SeatedIdle_01_v1"],
+	"tank": ["Tank_SeatedIdle_00_v1", "Tank_SeatedIdle_01_v1", "Tank_SeatedIdle_02_v1", "Tank_SeatedIdle_01_v1"]
+}
 const DRINKS := {"芒果冰沙": "Drink_MangoSlush_v1", "椰子水": "Drink_CoconutWater_v1", "青柠苏打": "Drink_LimeSoda_v1", "冰美式": "Drink_IcedAmericano_v1", "夜间无酒精特调": "Drink_NightMocktail_v1"}
 const FUTURE_DRINKS := {"极光莓果苏打": "Drink_AuroraSoda_v2", "肉桂热可可": "Drink_CinnamonCocoa_v2", "越橘热饮": "Drink_LingonberryTea_v2"}
 const DECOR_UI_ASSETS := {"panel": "UI_DecorShopPanel_Southwind_v2", "card": "UI_DecorShopCard_Southwind_v2", "purchase_button": "UI_DecorShopPurchaseButton_Southwind_v2"}
@@ -53,6 +62,15 @@ func portrait(id: String) -> Texture2D:
 
 func chibi(id: String) -> Texture2D:
 	return texture(CHIBIS.get(id, ""))
+
+func has_guest_idle(id: String) -> bool:
+	return GUEST_IDLE_SEQUENCES.has(id)
+
+func guest_idle(id: String, frame: int) -> Texture2D:
+	var sequence: Array = GUEST_IDLE_SEQUENCES.get(id, [])
+	if sequence.is_empty():
+		return chibi(id)
+	return texture(sequence[posmod(frame, sequence.size())])
 
 func drink(name: String) -> Texture2D:
 	return texture(DRINKS.get(name, FUTURE_DRINKS.get(name, "")))
@@ -131,6 +149,11 @@ const UI_REGIONS := {
 	"UI_ShopSelectionFrame_Southwind_v1": Rect2(19, 27, 1091, 1375),
 	"UI_PricePlate_Southwind_v1": Rect2(0, 23, 1910, 628),
 	"UI_Icon_Bonus_Southwind_v1": Rect2(33, 51, 1297, 1070),
+	"UI_ProductionDock_Southwind_v1": Rect2(0, 0, 2070, 729),
+	"UI_ProductionTaskCard_Southwind_v1": Rect2(0, 0, 2037, 733),
+	"UI_ProductionProgressFrame_Southwind_v1": Rect2(0, 0, 2105, 579),
+	"UI_HeldDrinkSlot_Southwind_v1": Rect2(0, 0, 1224, 1188),
+	"UI_ReadyDrinkTray_Southwind_v1": Rect2(0, 0, 1518, 1001),
 	"UI_StartPanel_Southwind_v1": Rect2(11, 26, 1637, 891),
 	"UI_StartHeader_Southwind_v1": Rect2(7, 165, 2008, 485),
 	"UI_Button_PrimaryWide_Southwind_v1": Rect2(21, 140, 2129, 427),

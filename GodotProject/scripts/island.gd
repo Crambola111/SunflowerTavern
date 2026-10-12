@@ -21,6 +21,12 @@ const NORDIC_DECOR_EFFECTS := ["小费 +5%", "错杯惩罚 -1 秒", "客人耐�
 const UI_BUTTON_PRIMARY := "UI_Button_PrimaryWide_Southwind_v1"
 const UI_BUTTON_SECONDARY := "UI_Button_SecondaryWide_Southwind_v1"
 const UI_BUTTON_DAY_TAB := "UI_Button_DayTabWide_Southwind_v1"
+const SUNNY_CENTER_IDLE_SEQUENCE := [
+	"Sunny_Southwind_CenterIdle_00",
+	"Sunny_Southwind_CenterIdle_01",
+	"Sunny_Southwind_CenterIdle_02",
+	"Sunny_Southwind_CenterIdle_01"
+]
 var model: RefCounted
 var progress: RefCounted
 var map_progress: RefCounted
@@ -39,8 +45,11 @@ var action_caption: Label
 var bubbles: Array[TextureRect] = []
 var status: Label
 var queue_label: Label
+var queue_icon: TextureRect
 var brew_progress: ProgressBar
 var ready_icon: TextureRect
+var held_caption: Label
+var ready_caption: Label
 var tutorial_label: Label
 var tutorial_panel: Panel
 var toast: Label
@@ -69,6 +78,7 @@ var service_direction := 0
 var service_pulse := 0.0
 var feedback_time := 0.0
 var sunny_breath_time := 0.0
+var guest_breath_time := 0.0
 var previous_coins := 0
 var previous_stolen := 0
 var previous_missed := 0
@@ -108,7 +118,7 @@ func _ready() -> void:
 	sunny = texture(self, Vector2(800,435), Vector2(175,175), art.texture(sunny_asset))
 	for i in 8:
 		var selected := i
-		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(200,70), "", func(): select_seat(selected)))
+		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(250,150), "", func(): select_seat(selected)))
 		seats[i].add_theme_font_size_override("font_size", 15)
 		var bubble := texture(self, SEATS[i]+Vector2(0,-78), Vector2(210,98), themed_ui_texture("UI_OrderBubble_Southwind_v1"))
 		bubble.z_index = 12
@@ -118,11 +128,9 @@ func _ready() -> void:
 		bubble_labels.append(bubble_label)
 		# Bubble is visual-only above the guest; the transparent table button remains clickable.
 		move_child(bubble, seats[i].get_index())
+		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+			seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
 		if i > 0:
-			for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-				seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
-			seats[i].size = Vector2(156,70)
-			seats[i].position.x += 6
 			seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
 			seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
 		var bar := ProgressBar.new()
@@ -154,28 +162,51 @@ func _ready() -> void:
 	action_caption = label(self, Vector2(1400,878), Vector2(180,30), "", 18)
 	card(self, Vector2(1400,748), Vector2(300,46))
 	selection = label(self, Vector2(1400,748), Vector2(280,34), "", 18)
-	# Centered production dock: title, live brew progress, held/ready slots, and status.
-	art_panel(self, Vector2(800,805), Vector2(620,155), themed_ui("UI_QueuePanel_Southwind_v1"), 34, 24)
-	art_panel(self, Vector2(800,744), Vector2(250,36), "UI_BrewingBadge_Southwind_v1", 24, 14)
-	label(self, Vector2(800,744), Vector2(560,30), "制作中", 20)
-	queue_label = label(self, Vector2(800,770), Vector2(560,30), "", 18)
+	# Authored production dock. Dynamic values stay inside its fixed task zones.
+	var production_dock := texture(self, Vector2(800,812), Vector2(700,176), themed_ui_texture("UI_ProductionDock_Southwind_v1"))
+	production_dock.name = "ProductionDock"
+	production_dock.stretch_mode = TextureRect.STRETCH_SCALE
+	var task_card := texture(self, Vector2(680,802), Vector2(340,105), themed_ui_texture("UI_ProductionTaskCard_Southwind_v1"))
+	task_card.name = "ProductionTaskCard"
+	task_card.stretch_mode = TextureRect.STRETCH_SCALE
+	queue_icon = texture(self, Vector2(570,802), Vector2(58,58), null)
+	queue_icon.name = "ProductionDrinkIcon"
+	queue_label = label(self, Vector2(720,794), Vector2(210,54), "", 15)
+	queue_label.name = "ProductionTaskLabel"
+	var progress_frame := texture(self, Vector2(720,840), Vector2(210,25), themed_ui_texture("UI_ProductionProgressFrame_Southwind_v1"))
+	progress_frame.name = "ProductionProgressFrame"
+	progress_frame.stretch_mode = TextureRect.STRETCH_SCALE
 	brew_progress = ProgressBar.new()
-	place(brew_progress, self, Vector2(800,800), Vector2(450,12))
+	place(brew_progress, self, Vector2(720,840), Vector2(176,8))
+	brew_progress.name = "ProductionProgress"
 	brew_progress.min_value = 0
 	brew_progress.max_value = 100
 	brew_progress.show_percentage = false
 	brew_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texture(self, Vector2(650,840), Vector2(64,64), themed_ui_texture("UI_DrinkSlot_Southwind_v1"))
-	held_icon = texture(self, Vector2(650,840), Vector2(46,46), null)
-	texture(self, Vector2(800,840), Vector2(64,64), themed_ui_texture("UI_DrinkSlot_Southwind_v1"))
-	ready_icon = texture(self, Vector2(800,840), Vector2(46,46), null)
-	label(self, Vector2(950,840), Vector2(180,42), "空槽 · 可继续制作", 15)
-	status = label(self, Vector2(800,881), Vector2(560,28), "", 16)
+	brew_progress.add_theme_stylebox_override("background", StyleBoxEmpty.new())
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color("55d5bf")
+	fill.corner_radius_top_left = 4
+	fill.corner_radius_top_right = 4
+	fill.corner_radius_bottom_left = 4
+	fill.corner_radius_bottom_right = 4
+	brew_progress.add_theme_stylebox_override("fill", fill)
+	var held_slot := texture(self, Vector2(918,808), Vector2(92,92), themed_ui_texture("UI_HeldDrinkSlot_Southwind_v1"))
+	held_slot.name = "HeldDrinkSlot"
+	held_icon = texture(self, Vector2(918,813), Vector2(48,48), null)
+	held_icon.name = "HeldDrinkIcon"
+	held_caption = label(self, Vector2(918,868), Vector2(116,22), "手持 · 空", 14)
+	var ready_tray := texture(self, Vector2(1060,810), Vector2(118,86), themed_ui_texture("UI_ReadyDrinkTray_Southwind_v1"))
+	ready_tray.name = "ReadyDrinkTray"
+	ready_icon = texture(self, Vector2(1060,810), Vector2(48,48), null)
+	ready_icon.name = "ReadyDrinkIcon"
+	ready_caption = label(self, Vector2(1060,868), Vector2(130,22), "出酒口 · 空", 14)
+	status = label(self, Vector2(680,874), Vector2(360,22), "", 14)
 	tutorial_panel = art_panel(self, Vector2(800,700), Vector2(620,42), "UI_ToastPanel_Southwind_v1", 28, 18)
 	tutorial_label = label(self, Vector2(800,700), Vector2(600,36), "", 17)
 	toast_panel = art_panel(self, Vector2(280,140), Vector2(500,74), "UI_ToastPanel_Southwind_v1", 28, 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
-	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
+	discard = button(self, Vector2(1195,735), Vector2(130,36), "清理杯子", confirm_discard)
 	progress = Progress.new()
 	map_progress = NordicProgress.new() if map_id == Maps.MAP02 else progress
 	if not progress.error.is_empty() or not map_progress.error.is_empty():
@@ -197,6 +228,8 @@ func reset_day() -> void:
 	arrival_time = 0
 	service_pulse = 0
 	serve_time = 0
+	sunny_breath_time = 0
+	guest_breath_time = 0
 	previous_coins = 0
 	previous_stolen = 0
 	previous_missed = 0
@@ -393,6 +426,7 @@ func _process(delta: float) -> void:
 	var dt := 0.0 if model.paused or model.ended or focus_paused else delta
 	ambient.advance(dt)
 	sunny_breath_time += dt
+	guest_breath_time += dt
 	feedback_time = maxf(0, feedback_time-dt)
 	var stolen: int = model.stolen_coins - previous_stolen
 	var earned: int = model.coins - previous_coins + stolen
@@ -408,22 +442,24 @@ func _process(delta: float) -> void:
 	previous_stolen = model.stolen_coins
 	previous_missed = model.missed
 	status.text = feedback if feedback_time > 0 else model.message
-	if not model.hand.is_empty():
-		queue_label.text = "手持：%s · 同款可互送" % model.hand.drink
-		brew_progress.visible = false
-	elif not model.ready.is_empty():
-		queue_label.text = "已做好：%s · 面向出酒口取杯" % model.ready.drink
-		brew_progress.visible = false
-	elif not model.queue.is_empty():
-		queue_label.text = "制作：%s  %.1fs  | 排队 %d" % [model.queue[0].drink, model.queue[0].remaining, model.queue.size()]
-		brew_progress.visible = true
+	if not model.queue.is_empty():
+		queue_label.text = "制作中 · %s\n剩余 %.1f 秒 · 队列 %d 杯" % [model.queue[0].drink, model.queue[0].remaining, model.queue.size()]
+		queue_icon.texture = art.drink(model.queue[0].drink)
 		brew_progress.value = clampf((1.0 - model.queue[0].remaining / maxf(0.01, model.queue[0].duration)) * 100.0, 0.0, 100.0)
+	elif not model.ready.is_empty():
+		queue_label.text = "制作完成\n请从右侧出酒口取杯"
+		queue_icon.texture = null
+		brew_progress.value = 100
 	else:
-		queue_label.text = "点击客位转向，再次点击互动"
-		brew_progress.visible = false
+		queue_label.text = "等待订单\n接单后自动制作"
+		queue_icon.texture = null
+		brew_progress.value = 0
 	discard.disabled = not can_input() or (model.hand.is_empty() and model.ready.is_empty())
+	discard.visible = not model.hand.is_empty() or not model.ready.is_empty()
 	held_icon.texture = art.drink(model.hand.get("drink", ""))
 	ready_icon.texture = art.drink(model.ready.get("drink", ""))
+	held_caption.text = "手持 · %s" % model.hand.get("drink", "空")
+	ready_caption.text = "出酒口 · %s" % model.ready.get("drink", "空")
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
 	var hint: Dictionary = model.service_hint()
 	tutorial_label.visible = tutorial and not model.ended and modal == null
@@ -457,9 +493,11 @@ func refresh_seats(dt: float, hint: int) -> void:
 			sprites[i].texture = art.chibi(v.guest.id)
 		visibility[i] = move_toward(float(visibility.get(i,0)), 0.0 if v.is_empty() else 1.0, dt/0.22)
 		sprites[i].modulate.a = visibility[i]
+		refresh_guest_breath(i, not v.is_empty(), "" if v.is_empty() else v.guest.id)
 		if model.bills.has(i):
 			visibility[i] = 0.0
 			sprites[i].modulate.a = 0.0
+			refresh_guest_breath(i, false)
 			visit_ids.erase(i)
 			icons[i].texture = themed_ui_texture("UI_Icon_Coin_Southwind_v1")
 			seats[i].text = "P%d · 待收款\n金币 · 用过的杯子 ×%d" % [i, model.bills[i].cups]
@@ -501,6 +539,24 @@ func refresh_seats(dt: float, hint: int) -> void:
 		bars[i].value = clampf(ratio,0,1)*100
 		bars[i].modulate = Color("ff563a") if ratio < 0.3 else Color("86d062")
 
+func refresh_guest_breath(i: int, active: bool, guest_id: String = "") -> void:
+	var sprite: TextureRect = sprites[i]
+	var base_position: Vector2 = SEATS[i] + Vector2(-30,-35)
+	if not active:
+		sprite.scale = Vector2.ONE
+		sprite.position = base_position
+		return
+	if art.has_guest_idle(guest_id):
+		var frame: int = int(guest_breath_time / 0.28 + float(i) * 0.75) % 4
+		sprite.texture = art.guest_idle(guest_id, frame)
+		sprite.scale = Vector2.ONE
+		sprite.position = base_position
+		return
+	var breathing := 0.0 if model.paused or model.ended else sin(guest_breath_time * 1.9 + float(i) * 0.8) * 0.008
+	sprite.pivot_offset = Vector2(65,65)
+	sprite.scale = Vector2(1.0-breathing*0.25, 1.0+breathing)
+	sprite.position = base_position + Vector2(0,-breathing*16.0)
+
 func refresh_motion(dt: float) -> void:
 	if model.ended or model.direction != service_direction:
 		service_pulse = 0
@@ -518,6 +574,8 @@ func refresh_motion(dt: float) -> void:
 			asset = "Sunny_Southwind_D%d_Carry" % direction
 		if serve_time > 0:
 			asset = "Sunny_Southwind_D%d_Serve_%02d" % [6 if direction == 6 else 0, clampi(int((1-serve_time/0.36)*3),0,2)]
+		elif asset == "Sunny_Southwind_Idle_v1":
+			asset = SUNNY_CENTER_IDLE_SEQUENCE[int(sunny_breath_time / 0.32) % SUNNY_CENTER_IDLE_SEQUENCE.size()]
 	sunny.texture = art.texture(asset)
 	var pulse := sin((1-service_pulse/0.32)*PI) if service_pulse > 0 else 0.0
 	var base_position: Vector2 = Vector2(712.5,347.5) + (SEATS[service_direction]-Vector2(800,435)).normalized()*8*pulse
