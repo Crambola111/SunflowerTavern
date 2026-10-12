@@ -546,21 +546,63 @@ func dialogue(v: Dictionary) -> void:
 	button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
 
 func codex(selected: int) -> void:
-	open_modal("客人图鉴",true)
+	close_modal()
+	model.paused = true
+	modal = Control.new()
+	modal.name = "GuestCodex"
+	modal.size = Vector2(1600, 900)
+	modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(modal)
+	var shade := ColorRect.new()
+	place(shade, modal, Vector2(800,450), Vector2(1600,900))
+	shade.color = Color(0,0,0,0.50)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture(modal, Vector2(800,450), Vector2(1440,780), art.texture("UI_CodexBook_Southwind_v2"))
+	button(modal, Vector2(1405,125), Vector2(72,72), "×", close_modal)
+	label(modal, Vector2(800,135), Vector2(520,62), "客人图鉴", 34)
 	var available: Array = Config.available_guests()
+	var safe_selected := clampi(selected, 0, maxi(0, available.size()-1))
+	var current_id: String = available[safe_selected] if not available.is_empty() else ""
+	var current_guest: Dictionary = Config.guest(current_id) if not current_id.is_empty() else {}
+	label(modal, Vector2(500,220), Vector2(220,42), "%d / %d" % [safe_selected+1, available.size()], 22)
+	var grid_x := [285.0, 465.0, 645.0]
+	var grid_y := [330.0, 495.0, 660.0]
 	for i in 9:
+		if i >= available.size():
+			continue
 		var choice := i
-		var known: bool = i < available.size() and model.codex.has(available[i])
-		var b := button(modal,Vector2(420+(i%3)*150,320+(i/3)*125),Vector2(135,100),Config.guest(available[i]).name.split(" ")[0] if known else "未遇见",func(): codex(choice))
-		b.disabled = not known
-	var id: String = available[clampi(selected,0,available.size()-1)]
-	var g: Dictionary = Config.guest(id)
-	var unlocked: bool = model.codex.has(id)
+		var id: String = available[i]
+		var known: bool = model.codex.has(id)
+		var tile_center := Vector2(grid_x[i % 3], grid_y[i / 3])
+		if known:
+			card(modal, tile_center, Vector2(142,142))
+			texture(modal, tile_center, Vector2(126,126), art.portrait(id))
+		else:
+			texture(modal, tile_center, Vector2(142,142), art.texture("UI_CodexLockedSlot_Southwind_v2"))
+		var pick := button(modal, tile_center+Vector2(0,70), Vector2(150,24), "", func(): codex(choice))
+		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+			pick.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+		pick.add_theme_color_override("font_color", Color.TRANSPARENT)
+		pick.tooltip_text = current_guest.name if i == safe_selected and known else ("已解锁" if known else "完成服务后解锁")
+		pick.disabled = not known and i != safe_selected
+	var unlocked: bool = not current_id.is_empty() and model.codex.has(current_id)
+	var name_text := current_guest.name if unlocked else "未知客人"
+	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
 	if unlocked:
-		texture(modal,Vector2(1060,385),Vector2(230,250),art.portrait(id))
-		texture(modal,Vector2(810,605),Vector2(65,65),art.drink(g.drink))
-	label(modal,Vector2(1060,230),Vector2(440,60),g.name if unlocked else "未知客人",25)
-	label(modal,Vector2(1060,610),Vector2(420,170),g.bio+"\n喜欢："+g.drink+(" × %d" % g.cups if g.cups > 1 else "") if unlocked else "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23)
+		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
+		var badge_sheet := texture(modal, Vector2(1290,330), Vector2(250,166), art.texture("UI_CodexTraitBadges_Southwind_v2"))
+		badge_sheet.modulate = Color(1,1,1,0.92)
+		label(modal, Vector2(1290,280), Vector2(250,34), "客人标签", 18)
+		label(modal, Vector2(1290,310), Vector2(210,28), "海岛旅客", 17)
+		label(modal, Vector2(1290,350), Vector2(210,28), "喜欢拍照", 17)
+		label(modal, Vector2(1290,390), Vector2(210,28), "常点饮品", 17)
+		var bio := current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
+		label(modal, Vector2(1115,665), Vector2(480,150), bio, 20)
+	else:
+		texture(modal, Vector2(1070,470), Vector2(250,250), art.texture("UI_CodexLockedSlot_Southwind_v2"))
+		label(modal, Vector2(1120,665), Vector2(420,100), "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。", 21)
+	button(modal, Vector2(1030,770), Vector2(82,64), "‹", func(): codex(posmod(safe_selected-1, available.size())))
+	button(modal, Vector2(1380,770), Vector2(82,64), "›", func(): codex(posmod(safe_selected+1, available.size())))
 
 func settlement() -> void:
 	var passed := model.passed()
