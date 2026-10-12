@@ -1,16 +1,19 @@
-# 南风岛已确认UI
+# SunflowerTavern · 向日葵酒馆
 
-2026-09-29 22:16：已确认11件。底框/按钮6件：订单气泡、手掌互动按钮、地图名称牌、金币目标牌、计时器底框、通用木质圆按钮底。独立图标5件：Codex图鉴、Decorate装修、TurnLeft左转、TurnRight右转、Pause暂停。
+当前主工程：**Godot 4.5.1 标准版 / GDScript / 原生2D UI**。用户已确认从Unity迁移，后续开发均在Godot进行。
 
-本目录为正式原稿，Review同名文件仅为审稿历史。PNG均为真透明，动态文字/数字由Godot叠加。根据Alpha有效包围盒统一视觉尺寸；不要把透明外边距算作按钮大小，暂停图标需特别校准。确认不代表已经接入；运行接入状态以manifest和开发记录为准。
+导入 `GodotProject/project.godot`，按F5运行。无需Unity或.NET。详细说明见 [GodotProject/README.md](GodotProject/README.md)。
 
+| 路径 | 内容 |
+|---|---|
+| [GodotProject/](GodotProject/) | 当前主工程、GDScript、场景、配置、运行美术与检查 |
+| [docs/GameDesign/OVERVIEW.md](docs/GameDesign/OVERVIEW.md) | 游戏方案与已确认交互范围 |
+| [docs/Characters/](docs/Characters/) | 按地图整理的人物设定 |
+| [Art/](Art/) | 确认原稿、用途、文件校验 |
+| [docs/Development/map-01-godot-plan.md](docs/Development/map-01-godot-plan.md) | 当前开发计划 |
+| [docs/Development/GODOT_MIGRATION.md](docs/Development/GODOT_MIGRATION.md) | 迁移对照、实际检查、待验收与限制 |
+| UnityProject/ | 历史对照与旧存档导出入口，暂停功能开发 |
 
-## G4A 接入（2026-09-29）
+当前可玩前三天；Day4与第一地图结尾尚未实现。迁移经过Godot无界面启动、86项逻辑和26项界面操作检查；图形窗口画面、实际试玩和桌面导出待验收。座位Q版缺图不使用精细立绘冒充。
 
-11件均已接入Godot原生UI。新增5图标按AtlasTexture有效区域等比显示，Pause小图单独裁边；图标不接收鼠标事件，保留按钮点击和文字悬停提示。图鉴/装修另保留小字标签。PNG原稿不改，运行副本与.import同步。
-
-对话已改为双侧人物+底部面板。小葵暂无独立对话立绘，明确复用Sunny_Chibi作为过渡；缺客人立绘时不借用其他人物。图形试玩和最终视觉仍待验收。
-
-## ART1 运行资源核对（2026-10-12）
-
-六类装修原稿及 Godot 场景已进入运行工程：已购旧三类会在主场景显示，对应六类均在商店提供预览；Review/BATCH05素材不进入运行。北欧饮品和默认服动作虽已进入 Godot 资源库，但只注册为跨地图资产，不改变南风岛客流。
+每轮同步源文件树、相关方案/设定、美术状态和开发日志；已确认不等于已接入，已接入不等于已通过视觉验收。
