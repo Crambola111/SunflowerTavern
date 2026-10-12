@@ -22,6 +22,12 @@
 | `UI_PricePlate_Nordic_v1.png` | 装饰价格牌；保留左侧金币图标位和右侧动态价格位 | Review |
 | `UI_CodexSelectionFrame_Nordic_v1.png` | 图鉴选中框；透明中心，套在头像槽之外 | Review |
 | `UI_CodexTag_Nordic_v1.png` | 图鉴属性标签；文字与图标运行时叠加 | Review |
+| `UI_Badge_GoalSuccess_Nordic_v1.png` | 结算达标徽章，保留第一关勾选语义 | Review |
+| `UI_Badge_GoalRetry_Nordic_v1.png` | 结算未达标/重试徽章，保留第一关重试语义 | Review |
+| `UI_Button_Teal_Nordic_v1.png` | 北欧青主按钮底，文字运行时叠加 | Review |
+| `UI_Button_Ivory_Nordic_v1.png` | 象牙色次按钮底，文字运行时叠加 | Review |
+| `UI_Icon_Close_Nordic_v1.png` | 图鉴、装饰、结算共用关闭图标 | Review |
+| `UI_Icon_Coin_Nordic_v1.png` | 北欧金币图标，改为八角罗盘星压纹 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
 
