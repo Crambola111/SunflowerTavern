@@ -196,9 +196,9 @@ func refresh_decor_visibility() -> void:
 	decor_nodes["hanging_lamp"].visible = progress.owns(1)
 	# New stable-ID replacement slots are loaded and previewed, but remain
 	# disabled until G8 pricing/save migration is implemented.
-	decor_nodes["deck"].visible = false
-	decor_nodes["railing"].visible = false
-	decor_nodes["table"].visible = false
+	decor_nodes["deck"].visible = progress.owns(5)
+	decor_nodes["railing"].visible = progress.owns(3)
+	decor_nodes["table"].visible = progress.owns(4)
 
 func can_input() -> bool:
 	return model != null and not fatal and not model.paused and not model.ended and not focus_paused and modal == null and Engine.get_process_frames() > input_block_frame
@@ -589,13 +589,12 @@ func shop() -> void:
 		var slot: String = preview_slots[i]
 		texture(modal,Vector2(420,335+i*72),Vector2(78,62),art.decor(slot))
 		label(modal,Vector2(720,335+i*72),Vector2(520,62),preview_names[i]+"\n"+preview_effects[i],18)
-		var legacy := i < 3
 		var index := i
-		var b := button(modal,Vector2(1150,335+i*72),Vector2(220,52),"已拥有" if legacy and progress.owns(i) else ("%d 金币" % Progress.PRICES[i] if legacy else "G8开放"),func():
-			if legacy and progress.purchase(index):
+		var b := button(modal,Vector2(1150,335+i*72),Vector2(220,52),"已拥有" if progress.owns(i) else "%d 金币" % Progress.PRICES[i],func():
+			if progress.purchase(index):
 				bonuses()
 			shop())
-		b.disabled = not legacy or progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
+		b.disabled = progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
 	label(modal,Vector2(800,790),Vector2(960,42),"已购三类会替换场景中的对应物件；新三类素材已接入预览，价格与存档迁移留在 G8。",17)
 
 func open_modal(title: String, book := false) -> void:
