@@ -81,17 +81,18 @@ func _ready() -> void:
 	ambient = Ambient.new()
 	add_child(ambient)
 	ambient.setup(background)
+	# The baked table/front layer is the base; approved replacements render above it.
+	texture(self, Vector2(800,450), Vector2(1600,900), art.texture("TableFront_Combined"))
 	setup_decor_layer()
 	var guest_layer := Control.new()
 	guest_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(guest_layer)
 	for i in 8:
 		sprites.append(texture(guest_layer, SEATS[i]+Vector2(-30,-35), Vector2(130,130), null))
-	texture(self, Vector2(800,450), Vector2(1600,900), art.texture("TableFront_Combined"))
 	sunny = texture(self, Vector2(800,435), Vector2(175,175), art.texture("Sunny_Southwind_Idle_v1"))
 	for i in 8:
 		var selected := i
-		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(200,70), "", func(): select_seat(selected)))
+		seats.append(button(self, SEATS[i]+Vector2(0,50 if i == 0 else 65), Vector2(250,150), "", func(): select_seat(selected)))
 		seats[i].add_theme_font_size_override("font_size", 15)
 		var bubble := texture(self, SEATS[i]+Vector2(0,-78), Vector2(210,98), art.ui_texture("UI_OrderBubble_Southwind_v1"))
 		bubble.z_index = 12
@@ -101,13 +102,12 @@ func _ready() -> void:
 		bubble_labels.append(bubble_label)
 		# Bubble is visual-only above the guest; the transparent table button remains clickable.
 		move_child(bubble, seats[i].get_index())
-		if i > 0:
-			for state in ["normal", "hover", "pressed", "disabled", "focus"]:
-				seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
-			seats[i].size = Vector2(156,70)
-			seats[i].position.x += 6
-			seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
-			seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
+		# Invisible full-table hit target; labels/bubbles remain the visual feedback.
+		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+			seats[i].add_theme_stylebox_override(state, StyleBoxEmpty.new())
+		seats[i].add_theme_color_override("font_color", Color("48270e"))
+		seats[i].add_theme_color_override("font_hover_color", Color("48270e"))
+		seats[i].add_theme_color_override("font_pressed_color", Color("48270e"))
 		var bar := ProgressBar.new()
 		place(bar, self, SEATS[i]+Vector2(0,106), Vector2(150,7))
 		bar.show_percentage = false
@@ -246,17 +246,17 @@ func setup_decor_layer() -> void:
 			decor_nodes["seat_cushion_%d" % i] = texture(decor_layer, SEATS[i+1]+Vector2(0,40), Vector2(72,58), art.nordic_decor_batch2("seat_cushion"))
 		refresh_decor_visibility()
 		return
-	# Positions are conservative first-pass anchors in the 1600x900 scene. Each
-	# asset remains a native transparent PNG; no raster edits or baked text.
+	# Approved transparent replacements render above the baked table layer and below guests/UI.
 	decor_nodes["deck"] = texture(decor_layer, Vector2(800,450), Vector2(1600,900), art.decor("deck"))
-	decor_nodes["counter"] = texture(decor_layer, Vector2(800,790), Vector2(500,282), art.decor("counter"))
-	decor_nodes["railing"] = texture(decor_layer, Vector2(800,170), Vector2(1120,532), art.decor("railing"))
-	decor_nodes["table"] = texture(decor_layer, Vector2(800,470), Vector2(210,192), art.decor("table"))
-	decor_nodes["hanging_lamp"] = texture(decor_layer, Vector2(800,104), Vector2(120,118), art.decor("hanging_lamp"))
+	decor_nodes["counter"] = texture(decor_layer, Vector2(800,790), Vector2(600,338), art.decor("counter"))
+	decor_nodes["railing"] = texture(decor_layer, Vector2(800,185), Vector2(1280,607), art.decor("railing"))
+	decor_nodes["hanging_lamp"] = texture(decor_layer, Vector2(800,112), Vector2(110,108), art.decor("hanging_lamp"))
 	for i in 7:
-		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-8), Vector2(35,35), art.decor("lighting"))
+		var table := texture(decor_layer, SEATS[i+1], Vector2(150,137), art.decor("table"))
+		decor_nodes["table_%d" % i] = table
+		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-42), Vector2(24,22), art.decor("lighting"))
 		decor_nodes["lighting_%d" % i] = lamp
-		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,30), Vector2(72,64), art.decor("chair"))
+		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,46), Vector2(100,89), art.decor("chair"))
 		decor_nodes["chair_%d" % i] = chair
 	refresh_decor_visibility()
 
@@ -274,17 +274,19 @@ func refresh_decor_visibility() -> void:
 			else:
 				decor_nodes[key].visible = decor_owned(i)
 		return
-	# Existing three save slots map to the confirmed replacement family.
+	# Six persistent slots map to the approved replacement family.
 	decor_nodes["counter"].visible = progress.owns(2)
 	for i in 7:
 		decor_nodes["chair_%d" % i].visible = progress.owns(0)
 	for i in 7:
 		decor_nodes["lighting_%d" % i].visible = progress.owns(1)
+	for i in 7:
+		decor_nodes["table_%d" % i].visible = progress.owns(4)
 	decor_nodes["hanging_lamp"].visible = progress.owns(1)
 	# New stable-ID replacement slots are active after purchase; old saves migrate to six slots.
 	decor_nodes["deck"].visible = progress.owns(5)
 	decor_nodes["railing"].visible = progress.owns(3)
-	decor_nodes["table"].visible = progress.owns(4)
+
 
 func can_input() -> bool:
 	return model != null and not fatal and not model.paused and not model.ended and not focus_paused and modal == null and Engine.get_process_frames() > input_block_frame
