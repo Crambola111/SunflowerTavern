@@ -13,6 +13,7 @@ const NordicProgress = preload("res://scripts/nordic_progress_store.gd")
 const NordicEvent = preload("res://scripts/nordic_event.gd")
 const Art = preload("res://scripts/art_catalog.gd")
 const SEATS: Array[Vector2] = [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
+const TAVERN_CENTER := Vector2(800,435)
 const ITEMS := ["向日葵花瓶", "藤编小灯", "顺手托盘"]
 const EFFECTS := ["客人耐心 +5%", "小费 +5%（累计取整）", "制作速度 +5%"]
 const NORDIC_DECOR_SLOTS := ["lantern", "tabletop", "chair_cover", "fir_planter", "centerpiece", "railing", "counter_front", "aurora_pendant", "menu_board", "seat_cushion", "snow_deck_trim", "ice_barrel_table"]
@@ -260,7 +261,11 @@ func setup_decor_layer() -> void:
 		decor_nodes["table_%d" % i] = table
 		var lamp := texture(decor_layer, SEATS[i+1]+Vector2(0,-42), Vector2(24,22), art.decor("lighting"))
 		decor_nodes["lighting_%d" % i] = lamp
-		var chair := texture(decor_layer, SEATS[i+1]+Vector2(0,46), Vector2(100,89), art.decor("chair"))
+		# Seat furniture follows the radial direction of each table. The approved chair is a single three-quarter view, so rotation and outward offset are seat-specific.
+		var radial := (SEATS[i+1] - TAVERN_CENTER).normalized()
+		var chair := texture(decor_layer, SEATS[i+1] + radial * 52.0, Vector2(100,89), art.decor("chair"))
+		chair.pivot_offset = chair.size / 2.0
+		chair.rotation = radial.angle() + PI / 2.0
 		decor_nodes["chair_%d" % i] = chair
 	refresh_decor_visibility()
 
@@ -703,13 +708,16 @@ func santa_dialogue(v: Dictionary, step: int) -> void:
 	content.name = "EventText"
 	content.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	if step < 2:
-		button(modal,Vector2(1300,727),Vector2(350,66),"继续",func(): santa_dialogue(v, step + 1))
+		var continue_button := button(modal,Vector2(1300,727),Vector2(350,66),"继续",func(): santa_dialogue(v, step + 1))
+		skin_button(continue_button, "UI_Button_Teal_Southwind_v1")
 	else:
-		button(modal,Vector2(1300,727),Vector2(350,66),"来一杯肉桂热可可",func():
+		var cocoa_button := button(modal,Vector2(1300,727),Vector2(350,66),"来一杯肉桂热可可",func():
 			close_modal()
 			model.direction = v.seat
 			model.interact())
-	button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
+		skin_button(cocoa_button, "UI_Button_Teal_Southwind_v1")
+	var later_button := button(modal,Vector2(1300,810),Vector2(350,60),"稍后再来",close_modal)
+	skin_button(later_button, "UI_Button_Ivory_Southwind_v1")
 
 func codex(selected: int) -> void:
 	close_modal()
