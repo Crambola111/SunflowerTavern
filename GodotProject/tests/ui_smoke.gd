@@ -46,6 +46,9 @@ func run() -> void:
 			check(child.get_node("ButtonIcon").mouse_filter == Control.MOUSE_FILTER_IGNORE and not child.tooltip_text.is_empty(), "Round icon preserves click and tooltip")
 	check(icon_count == 5, "Five native controls use approved independent icons")
 	check(ui.bubbles.size() == 8 and ui.bubbles[2].mouse_filter == Control.MOUSE_FILTER_IGNORE, "Order artwork preserves table input")
+	for seat in ui.seats:
+		check(seat.size.x >= 240 and seat.size.y >= 140, "Each table has a full-table click target")
+	check(ui.decor_nodes.has("table_0") and ui.decor_nodes.has("table_6"), "Shop mounts seven table replacement instances")
 	ui.close_modal()
 	await process_frame
 	await process_frame
