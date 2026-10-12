@@ -19,6 +19,8 @@ static func playable(map_id: String, day: int) -> bool:
 static func for_day(map_id: String, day: int) -> Dictionary:
 	assert(playable(map_id, day), "Map day not implemented")
 	var config: Dictionary = days(map_id)[day - 1].duplicate(true)
+	config.map_id = map_id
+	config.map_name = map_name(map_id)
 	assert(Base.validate(config))
 	return config
 
