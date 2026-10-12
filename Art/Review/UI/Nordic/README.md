@@ -8,5 +8,7 @@
 | `UI_OrderBubble_Nordic_v1.png` | 客人头顶点单气泡，中心留空 | Review |
 | `UI_RoundButtonBase_Nordic_v1.png` | 通用圆形按钮底，中心留空 | Review |
 | `UI_TimerPlate_Nordic_v1.png` | 计时器底框，右侧留空 | Review |
+| `UI_QueuePanel_Nordic_v1.png` | 底部制作队列面板，中心及槽位留空 | Review |
+| `UI_IncomeGoalPlate_Nordic_v1.png` | 金币与目标双字段HUD，数值留空 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
