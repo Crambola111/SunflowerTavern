@@ -1,6 +1,6 @@
 # 游戏方案 · 当前方向
 
-> 2026-09-29引擎迁移：当前入口为GodotProject/project.godot，Godot 4.5.1标准版/GDScript。既有机制已迁移，前三天开放、Day4仍待开发。本文旧Unity路径和轮次为历史记录；当前配置在GodotProject/data，检查与边界见docs/Development/GODOT_MIGRATION.md。
+> 2026-10-12引擎状态：当前入口为GodotProject/project.godot，Godot 4.5.1标准版/GDScript。第一地图四天排班、九客目录、连续解锁与第四天通关提示已完成代码接线；图形运行验收仍待执行。
 
 
 ## 定位
@@ -13,7 +13,7 @@
 
 ## 当前范围
 
-当前为Godot 4.5.1标准版、GDScript / 原生Control UI。第一地图目标4天、每天120秒、7客位＋1出酒口、9位客人、6类场景装修。旧实现前三天已迁移；G1同款互送与成品保留、G2离场账单与收钱清台已实现并通过headless检查；图形试玩仍待验收，不等于第一地图完成。
+当前为Godot 4.5.1标准版、GDScript / 原生Control UI。第一地图目标4天、每天120秒、7客位＋1出酒口、9位客人、6类场景装修。四天排班、解锁与终局提示已完成代码接线；G1同款互送与成品保留、G2离场账单与收钱清台已实现；图形试玩仍待验收。
 
 角色、场景和 UI 参考见 Art/Approved；当前运行素材位于 GodotProject/assets；UnityProject仅保留迁移对照。
 
