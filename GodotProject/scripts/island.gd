@@ -36,6 +36,9 @@ var action_caption: Label
 var bubbles: Array[TextureRect] = []
 var status: Label
 var queue_label: Label
+var brew_timer: Label
+var held_caption: Label
+var ready_caption: Label
 var brew_progress: ProgressBar
 var ready_icon: TextureRect
 var tutorial_label: Label
@@ -142,11 +145,12 @@ func _ready() -> void:
 	action_caption = label(self, Vector2(1400,878), Vector2(180,30), "", 18)
 	card(self, Vector2(1400,748), Vector2(300,46))
 	selection = label(self, Vector2(1400,748), Vector2(280,34), "", 18)
-	# Centered production dock: title, live brew progress, held/ready slots, and status.
+	# 清晰的制作台：上方显示当前饮品与计时，底部固定为手持/出酒口两个槽位。
 	art_panel(self, Vector2(800,805), Vector2(620,155), "UI_QueuePanel_Southwind_v1", 34, 24)
 	art_panel(self, Vector2(800,744), Vector2(250,36), "UI_BrewingBadge_Southwind_v1", 24, 14)
-	label(self, Vector2(800,744), Vector2(560,30), "制作中", 20)
-	queue_label = label(self, Vector2(800,770), Vector2(560,30), "", 18)
+	label(self, Vector2(610,744), Vector2(190,30), "饮品制作", 20)
+	queue_label = label(self, Vector2(650,770), Vector2(320,28), "等待制作", 18)
+	brew_timer = label(self, Vector2(1010,770), Vector2(180,28), "", 17)
 	brew_progress = ProgressBar.new()
 	place(brew_progress, self, Vector2(800,800), Vector2(450,12))
 	brew_progress.min_value = 0
@@ -155,10 +159,11 @@ func _ready() -> void:
 	brew_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texture(self, Vector2(650,840), Vector2(64,64), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
 	held_icon = texture(self, Vector2(650,840), Vector2(46,46), null)
-	texture(self, Vector2(800,840), Vector2(64,64), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
-	ready_icon = texture(self, Vector2(800,840), Vector2(46,46), null)
-	label(self, Vector2(950,840), Vector2(180,42), "空槽 · 可继续制作", 15)
-	status = label(self, Vector2(800,881), Vector2(560,28), "", 16)
+	held_caption = label(self, Vector2(650,874), Vector2(170,22), "手持：空", 14)
+	texture(self, Vector2(820,840), Vector2(64,64), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
+	ready_icon = texture(self, Vector2(820,840), Vector2(46,46), null)
+	ready_caption = label(self, Vector2(820,874), Vector2(170,22), "出酒口：空", 14)
+	status = label(self, Vector2(1010,838), Vector2(210,58), "", 15)
 	tutorial_panel = art_panel(self, Vector2(800,700), Vector2(620,42), "UI_ToastPanel_Southwind_v1", 28, 18)
 	tutorial_label = label(self, Vector2(800,700), Vector2(600,36), "", 17)
 	toast_panel = art_panel(self, Vector2(280,140), Vector2(500,74), "UI_ToastPanel_Southwind_v1", 28, 18)
@@ -408,18 +413,23 @@ func _process(delta: float) -> void:
 	previous_stolen = model.stolen_coins
 	previous_missed = model.missed
 	status.text = feedback if feedback_time > 0 else model.message
-	if not model.hand.is_empty():
-		queue_label.text = "手持：%s · 同款可互送" % model.hand.drink
-		brew_progress.visible = false
-	elif not model.ready.is_empty():
-		queue_label.text = "已做好：%s · 面向出酒口取杯" % model.ready.drink
-		brew_progress.visible = false
-	elif not model.queue.is_empty():
-		queue_label.text = "制作：%s  %.1fs  | 排队 %d" % [model.queue[0].drink, model.queue[0].remaining, model.queue.size()]
+	if not model.queue.is_empty():
+		var brew: Dictionary = model.queue[0]
+		queue_label.text = "制作中 · %s" % brew.drink
+		brew_timer.text = "%.1f 秒 · 排队 %d" % [brew.remaining, model.queue.size()]
 		brew_progress.visible = true
-		brew_progress.value = clampf((1.0 - model.queue[0].remaining / maxf(0.01, model.queue[0].duration)) * 100.0, 0.0, 100.0)
+		brew_progress.value = clampf((1.0 - brew.remaining / maxf(0.01, brew.duration)) * 100.0, 0.0, 100.0)
+	elif not model.ready.is_empty():
+		queue_label.text = "已完成 · %s" % model.ready.drink
+		brew_timer.text = "前往出酒口取杯"
+		brew_progress.visible = false
+	elif not model.hand.is_empty():
+		queue_label.text = "已取杯 · %s" % model.hand.drink
+		brew_timer.text = "前往客位服务"
+		brew_progress.visible = false
 	else:
-		queue_label.text = "点击客位转向，再次点击互动"
+		queue_label.text = "等待制作"
+		brew_timer.text = "点击客位接单"
 		brew_progress.visible = false
 	discard.disabled = not can_input() or (model.hand.is_empty() and model.ready.is_empty())
 	if campfire_button != null:
@@ -427,6 +437,8 @@ func _process(delta: float) -> void:
 		campfire_button.text = "篝火升温" if model.campfire_ready() else "篝火 %.0fs" % model.campfire_cooldown
 	held_icon.texture = art.drink(model.hand.get("drink", ""))
 	ready_icon.texture = art.drink(model.ready.get("drink", ""))
+	held_caption.text = "手持：" + (model.hand.get("drink", "") if not model.hand.is_empty() else "空")
+	ready_caption.text = "出酒口：" + (model.ready.get("drink", "") if not model.ready.is_empty() else "空")
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
 	var hint: Dictionary = model.service_hint()
 	tutorial_label.visible = tutorial and not model.ended and modal == null
@@ -635,6 +647,23 @@ func pause_game() -> void:
 		tutorial_baseline = model.served
 		tutorial_time = 0
 		close_modal())
+	button(modal,Vector2(800,705),Vector2(360,55),"回到最初（清空进度）",confirm_full_reset)
+
+func confirm_full_reset() -> void:
+	open_modal("回到最初 · 确认")
+	label(modal,Vector2(800,430),Vector2(850,96),"将清空钱包、全部装饰、客人图鉴和所有天数记录。\n北欧地图进度也会一起清空，操作不可撤销。",20)
+	var confirm := button(modal,Vector2(680,600),Vector2(300,58),"确认清空并重新开始",full_reset)
+	var cancel := button(modal,Vector2(920,600),Vector2(220,58),"取消",close_modal)
+
+func full_reset() -> void:
+	if progress == null:
+		return
+	var nordic_reset := NordicProgress.new()
+	var ok := progress.reset_all() and nordic_reset.reset_all()
+	if not ok:
+		show_error("重置失败：" + (progress.error if not progress.error.is_empty() else nordic_reset.error))
+		return
+	get_tree().change_scene_to_file("res://scenes/island.tscn")
 
 func dialogue(v: Dictionary) -> void:
 	if map_id == Maps.MAP02 and v.guest.id == NordicEvent.SANTA_ID:
