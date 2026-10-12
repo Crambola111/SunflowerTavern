@@ -29,7 +29,7 @@ var stolen_coins := 0
 var started := false
 var paused := false
 var ended := false
-var message := "欢迎来到南风岛。开始营业后，面向客人接单。"
+var message := "欢迎来到椰风岛。开始营业后，面向客人接单。"
 var spawned := {}
 var settlement_claimed := false
 
@@ -190,7 +190,7 @@ func interact() -> void:
 				if v.patience <= 0:
 					miss(v)
 				else:
-					message = "饮品不对，耐心 -2 秒。杯子保留，订单仍显示在客人头顶。"
+					message = "饮品不对，耐心 -%d 秒。杯子保留，订单仍显示在客人头顶。" % int(wrong_cup_penalty)
 				return
 			hand = {}
 			v.delivered += 1
