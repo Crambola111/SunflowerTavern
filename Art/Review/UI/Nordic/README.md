@@ -28,6 +28,7 @@
 | `UI_Button_Ivory_Nordic_v1.png` | 象牙色次按钮底，文字运行时叠加 | Review |
 | `UI_Icon_Close_Nordic_v1.png` | 图鉴、装饰、结算共用关闭图标 | Review |
 | `UI_Icon_Coin_Nordic_v1.png` | 北欧金币图标，改为八角罗盘星压纹 | Review |
+| `UI_DialoguePanel_Nordic_v1.png` | 北欧底部对话面板；沿用第一关文字区与右侧选项区结构 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
 
