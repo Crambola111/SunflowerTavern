@@ -8,5 +8,8 @@
 | `Drink_MapleLatte_v1.png` | 雪顶枫糖拿铁 | Review |
 | `Drink_CloudberryPunch_v1.png` | 云莓热果饮 | Review |
 | `Drink_CardamomOatMilk_v1.png` | 豆蔻燕麦热乳 | Review |
+| `Drink_BirchHoneyTea_v1.png` | 白桦蜂蜜热茶 | Review |
 
 共同约束：单杯居中、真透明背景、无文字与边框；延续北欧确认稿的高饱和移动游戏质感，但四款杯型、轮廓和主色需能在订单气泡的小尺寸下区分。
+
+`白桦蜂蜜热茶` 为第8款北欧饮品候选：浅金热茶、白桦树皮杯套、青色编织纹与蜂蜜棒，补齐用户要求的北欧8款菜单数量。该饮品尚未绑定特定客人，遵循杯子按饮品类型通用的玩法规则。
