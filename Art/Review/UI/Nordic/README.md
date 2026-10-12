@@ -16,6 +16,12 @@
 | `UI_ShopItemCard_Nordic_v1.png` | 装饰商品卡；沿用第一关预览/数值/价格分区 | Review |
 | `UI_CodexPortraitSlot_Nordic_v1.png` | 图鉴头像槽；沿用第一关九宫格头像卡结构 | Review |
 | `UI_FavoriteDrinkCard_Nordic_v1.png` | 图鉴最爱饮品卡；沿用第一关图标/名称分区 | Review |
+| `UI_SettlementTitle_Nordic_v1.png` | 结算标题牌；沿用第一关宽木牌结构，标题运行时叠加 | Review |
+| `UI_StatRow_Nordic_v1.png` | 结算统计行；用于营业收入、服务客人、新增图鉴 | Review |
+| `UI_ShopSelectionFrame_Nordic_v1.png` | 装饰商品选中框；透明中心，不遮挡商品预览 | Review |
+| `UI_PricePlate_Nordic_v1.png` | 装饰价格牌；保留左侧金币图标位和右侧动态价格位 | Review |
+| `UI_CodexSelectionFrame_Nordic_v1.png` | 图鉴选中框；透明中心，套在头像槽之外 | Review |
+| `UI_CodexTag_Nordic_v1.png` | 图鉴属性标签；文字与图标运行时叠加 | Review |
 
 不包含中文、英文、数字或Logo，避免动态文字重复烘焙。
 
