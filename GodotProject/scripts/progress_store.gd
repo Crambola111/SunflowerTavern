@@ -81,6 +81,14 @@ func unlocked(day: int) -> bool:
 func can_enter(day: int) -> bool:
 	return Config.playable(day) and unlocked(day)
 
+func map_unlocked(map_id: String) -> bool:
+	return map_id == "southwind" or (map_id == "nordic" and cleared(4))
+
+func can_enter_map(map_id: String, day: int) -> bool:
+	if map_id == "southwind":
+		return can_enter(day)
+	return map_id == "nordic" and day == 1 and map_unlocked(map_id)
+
 func owns(index: int) -> bool:
 	return index >= 0 and index < 6 and data.decorations[index]
 
