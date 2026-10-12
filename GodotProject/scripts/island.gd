@@ -395,11 +395,15 @@ func refresh_seats(dt: float, hint: int) -> void:
 			Model.State.DRINKING: text = "饮用中"
 		if model.needs_cooling(v):
 			text += " · 降温 %ds" % ceili(v.heat_remaining)
+		if model.needs_warmth(v):
+			text += " · 保暖 %ds" % ceili(v.warmth_remaining)
 		seats[i].text = "P%d · %s\n%s" % [i, v.guest.name.split(" ")[0], text]
 		bars[i].visible = v.state != Model.State.DRINKING
 		var ratio: float = v.patience/(25.0*model.patience_multiplier)
 		if model.needs_cooling(v):
 			ratio = minf(ratio, v.heat_remaining/v.heat_limit)
+		if model.needs_warmth(v):
+			ratio = minf(ratio, v.warmth_remaining/v.warmth_limit)
 		bars[i].value = clampf(ratio,0,1)*100
 		bars[i].modulate = Color("ff563a") if ratio < 0.3 else Color("86d062")
 
