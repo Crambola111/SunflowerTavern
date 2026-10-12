@@ -3,10 +3,10 @@ extends RefCounted
 
 const Config = preload("res://scripts/day_config.gd")
 const VERSION := 2
-const PRICES := [30, 45, 60]
+const PRICES := [30, 45, 60, 80, 95, 110]
 var path: String
 var data := {"version": VERSION, "wallet": 0, "tip_remainder": 0.0, "tutorial_done": false,
-	"decorations": [false, false, false], "codex": [], "best": [[0,0],[0,0],[0,0],[0,0]],
+	"decorations": [false, false, false, false, false, false], "codex": [], "best": [[0,0],[0,0],[0,0],[0,0]],
 	"cleared": [[false,false],[false,false],[false,false],[false,false]]}
 var error := ""
 
@@ -18,6 +18,9 @@ func _init(save_path := "user://progress_v2.json") -> void:
 			error = "存档损坏或版本不受支持；原文件未修改。请备份后恢复存档。"
 			return
 		data = parsed
+		if data.decorations.size() == 3:
+			data.decorations.append_array([false, false, false])
+			save()
 
 func valid(value: Variant) -> bool:
 	if not value is Dictionary or not value.has_all(data.keys()):
@@ -26,7 +29,7 @@ func valid(value: Variant) -> bool:
 		return false
 	if not number(value.tip_remainder) or value.tip_remainder < 0 or value.tip_remainder >= 1:
 		return false
-	if not value.tutorial_done is bool or not value.codex is Array or not value.decorations is Array or value.decorations.size() != 3:
+	if not value.tutorial_done is bool or not value.codex is Array or not value.decorations is Array or not [3, 6].has(value.decorations.size()):
 		return false
 	for owned in value.decorations:
 		if not owned is bool:
@@ -79,7 +82,7 @@ func can_enter(day: int) -> bool:
 	return Config.playable(day) and unlocked(day)
 
 func owns(index: int) -> bool:
-	return index >= 0 and index < 3 and data.decorations[index]
+	return index >= 0 and index < 6 and data.decorations[index]
 
 func unlock(id: String) -> void:
 	if Config.GUESTS.data.has(id) and not data.codex.has(id):
