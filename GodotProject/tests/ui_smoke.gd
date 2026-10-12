@@ -25,6 +25,15 @@ func run() -> void:
 	ui.reset_day()
 	ui.welcome()
 	check(ui.modal != null and ui.model.paused,"Welcome pauses game")
+	var welcome_labels := ui.modal.find_children("*", "Label", true, false)
+	check(welcome_labels.size() > 0, "Welcome panel contains readable labels")
+	for welcome_label in welcome_labels:
+		check(welcome_label.get_theme_color("font_color").v < 0.5, "Welcome panel uses dark high-contrast text")
+	var breath_before := ui.sunny.scale
+	ui.close_modal()
+	ui._process(0.5)
+	check(ui.sunny.scale != breath_before, "Sunny idle has a restrained breathing motion")
+	ui.welcome()
 	for asset in ui.art.UI_REGIONS:
 		var atlas = ui.art.ui_texture(asset)
 		check(atlas.atlas != null and Rect2(Vector2.ZERO, atlas.atlas.get_size()).encloses(atlas.region), "Approved UI atlas loads within original: " + asset)
