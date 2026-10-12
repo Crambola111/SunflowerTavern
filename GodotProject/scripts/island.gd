@@ -561,17 +561,30 @@ func codex(selected: int) -> void:
 	label(modal,Vector2(1060,610),Vector2(420,170),g.bio+"\n喜欢："+g.drink+(" × %d" % g.cups if g.cups > 1 else "") if unlocked else "完成服务并收钱，解锁人物小传。\n更多客人将在后续营业日登场。",23)
 
 func settlement() -> void:
-	open_modal("今日打烊 · 目标达成" if model.passed() else "今日打烊 · 再试一次")
-	label(modal,Vector2(800,410),Vector2(950,230),"%s模式 · 营业收入 %d / %d\n服务 %d 位 · 漏单 %d 次 · 最佳连击 %d\n%s\n金币已入账 · 钱包 %d\n%s" % ["辅助" if assisted else "标准",model.coins,model.day.target,model.served,model.missed,model.best_combo,"目标达成，可选择已解锁营业日" if model.passed() else "还差 %d 金币；重试保留钱包、装饰和图鉴" % maxi(0,model.day.target-model.coins),progress.data.wallet,record_text()],22)
-	button(modal,Vector2(470,590),Vector2(260,65),"装饰酒馆",shop)
-	button(modal,Vector2(800,590),Vector2(290,65),"同模式重玩当天",func(): restart(assisted))
-	button(modal,Vector2(1130,590),Vector2(290,65),"标准模式重试" if assisted else "辅助模式重试",func(): restart(not assisted))
+	var passed := model.passed()
+	open_modal("")
+	var frame := card(modal, Vector2(800, 470), Vector2(1250, 680))
+	frame.name = "VictorySettlementPanel"
+	texture(modal, Vector2(800, 212), Vector2(1050, 110), art.texture("UI_VictoryFloralHeader_Southwind_v1"))
+	label(modal, Vector2(800, 247), Vector2(760, 66), "目标达成" if passed else "今日打烊", 42)
+	var character_asset := "Sunny_Southwind_Victory_v1" if passed else "Sunny_Chibi"
+	texture(modal, Vector2(410, 495), Vector2(350, 500), art.texture(character_asset))
+	if passed:
+		texture(modal, Vector2(1095, 382), Vector2(185, 140), art.texture("UI_VictoryCoinBurst_Southwind_v1"))
+	label(modal, Vector2(800, 330), Vector2(420, 38), "%s模式 · 椰风岛 · 第%d天" % ["辅助" if assisted else "标准", current_day], 20)
+	var summary := "营业收入    %d / %d\n服务客人    %d\n已收录图鉴  %d\n最佳连击    %d" % [model.coins, model.day.target, model.served, model.codex.size(), model.best_combo]
+	label(modal, Vector2(930, 490), Vector2(470, 220), summary, 24)
+	label(modal, Vector2(930, 625), Vector2(470, 44), "金币已入账 · 钱包 %d" % progress.data.wallet, 20)
+	label(modal, Vector2(930, 675), Vector2(470, 38), "目标达成，可进入下一天" if passed else "还差 %d 金币；重试保留钱包、装饰和图鉴" % maxi(0, model.day.target-model.coins), 17)
+	button(modal, Vector2(470, 760), Vector2(250, 58), "装饰酒馆", shop)
+	button(modal, Vector2(800, 760), Vector2(280, 58), "同模式重玩当天", func(): restart(assisted))
+	button(modal, Vector2(1130, 760), Vector2(250, 58), "标准模式重试" if assisted else "辅助模式重试", func(): restart(not assisted))
 	if progress.can_enter(current_day+1):
-		button(modal,Vector2(970,675),Vector2(290,55),"进入第%d天" % (current_day+1),func(): choose_day(current_day+1))
+		button(modal, Vector2(970, 825), Vector2(280, 50), "进入第%d天" % (current_day+1), func(): choose_day(current_day+1))
 	if current_day > 1:
-		button(modal,Vector2(620,675),Vector2(290,55),"返回第%d天" % (current_day-1),func(): choose_day(current_day-1))
+		button(modal, Vector2(620, 825), Vector2(280, 50), "返回第%d天" % (current_day-1), func(): choose_day(current_day-1))
 	if current_day == 3:
-		label(modal,Vector2(975,675),Vector2(350,50),"第4天尚未开放",20)
+		label(modal, Vector2(975, 825), Vector2(350, 42), "第4天尚未开放", 18)
 
 func shop() -> void:
 	open_modal("装饰酒馆 · 钱包 %d" % progress.data.wallet)
