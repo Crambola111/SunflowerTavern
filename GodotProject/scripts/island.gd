@@ -680,7 +680,7 @@ func active_best(day: int, mode: int) -> int:
 
 func record_active_day(income: int) -> void:
 	if map_id == Maps.MAP02:
-		var recorded := map_progress.record(current_day, income, model.day.target, model.assisted)
+		var recorded: bool = map_progress.record(current_day, income, model.day.target, model.assisted)
 		if recorded:
 			progress.deposit_income(income + NordicEvent.reward(model.codex, model.passed()))
 	else:
