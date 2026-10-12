@@ -44,6 +44,7 @@ var toast_panel: Panel
 var selection: Label
 var action: Button
 var discard: Button
+var campfire_button: Button
 var sunny: TextureRect
 var held_icon: TextureRect
 var seats: Array[Button] = []
@@ -127,6 +128,8 @@ func _ready() -> void:
 	round_button(Vector2(1520,48), "Ⅱ", pause_game)
 	round_button(Vector2(100,835), "图鉴", func(): codex(0))
 	round_button(Vector2(205,835), "装饰", shop)
+	if map_id == Maps.MAP02:
+		campfire_button = button(self, Vector2(315,835), Vector2(150,58), "篝火升温", use_campfire)
 	round_button(Vector2(1290,835), "←", func(): turn(-1))
 	action = button(self, Vector2(1400,816), Vector2(92,92), "互动", interact)
 	round_button(Vector2(1510,835), "→", func(): turn(1))
@@ -323,6 +326,11 @@ func interact() -> void:
 		service_pulse = 0.32
 		serve_time = 0.36 if lime else 0.0
 
+func use_campfire() -> void:
+	if not can_input() or model == null or map_id != Maps.MAP02:
+		return
+	model.use_campfire()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo or fatal:
 		return
@@ -409,6 +417,9 @@ func _process(delta: float) -> void:
 		queue_label.text = "点击客位转向，再次点击互动"
 		brew_progress.visible = false
 	discard.disabled = not can_input() or (model.hand.is_empty() and model.ready.is_empty())
+	if campfire_button != null:
+		campfire_button.disabled = not can_input() or not model.campfire_ready()
+		campfire_button.text = "篝火升温" if model.campfire_ready() else "篝火 %.0fs" % model.campfire_cooldown
 	held_icon.texture = art.drink(model.hand.get("drink", ""))
 	ready_icon.texture = art.drink(model.ready.get("drink", ""))
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
