@@ -13,6 +13,9 @@ var ready: Dictionary = {}
 var hand: Dictionary = {}
 var elapsed := 0.0
 var patience_multiplier := 1.0
+var patience_bonus := 0.0
+var wrong_cup_penalty := 2.0
+var combo_reward_cap := 5
 var brew_speed := 1.0
 var tip_multiplier := 1.0
 var tip_remainder := 0.0
@@ -67,7 +70,7 @@ func collect_bill(seat: int) -> void:
 	bills.erase(seat)
 	combo += 1
 	best_combo = maxi(combo, best_combo)
-	var gain: int = int(bill.base + bill.tip) + mini(5, maxi(0, combo - 2))
+	var gain: int = int(bill.base + bill.tip) + mini(combo_reward_cap, maxi(0, combo - 2))
 	tip_remainder += bill.tip * maxf(0, tip_multiplier - 1)
 	var extra := int(floor(tip_remainder))
 	tip_remainder -= extra
@@ -182,7 +185,7 @@ func interact() -> void:
 				message = v.guest.name + "：" + order_text(v)
 				return
 			if not accepts(v, hand):
-				v.patience = maxf(0, v.patience - 2)
+				v.patience = maxf(0, v.patience - wrong_cup_penalty)
 				v.bubble = 2.5
 				if v.patience <= 0:
 					miss(v)
@@ -249,7 +252,7 @@ func tick(dt: float) -> void:
 		if seat == 0:
 			continue
 		var v := {"id": i, "seat": seat, "blocked": 0, "guest": Config.guest(arrival.guest, arrival.time >= day.duration * 0.5),
-			"state": State.ORDER, "patience": 25.0 * patience_multiplier, "timer": 0.0, "bubble": 2.5,
+			"state": State.ORDER, "patience": 25.0 * patience_multiplier + patience_bonus, "timer": 0.0, "bubble": 2.5,
 			"tip": 0, "delivered": 0, "tank_ready": false, "gecko_attempted": false, "gecko_wait": 0.0,
 			"mimi_attempted": false, "mimi_away": 0.0, "mimi_warning_time": 0.0, "heat_limit": 0.0, "heat_remaining": 0.0}
 		if v.guest.id == "snowy":
