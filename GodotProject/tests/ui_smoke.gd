@@ -23,6 +23,7 @@ func run() -> void:
 	root.add_child(ui)
 	ui.progress = Progress.new(path)
 	ui.reset_day()
+	check(ui.has_method("santa_dialogue"), "Nordic surprise guest exposes a three-beat event dialogue")
 	check(not ui.tutorial and not ui.tutorial_panel.visible, "Tutorial is opt-in and hidden by default")
 	ui.welcome()
 	check(ui.modal != null and ui.model.paused,"Welcome pauses game")
