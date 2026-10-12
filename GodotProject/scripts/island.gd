@@ -17,6 +17,7 @@ var progress: RefCounted
 var art := Art.new()
 var current_day := 1
 var assisted := false
+var decor_shop_page := 0
 var modal: Control
 var hud: Label
 var income_label: Label
@@ -631,21 +632,60 @@ func settlement() -> void:
 		label(modal, Vector2(800, 825), Vector2(700, 50), "第一地图完成！下一站：北欧极光峡湾", 20)
 
 func shop() -> void:
-	open_modal("装饰酒馆 · 钱包 %d" % progress.data.wallet)
+	decor_shop_page = 0
+	decor_shop_page_view()
+
+func decor_shop_page_view() -> void:
+	close_modal()
+	model.paused = true
+	modal = Control.new()
+	modal.name = "DecorShop"
+	modal.size = Vector2(1600,900)
+	modal.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(modal)
+	var shade := ColorRect.new()
+	place(shade, modal, Vector2(800,450), Vector2(1600,900))
+	shade.color = Color(0,0,0,0.10)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture(modal, Vector2(1250,450), Vector2(650,900), art.decor_ui("panel"))
+	button(modal, Vector2(1490,83), Vector2(64,64), "×", close_modal)
+	label(modal, Vector2(1250,83), Vector2(390,58), "装饰酒馆", 34)
+	label(modal, Vector2(1250,166), Vector2(370,48), "金币  %d" % progress.data.wallet, 26)
 	var preview_slots := ["chair", "lighting", "counter", "railing", "table", "deck"]
 	var preview_names := ["贝壳藤编软椅", "海岛贝壳灯具", "浅海玻璃吧台", "漂流木贝壳栏杆", "浅海波纹客桌", "海岸贝母地板"]
-	var preview_effects := ["初始耐心 +5%", "小费 +5%", "制作速度 +5%", "耐心 +2 秒", "错杯惩罚 -1 秒", "连击收益上限 +1"]
-	for i in 6:
-		var slot: String = preview_slots[i]
-		texture(modal,Vector2(420,335+i*72),Vector2(78,62),art.decor(slot))
-		label(modal,Vector2(720,335+i*72),Vector2(520,62),preview_names[i]+"\n"+preview_effects[i],18)
-		var index := i
-		var b := button(modal,Vector2(1150,335+i*72),Vector2(220,52),"已拥有" if progress.owns(i) else "%d 金币" % Progress.PRICES[i],func():
+	var preview_effects := ["客人耐心 +5%", "小费 +5%", "制作速度 +5%", "耐心 +2 秒", "错杯惩罚 -1 秒", "连击收益上限 +1"]
+	var card_x := [1050.0, 1250.0, 1450.0]
+	var card_y := 385.0
+	for i in 3:
+		var index := decor_shop_page * 3 + i
+		if index >= preview_slots.size():
+			continue
+		var slot: String = preview_slots[index]
+		var cx := card_x[i]
+		texture(modal, Vector2(cx, card_y), Vector2(180,470), art.decor_ui("card"))
+		texture(modal, Vector2(cx, 315), Vector2(145,145), art.decor(slot))
+		label(modal, Vector2(cx, 205), Vector2(175,38), preview_names[index], 18)
+		label(modal, Vector2(cx, 515), Vector2(175,58), preview_effects[index], 17)
+		var owned := progress.owns(index)
+		var buy_text := "已拥有" if owned else "%d 金币" % Progress.PRICES[index]
+		texture(modal, Vector2(cx, 645), Vector2(176,58), art.decor_ui("purchase_button"))
+		var buy := button(modal, Vector2(cx,645), Vector2(176,58), "", func():
 			if progress.purchase(index):
 				bonuses()
-			shop())
-		b.disabled = progress.owns(i) or progress.data.wallet < Progress.PRICES[i]
-	label(modal,Vector2(800,790),Vector2(960,42),"六类装修购买后会替换场景中的对应物件；旧三槽存档自动迁移为六槽。",17)
+			decor_shop_page_view())
+		for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+			buy.add_theme_stylebox_override(state, StyleBoxEmpty.new())
+		buy.add_theme_color_override("font_color", Color.TRANSPARENT)
+		label(modal, Vector2(cx,645), Vector2(160,42), buy_text, 19)
+		buy.disabled = owned or progress.data.wallet < Progress.PRICES[index]
+	label(modal, Vector2(1250,760), Vector2(390,34), "购买后会立即替换场景中的对应物件", 17)
+	label(modal, Vector2(1250,798), Vector2(180,30), "%d / 2" % (decor_shop_page+1), 16)
+	button(modal, Vector2(1070,798), Vector2(58,44), "‹", func():
+		decor_shop_page = posmod(decor_shop_page-1, 2)
+		decor_shop_page_view())
+	button(modal, Vector2(1430,798), Vector2(58,44), "›", func():
+		decor_shop_page = posmod(decor_shop_page+1, 2)
+		decor_shop_page_view())
 
 func open_modal(title: String, book := false) -> void:
 	close_modal()
