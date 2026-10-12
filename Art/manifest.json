@@ -1780,8 +1780,9 @@
       255
     ],
     "sha256": "dab6256f55cc4775af54bca144310dbadb9e5ede881d4012fb5c80828a11fae4",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Close_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Lock_Southwind_v1.png",
@@ -1795,8 +1796,9 @@
       255
     ],
     "sha256": "a170dcbc8ef66be124d5fa54d19526114dc78a889f8703d5eea25064dae8bbad",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Lock_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_Icon_Coin_Southwind_v1.png",
@@ -1810,8 +1812,9 @@
       255
     ],
     "sha256": "feccafbe5193dd9dd07c6e380b6fb14d6327a2018f1e8543e3938ae3ae7efd9d",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_Icon_Coin_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_QueuePanel_Southwind_v1.png",
@@ -1825,8 +1828,9 @@
       255
     ],
     "sha256": "3d96cdeda34cb602bbfdaababd01040c7baf2bb18037a3acb1908688cf722547",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_QueuePanel_Southwind_v1.png"
   },
   {
     "path": "Art/Review/UI/Southwind/UI_DrinkSlot_Southwind_v1.png",
@@ -1840,7 +1844,808 @@
       255
     ],
     "sha256": "24875786d75a74ad6564944e7d3d7f55b8e0f35c68885d1a9a1f25ddcfbe2b86",
-    "status": "uploaded_for_review_not_runtime_integrated",
-    "usage": "ui_overlay"
+    "status": "review_copy_superseded_by_approved",
+    "usage": "ui_overlay",
+    "approved_path": "Art/Approved/UI/Southwind/UI_DrinkSlot_Southwind_v1.png"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Badge_GoalRetry_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "c7d8edf772791ec8694a3935445f4372160b314f1506a10157b668ff6758ee3c",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Badge_GoalRetry_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "c7d8edf772791ec8694a3935445f4372160b314f1506a10157b668ff6758ee3c",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Badge_GoalSuccess_Southwind_v1.png",
+    "size": [
+      1278,
+      1230
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "ca8b3242218b98332403d7b8e58d8bcaf99c9f9a8cb119a96a9e2c26584ba657",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Badge_GoalSuccess_Southwind_v1.png",
+    "size": [
+      1278,
+      1230
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "ca8b3242218b98332403d7b8e58d8bcaf99c9f9a8cb119a96a9e2c26584ba657",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_BrewingBadge_Southwind_v1.png",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "987d37b2f92f1c75989b7cf4ba1ae465dad9dadd0a6502f3e141a65f9f19eaeb",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_BrewingBadge_Southwind_v1.png",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "987d37b2f92f1c75989b7cf4ba1ae465dad9dadd0a6502f3e141a65f9f19eaeb",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Button_Ivory_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "b6bec8cf99bbf1930de8726d40d0d244e975c7c4bc07e1052a642d324821e10d",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Button_Ivory_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "b6bec8cf99bbf1930de8726d40d0d244e975c7c4bc07e1052a642d324821e10d",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Button_Teal_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9debca049791eced9dc93e32c2acd4e32ea05ba12d07da4fc7917ced897ac200",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Button_Teal_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9debca049791eced9dc93e32c2acd4e32ea05ba12d07da4fc7917ced897ac200",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_CodexPortraitSlot_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "289c3b43889cea9a68af74b259668d191432ac803e77546255976c44511a875b",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_CodexPortraitSlot_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "289c3b43889cea9a68af74b259668d191432ac803e77546255976c44511a875b",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_CodexSelectionFrame_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9eb1504aa2978118d45ddc068c2dbe493e4b87a318a4918a6b2661cd65fc3c19",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_CodexSelectionFrame_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9eb1504aa2978118d45ddc068c2dbe493e4b87a318a4918a6b2661cd65fc3c19",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_CodexTag_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "ab33d12fd0dcee5442d39c88088f162f1174f3e086524e8644998d3eb11d1f75",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_CodexTag_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "ab33d12fd0dcee5442d39c88088f162f1174f3e086524e8644998d3eb11d1f75",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_DialogueNamePlate_Southwind_v1.png",
+    "size": [
+      2060,
+      763
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9a9f51311781ab416a004e0f41485c79837aab55bbd5edccebbffcbaac846703",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_DialogueNamePlate_Southwind_v1.png",
+    "size": [
+      2060,
+      763
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9a9f51311781ab416a004e0f41485c79837aab55bbd5edccebbffcbaac846703",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_DrinkSlot_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "24875786d75a74ad6564944e7d3d7f55b8e0f35c68885d1a9a1f25ddcfbe2b86",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_DrinkSlot_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "24875786d75a74ad6564944e7d3d7f55b8e0f35c68885d1a9a1f25ddcfbe2b86",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_FavoriteDrinkCard_Southwind_v1.png",
+    "size": [
+      1086,
+      1448
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "8d1feb6cc4fc35821e519eb25eb4c3525e79c4757d17fa0eec7f10ed6b778c01",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_FavoriteDrinkCard_Southwind_v1.png",
+    "size": [
+      1086,
+      1448
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "8d1feb6cc4fc35821e519eb25eb4c3525e79c4757d17fa0eec7f10ed6b778c01",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Bonus_Southwind_v1.png",
+    "size": [
+      1374,
+      1145
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "1ea72266b77e940ceb33110c93d557d53d00b41cfbec2a1f93a637eb81732510",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Icon_Bonus_Southwind_v1.png",
+    "size": [
+      1374,
+      1145
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "1ea72266b77e940ceb33110c93d557d53d00b41cfbec2a1f93a637eb81732510",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Close_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "dab6256f55cc4775af54bca144310dbadb9e5ede881d4012fb5c80828a11fae4",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Icon_Close_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "dab6256f55cc4775af54bca144310dbadb9e5ede881d4012fb5c80828a11fae4",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Coin_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "feccafbe5193dd9dd07c6e380b6fb14d6327a2018f1e8543e3938ae3ae7efd9d",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Icon_Coin_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "feccafbe5193dd9dd07c6e380b6fb14d6327a2018f1e8543e3938ae3ae7efd9d",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_DialogueSkip_Southwind_v1.png",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "c8107bbc62ec58eead395fde92f4b210f5094be47f690ddf78f4cebc65626ad0",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Icon_DialogueSkip_Southwind_v1.png",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "c8107bbc62ec58eead395fde92f4b210f5094be47f690ddf78f4cebc65626ad0",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_Icon_Lock_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "a170dcbc8ef66be124d5fa54d19526114dc78a889f8703d5eea25064dae8bbad",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_Icon_Lock_Southwind_v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "a170dcbc8ef66be124d5fa54d19526114dc78a889f8703d5eea25064dae8bbad",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_PricePlate_Southwind_v1.png",
+    "size": [
+      2098,
+      749
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "aba54e4e7fb229afc71efb4516ce1ec71e72c37758d5777401667fa297a0606b",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_PricePlate_Southwind_v1.png",
+    "size": [
+      2098,
+      749
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "aba54e4e7fb229afc71efb4516ce1ec71e72c37758d5777401667fa297a0606b",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_QueuePanel_Southwind_v1.png",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3d96cdeda34cb602bbfdaababd01040c7baf2bb18037a3acb1908688cf722547",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_QueuePanel_Southwind_v1.png",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3d96cdeda34cb602bbfdaababd01040c7baf2bb18037a3acb1908688cf722547",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_SettlementPanel_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "29ed237c46bc78b37f9cf020274ee841d7bfce714cad75d4b96b6256f933b14e",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_SettlementPanel_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "29ed237c46bc78b37f9cf020274ee841d7bfce714cad75d4b96b6256f933b14e",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_SettlementTitle_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "240d54489567626bb1f470465138fbb0930cb8bec7d8349e38355f15865d4338",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_SettlementTitle_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "240d54489567626bb1f470465138fbb0930cb8bec7d8349e38355f15865d4338",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_ShopItemCard_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "39fc468113f48918828571346b373c4ccae3c01fd40fc518ba9c5f885a64bc03",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ShopItemCard_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "39fc468113f48918828571346b373c4ccae3c01fd40fc518ba9c5f885a64bc03",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_ShopSelectionFrame_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "38bb76bc8fcd75f1e6d4319b8dce419d94d29a195486bbc17c17146b06f861bf",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ShopSelectionFrame_Southwind_v1.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "38bb76bc8fcd75f1e6d4319b8dce419d94d29a195486bbc17c17146b06f861bf",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_ShopSidebar_Southwind_v1.png",
+    "size": [
+      971,
+      1619
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "0e8578388c6777a4ff4f37fc1fc4843871f3c67a9b2bc13fd78b264885fd97c7",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ShopSidebar_Southwind_v1.png",
+    "size": [
+      971,
+      1619
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "0e8578388c6777a4ff4f37fc1fc4843871f3c67a9b2bc13fd78b264885fd97c7",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_StatRow_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9c26db84ae85b4ac39b2b145222f61c83d9ab917eabe68db9c5f8a4957df678a",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_StatRow_Southwind_v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "9c26db84ae85b4ac39b2b145222f61c83d9ab917eabe68db9c5f8a4957df678a",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "Art/Approved/UI/Southwind/UI_ToastPanel_Southwind_v1.png",
+    "size": [
+      2057,
+      764
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3cfcbe8bd816b277ffc339f6a146d755cd3d70926ee52e41915b6396fab75508",
+    "status": "user_approved_godot_runtime_integrated",
+    "usage": "approved_source",
+    "approval_date": "2026-10-12"
+  },
+  {
+    "path": "GodotProject/assets/ui/southwind/UI_ToastPanel_Southwind_v1.png",
+    "size": [
+      2057,
+      764
+    ],
+    "mode": "RGBA",
+    "alpha": [
+      0,
+      255
+    ],
+    "sha256": "3cfcbe8bd816b277ffc339f6a146d755cd3d70926ee52e41915b6396fab75508",
+    "status": "godot_runtime_integrated_pending_visual_qa",
+    "usage": "ui_runtime",
+    "approval_date": "2026-10-12"
   }
 ]
