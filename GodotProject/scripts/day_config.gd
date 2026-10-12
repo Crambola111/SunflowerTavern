@@ -13,10 +13,10 @@ static func guest(id: String, night := false) -> Dictionary:
 	return g
 
 static func available_guests() -> Array:
-	return ["bobo", "coco", "horn", "tank", "gecko", "mimi", "spf8"]
+	return ["bobo", "coco", "horn", "tank", "gecko", "mimi", "spf8", "snowy", "jiwoo"]
 
 static func playable(day: int) -> bool:
-	return day >= 1 and day <= 3
+	return day >= 1 and day <= 4
 
 static func for_day(day: int) -> Dictionary:
 	assert(playable(day), "Day not implemented")
