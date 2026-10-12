@@ -34,6 +34,8 @@ var ended := false
 var message := "欢迎来到椰风岛。开始营业后，面向客人接单。"
 var spawned := {}
 var settlement_claimed := false
+var campfire_cooldown := 0.0
+var campfire_uses := 0
 
 func _init(config: Dictionary = {}, use_assistance := false) -> void:
 	day = Config.for_day(1) if config.is_empty() else config.duplicate(true)
@@ -138,6 +140,38 @@ func needs_cooling(v: Dictionary) -> bool:
 func needs_warmth(v: Dictionary) -> bool:
 	return map_id == Nordic.MAP_ID and Nordic.warmth_required(v.guest.id) and v.state in [State.ORDER, State.WAITING]
 
+func campfire_ready() -> bool:
+	return map_id == Nordic.MAP_ID and started and not paused and not ended and campfire_cooldown <= 0.0
+
+func use_campfire() -> bool:
+	if map_id != Nordic.MAP_ID or not started or paused or ended:
+		return false
+	if campfire_cooldown > 0.0:
+		message = "篝火还在升温，%.0f 秒后可以再添柴。" % campfire_cooldown
+		return false
+	var warmed := 0
+	for v in visitors:
+		if not needs_warmth(v):
+			continue
+		v.warmth_remaining = minf(v.warmth_limit, v.warmth_remaining + Nordic.CAMPFIRE_WARMTH)
+		warmed += 1
+	campfire_cooldown = Nordic.CAMPFIRE_COOLDOWN
+	campfire_uses += 1
+	message = "篝火添柴成功，%d 位客人暖和了！" % warmed if warmed > 0 else "篝火添柴成功，但现在没有需要保暖的客人。"
+	return true
+
+func apply_nordic_drink_effect(v: Dictionary, drink: String) -> String:
+	if map_id != Nordic.MAP_ID:
+		return ""
+	var effect := Nordic.drink_effect(v.guest.id, drink)
+	if effect == "warmth":
+		v.warmth_remaining = minf(v.warmth_limit, v.warmth_remaining + Nordic.HOT_DRINK_WARMTH)
+		return "%s 喝到热饮，保暖 +%d 秒" % [v.guest.name, Nordic.HOT_DRINK_WARMTH]
+	if effect == "refresh":
+		v.patience = minf(25.0 * patience_multiplier, v.patience + Nordic.COLD_DRINK_PATIENCE)
+		return "%s 喝到冰饮，耐心 +%d 秒" % [v.guest.name, Nordic.COLD_DRINK_PATIENCE]
+	return ""
+
 func mimi_warning(v: Dictionary) -> bool:
 	return v.guest.id == "mimi" and v.state == State.WAITING and not v.mimi_attempted and v.mimi_away >= 3
 
@@ -199,6 +233,7 @@ func interact() -> void:
 				else:
 					message = "饮品不对，耐心 -%d 秒。杯子保留，订单仍显示在客人头顶。" % int(wrong_cup_penalty)
 				return
+			var effect_text := apply_nordic_drink_effect(v, hand.drink)
 			hand = {}
 			v.delivered += 1
 			reconcile_queue()
@@ -209,7 +244,8 @@ func interact() -> void:
 			v.tip = 3 if v.patience >= 17.5 else (1 if v.patience >= 7.5 else 0)
 			v.state = State.DRINKING
 			v.timer = 2.0
-			message = "Snowy：终于从雪水切回雪人模式了。喝完记得收钱！" if v.guest.id == "snowy" else "送达！喝完之后记得收钱。"
+			var delivered_text := "Snowy：终于从雪水切回雪人模式了。喝完记得收钱！" if v.guest.id == "snowy" else "送达！喝完之后记得收钱。"
+			message = effect_text + "。" if not effect_text.is_empty() else delivered_text
 		_:
 			message = "客人正在喝饮品。"
 
@@ -233,6 +269,7 @@ func update(delta: float) -> void:
 
 func tick(dt: float) -> void:
 	elapsed = minf(day.duration, elapsed + dt)
+	campfire_cooldown = maxf(0.0, campfire_cooldown - dt)
 	# Stable two-pass ordering: due Jiwoo reservations before ordinary arrivals.
 	var indices: Array = range(day.arrivals.size())
 	var surprise_due := func(i): return not spawned.has(i) and elapsed >= day.arrivals[i].time and day.arrivals[i].guest == "jiwoo"
