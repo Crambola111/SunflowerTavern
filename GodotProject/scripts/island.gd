@@ -32,6 +32,8 @@ var action_caption: Label
 var bubbles: Array[TextureRect] = []
 var status: Label
 var queue_label: Label
+var brew_progress: ProgressBar
+var ready_icon: TextureRect
 var tutorial_label: Label
 var tutorial_panel: Panel
 var toast: Label
@@ -50,7 +52,7 @@ var visit_ids := {}
 var visibility := {}
 var bubble_labels: Array[Label] = []
 var arrival_time := 0.0
-var tutorial := true
+var tutorial := false
 var tutorial_baseline := 0
 var tutorial_time := 0.0
 var focus_paused := false
@@ -131,14 +133,25 @@ func _ready() -> void:
 	action_caption = label(self, Vector2(1400,878), Vector2(180,30), "", 18)
 	card(self, Vector2(1400,748), Vector2(300,46))
 	selection = label(self, Vector2(1400,748), Vector2(280,34), "", 18)
-	art_panel(self, Vector2(800,845), Vector2(780,82), "UI_QueuePanel_Southwind_v1", 34, 24)
-	art_panel(self, Vector2(800,807), Vector2(250,36), "UI_BrewingBadge_Southwind_v1", 24, 14)
-	queue_label = label(self, Vector2(837,827), Vector2(650,32), "", 19)
-	texture(self, Vector2(455,827), Vector2(52,52), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
-	held_icon = texture(self, Vector2(455,827), Vector2(38,38), null)
-	status = label(self, Vector2(800,863), Vector2(740,30), "", 17)
-	tutorial_panel = art_panel(self, Vector2(800,781), Vector2(780,40), "UI_ToastPanel_Southwind_v1", 28, 18)
-	tutorial_label = label(self, Vector2(800,781), Vector2(755,36), "", 18)
+	# Centered production dock: title, live brew progress, held/ready slots, and status.
+	art_panel(self, Vector2(800,805), Vector2(620,155), "UI_QueuePanel_Southwind_v1", 34, 24)
+	art_panel(self, Vector2(800,744), Vector2(250,36), "UI_BrewingBadge_Southwind_v1", 24, 14)
+	label(self, Vector2(800,744), Vector2(560,30), "制作中", 20)
+	queue_label = label(self, Vector2(800,770), Vector2(560,30), "", 18)
+	brew_progress = ProgressBar.new()
+	place(brew_progress, self, Vector2(800,800), Vector2(450,12))
+	brew_progress.min_value = 0
+	brew_progress.max_value = 100
+	brew_progress.show_percentage = false
+	brew_progress.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	texture(self, Vector2(650,840), Vector2(64,64), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
+	held_icon = texture(self, Vector2(650,840), Vector2(46,46), null)
+	texture(self, Vector2(800,840), Vector2(64,64), art.ui_texture("UI_DrinkSlot_Southwind_v1"))
+	ready_icon = texture(self, Vector2(800,840), Vector2(46,46), null)
+	label(self, Vector2(950,840), Vector2(180,42), "空槽 · 可继续制作", 15)
+	status = label(self, Vector2(800,881), Vector2(560,28), "", 16)
+	tutorial_panel = art_panel(self, Vector2(800,700), Vector2(620,42), "UI_ToastPanel_Southwind_v1", 28, 18)
+	tutorial_label = label(self, Vector2(800,700), Vector2(600,36), "", 17)
 	toast_panel = art_panel(self, Vector2(280,140), Vector2(500,74), "UI_ToastPanel_Southwind_v1", 28, 18)
 	toast = label(self, Vector2(280,140), Vector2(480,70), "", 21)
 	discard = button(self, Vector2(1120,730), Vector2(160,42), "清理成品", confirm_discard)
@@ -168,7 +181,10 @@ func reset_day() -> void:
 	previous_missed = 0
 	feedback_time = 0
 	feedback = ""
-	tutorial = not progress.data.tutorial_done
+	# Tutorial is opt-in from the pause/help menu; gameplay starts clean.
+	tutorial = false
+	tutorial_panel.visible = false
+	tutorial_label.visible = false
 	tutorial_baseline = 0
 	tutorial_time = 0
 	close_modal()
@@ -323,14 +339,20 @@ func _process(delta: float) -> void:
 	status.text = feedback if feedback_time > 0 else model.message
 	if not model.hand.is_empty():
 		queue_label.text = "手持：%s · 同款可互送" % model.hand.drink
+		brew_progress.visible = false
 	elif not model.ready.is_empty():
 		queue_label.text = "已做好：%s · 面向出酒口取杯" % model.ready.drink
+		brew_progress.visible = false
 	elif not model.queue.is_empty():
 		queue_label.text = "制作：%s  %.1fs  | 排队 %d" % [model.queue[0].drink, model.queue[0].remaining, model.queue.size()]
+		brew_progress.visible = true
+		brew_progress.value = clampf((1.0 - model.queue[0].remaining / maxf(0.01, model.queue[0].duration)) * 100.0, 0.0, 100.0)
 	else:
 		queue_label.text = "点击客位转向，再次点击互动"
+		brew_progress.visible = false
 	discard.disabled = not can_input() or (model.hand.is_empty() and model.ready.is_empty())
 	held_icon.texture = art.drink(model.hand.get("drink", ""))
+	ready_icon.texture = art.drink(model.ready.get("drink", ""))
 	icons[0].texture = art.drink(model.ready.get("drink", ""))
 	var hint: Dictionary = model.service_hint()
 	tutorial_label.visible = tutorial and not model.ended and modal == null
