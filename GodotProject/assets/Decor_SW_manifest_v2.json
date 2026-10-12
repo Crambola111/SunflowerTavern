@@ -2,7 +2,7 @@
   "version": 2,
   "map": "southwind",
   "approved_at": "2026-09-29 22:06 +08:00",
-  "integrated": false,
+  "integrated": true,
   "assets": [
     {
       "id": "Decor_SW_Counter_v2",
