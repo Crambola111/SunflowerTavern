@@ -1,0 +1,19 @@
+{
+  "map_id": "nordic",
+  "map_name": "北欧极光峡湾",
+  "shared_layout": "southwind",
+  "decorations": [
+    {"id":"lantern","asset":"Nordic_SnowRuneLantern_v1","name":"符文雪灯","price":40,"effect_type":"tip_multiplier","effect_value":0.05,"display":"小费 +5%"},
+    {"id":"tabletop","asset":"Nordic_KnotworkTabletop_v1","name":"蓝金结纹桌面","price":55,"effect_type":"wrong_cup_penalty","effect_value":-1.0,"display":"错杯惩罚 -1 秒"},
+    {"id":"chair_cover","asset":"Nordic_WoolChairCover_v1","name":"雪花羊毛椅套","price":65,"effect_type":"patience_multiplier","effect_value":0.05,"display":"客人耐心 +5%"},
+    {"id":"fir_planter","asset":"Nordic_FrostedFirPlanter_v1","name":"雪覆冷杉花盆","price":70,"effect_type":"patience_bonus","effect_value":2.0,"display":"候位 +2 秒"},
+    {"id":"centerpiece","asset":"Nordic_AuroraIceCenterpiece_v1","name":"极光冰晶桌饰","price":80,"effect_type":"combo_reward_cap","effect_value":1,"display":"连击上限 +1"},
+    {"id":"railing","asset":"Nordic_FjordRailing_v1","name":"峡湾绳索栏杆","price":95,"effect_type":"patience_bonus","effect_value":2.0,"display":"保暖耐心 +2 秒"},
+    {"id":"counter_front","asset":"Nordic_CounterFront_v1","name":"北境柜台饰板","price":60,"effect_type":"brew_speed","effect_value":0.05,"display":"制作速度 +5%"},
+    {"id":"aurora_pendant","asset":"Nordic_AuroraPendant_v1","name":"极光吊灯","price":75,"effect_type":"tip_multiplier","effect_value":0.03,"display":"小费 +3%"},
+    {"id":"menu_board","asset":"Nordic_MenuBoard_v1","name":"北欧菜单牌","price":85,"effect_type":"patience_multiplier","effect_value":0.03,"display":"点单耐心 +3%"},
+    {"id":"seat_cushion","asset":"Nordic_WoolSeatCushion_v1","name":"雪花羊毛坐垫","price":90,"effect_type":"patience_multiplier","effect_value":0.03,"display":"客人耐心 +3%"},
+    {"id":"snow_deck_trim","asset":"Nordic_SnowDeckTrim_v1","name":"雪覆甲板边条","price":100,"effect_type":"combo_reward_cap","effect_value":1,"display":"连击上限 +1"},
+    {"id":"ice_barrel_table","asset":"Nordic_IceBarrelTable_v1","name":"冰桶边桌","price":115,"effect_type":"wrong_cup_penalty","effect_value":-0.5,"display":"错杯惩罚 -0.5 秒"}
+  ]
+}
