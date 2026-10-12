@@ -362,7 +362,7 @@ func service_hint() -> Dictionary:
 		if needs_cooling(v) and v.heat_remaining <= 5 and hand.is_empty():
 			if v.state == State.ORDER:
 				return {"target": v.seat, "text": "Snowy快热化了！去 P%d 接单。" % v.seat}
-				if not ready.is_empty() and accepts(v, ready):
+			if not ready.is_empty() and accepts(v, ready):
 				return {"target": 0, "text": "去出酒口取杯，快给Snowy降温！"}
 	for v in visitors:
 		if needs_warmth(v) and v.warmth_remaining <= 5 and hand.is_empty():
