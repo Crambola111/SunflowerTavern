@@ -689,7 +689,16 @@ func settlement() -> void:
 	if current_day > 1:
 		button(modal, Vector2(620, 825), Vector2(280, 50), "返回第%d天" % (current_day-1), func(): choose_day(current_day-1))
 	if current_day == 4 and model.passed():
-		label(modal, Vector2(800, 825), Vector2(700, 50), "第一地图完成！下一站：北欧极光峡湾" if map_id == Maps.MAP01 else "北欧地图完成！下一站：希腊古城", 20)
+		if map_id == Maps.MAP01:
+			label(modal, Vector2(800, 775), Vector2(700, 36), "第一地图完成！下一站：北欧极光峡湾", 20)
+			button(modal, Vector2(800, 825), Vector2(360, 58), "前往北欧极光峡湾", go_to_nordic)
+		else:
+			label(modal, Vector2(800, 825), Vector2(700, 50), "北欧地图完成！下一站：希腊古城", 20)
+
+func go_to_nordic() -> void:
+	if map_id != Maps.MAP01 or not progress.cleared(4):
+		return
+	get_tree().change_scene_to_file("res://scenes/nordic_island.tscn")
 
 func active_can_enter(day: int) -> bool:
 	return map_progress.unlocked(day) if map_id == Maps.MAP02 else progress.can_enter(day)
