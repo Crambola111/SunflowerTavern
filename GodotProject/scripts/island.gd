@@ -11,7 +11,7 @@ const Maps = preload("res://scripts/map_config.gd")
 const Progress = preload("res://scripts/progress_store.gd")
 const NordicProgress = preload("res://scripts/nordic_progress_store.gd")
 const Art = preload("res://scripts/art_catalog.gd")
-const SEATS := [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
+const SEATS: Array[Vector2] = [Vector2(800,710), Vector2(800,220), Vector2(1080,275), Vector2(1270,455), Vector2(1140,620), Vector2(440,620), Vector2(270,455), Vector2(520,275)]
 const ITEMS := ["向日葵花瓶", "藤编小灯", "顺手托盘"]
 const EFFECTS := ["客人耐心 +5%", "小费 +5%（累计取整）", "制作速度 +5%"]
 var model: RefCounted
@@ -421,7 +421,7 @@ func refresh_motion(dt: float) -> void:
 		asset = "Sunny_Southwind_D%d_Serve_%02d" % [6 if direction == 6 else 0, clampi(int((1-serve_time/0.36)*3),0,2)]
 	sunny.texture = art.texture(asset)
 	var pulse := sin((1-service_pulse/0.32)*PI) if service_pulse > 0 else 0.0
-	var base_position := Vector2(712.5,347.5) + (SEATS[service_direction]-Vector2(800,435)).normalized()*8*pulse
+	var base_position: Vector2 = Vector2(712.5,347.5) + (SEATS[service_direction]-Vector2(800,435)).normalized()*8*pulse
 	# A restrained procedural breath keeps the central host alive without adding
 	# another animation sheet. It freezes with pause/low-motion and yields to
 	# the existing service pulse.
@@ -608,7 +608,7 @@ func codex(selected: int) -> void:
 		pick.tooltip_text = Config.guest(id).name if known else "完成服务后解锁"
 		pick.disabled = not known and i != safe_selected
 	var unlocked: bool = not current_id.is_empty() and model.codex.has(current_id)
-	var name_text := current_guest.name if unlocked else "未知客人"
+	var name_text: String = current_guest.name if unlocked else "未知客人"
 	label(modal, Vector2(1070,225), Vector2(600,58), name_text, 30)
 	if unlocked:
 		texture(modal, Vector2(1050,470), Vector2(330,340), art.portrait(current_id))
@@ -621,7 +621,7 @@ func codex(selected: int) -> void:
 		label(modal, Vector2(1290,400), Vector2(210,28), "常点饮品", 17)
 		texture(modal, Vector2(910,655), Vector2(120,150), art.ui_texture("UI_FavoriteDrinkCard_Southwind_v1"))
 		texture(modal, Vector2(910,635), Vector2(64,64), art.drink(current_guest.drink))
-		var bio := current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
+		var bio: String = current_guest.bio + "\n\n喜欢：" + current_guest.drink + (" × %d" % current_guest.cups if current_guest.cups > 1 else "")
 		label(modal, Vector2(1160,665), Vector2(410,150), bio, 20)
 	else:
 		texture(modal, Vector2(1070,470), Vector2(250,250), art.ui_texture("UI_CodexPortraitSlot_Southwind_v1"))
@@ -631,7 +631,7 @@ func codex(selected: int) -> void:
 	button(modal, Vector2(1380,770), Vector2(82,64), "›", func(): codex(posmod(safe_selected+1, available.size())))
 
 func settlement() -> void:
-	var passed := model.passed()
+	var passed: bool = model.passed()
 	open_modal("")
 	var frame := art_panel(modal, Vector2(800,470), Vector2(1250,680), "UI_SettlementPanel_Southwind_v1", 42, 38)
 	frame.name = "VictorySettlementPanel"
@@ -710,7 +710,7 @@ func decor_shop_page_view() -> void:
 		if index >= preview_slots.size():
 			continue
 		var slot: String = preview_slots[index]
-		var cx := card_x[i]
+		var cx: float = card_x[i]
 		texture(modal, Vector2(cx, card_y), Vector2(180,470), art.ui_texture("UI_ShopItemCard_Southwind_v1"))
 		texture(modal, Vector2(cx, card_y), Vector2(170,450), art.decor_ui("card"))
 		if progress.owns(index) or index == decor_shop_page*3:
@@ -719,7 +719,7 @@ func decor_shop_page_view() -> void:
 		label(modal, Vector2(cx, 205), Vector2(175,38), preview_names[index], 18)
 		texture(modal, Vector2(cx+55, 515), Vector2(34,34), art.ui_texture("UI_Icon_Bonus_Southwind_v1"))
 		label(modal, Vector2(cx, 515), Vector2(175,58), preview_effects[index], 17)
-		var owned := progress.owns(index)
+		var owned: bool = progress.owns(index)
 		var buy_text := "已拥有" if owned else "%d 金币" % Progress.PRICES[index]
 		texture(modal, Vector2(cx, 645), Vector2(186,62), art.ui_texture("UI_PricePlate_Southwind_v1"))
 		texture(modal, Vector2(cx, 645), Vector2(176,58), art.decor_ui("purchase_button"))
